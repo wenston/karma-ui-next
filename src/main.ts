@@ -1,5 +1,10 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
+import { createApp } from "vue"
+import App from "./App.vue"
+import router from "./router"
 
-createApp(App).use(router).mount('#app')
+//https://blog.csdn.net/qq_20473985/article/details/79132787
+const themeCss = require("./theme/index.css")
+
+createApp(App)
+  .use(router)
+  .mount(document.body)

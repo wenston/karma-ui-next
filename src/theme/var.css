@@ -1,0 +1,20 @@
+:root {
+  --radius: 4px;
+  --color-primary: #4693ff;
+  --color-default: #acafb5;
+
+  --color-1: #1f2e43;
+  --color-2: #414b5a;
+  --color-3: #666c72;
+  --color-4: #9ca3aa;
+  --color-5: #c4cacf;
+  --color-6: #dfe5e9;
+
+  --transition: 0.2s;
+
+  --button-height: 32px;
+  --button-padding: 0 12px;
+  --button-font-color-default: var(--color-2);
+  --button-font-border-color-default: var(--color-default);
+  --button-font-size: 12px;
+}

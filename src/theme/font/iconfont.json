@@ -1,0 +1,44 @@
+{
+  "id": "1034390",
+  "name": "karma-ui-next",
+  "font_family": "iconfont",
+  "css_prefix_text": "k-icon-",
+  "description": "for vue3",
+  "glyphs": [
+    {
+      "icon_id": "4576516",
+      "name": "icon-radio",
+      "font_class": "radio",
+      "unicode": "e622",
+      "unicode_decimal": 58914
+    },
+    {
+      "icon_id": "384475",
+      "name": "checkbox",
+      "font_class": "checkbox",
+      "unicode": "e684",
+      "unicode_decimal": 59012
+    },
+    {
+      "icon_id": "1026835",
+      "name": "radio-fill",
+      "font_class": "radio-fill",
+      "unicode": "e633",
+      "unicode_decimal": 58931
+    },
+    {
+      "icon_id": "7712639",
+      "name": "checkbox_on",
+      "font_class": "checkbox-fill",
+      "unicode": "e725",
+      "unicode_decimal": 59173
+    },
+    {
+      "icon_id": "6598339",
+      "name": "caret-down",
+      "font_class": "sort-down",
+      "unicode": "e8ec",
+      "unicode_decimal": 59628
+    }
+  ]
+}

@@ -1,32 +1,61 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+  <nav :id="css.nav">
+    <router-link v-for="r in routeMap"
+      :key="r.path"
+      :to="r.path">{{ r.meta.title }}</router-link>
+  </nav>
+  <div :id="css.article">
+    <router-view></router-view>
   </div>
 </template>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script lang="ts">
+import { ref, defineComponent } from "vue"
+import { routes } from "@/router/index"
+export default defineComponent({
+  setup() {
+    const routeMap = ref(routes)
+    return {
+      routeMap,
+    }
+  },
+})
+</script>
+<style lang="postcss" module="css">
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 14px;
 }
-
+html,
+body {
+  height: 100%;
+}
 #nav {
-  padding: 30px;
+  background-color: #1f2e43;
+  color: white;
+  float: right;
+  width: 200px;
+  height: 100%;
+  padding: 10px 0;
+  & a {
+    font-weight: bold;
+    display: block;
+    color: #ccc;
+    padding: 10px 20px;
+    text-decoration: none;
+    &:hover {
+      color: white;
+    }
+    &:global(.router-link-exact-active) {
+      background-color: #112035;
+      color: white;
+    }
+  }
 }
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+#article {
+  margin-right: 200px;
+  padding: 20px;
+  height: 100%;
 }
 </style>
