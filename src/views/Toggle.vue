@@ -2,12 +2,13 @@
 <script lang="tsx">
 import { ref, defineComponent, computed } from "vue"
 import Button from "@/packages/button"
-//ToggleType飘红，为什么？
-import Toggle, { ToggleType } from "@/packages/toggle"
+import Toggle from "@/packages/toggle"
+import Checkbox from "@/packages/checkbox"
 export default defineComponent({
   components: {
     Toggle,
     Button,
+    Checkbox,
   },
   setup(props, ctx) {
     const setTrue = (set: any, v: any) => ({
@@ -64,6 +65,15 @@ export default defineComponent({
         <div>
           实现radio：
           <Toggle v-slots={radioSlots} data={[0, 1, 2, 3]}></Toggle>
+        </div>
+
+        <h1>Checkbox</h1>
+        <div>
+          <Checkbox value={1}>选择</Checkbox>
+          <Checkbox value={1}>选择另外的</Checkbox>
+          <Checkbox data={[false, true]} value={false}>
+            有一个
+          </Checkbox>
         </div>
       </div>
     )

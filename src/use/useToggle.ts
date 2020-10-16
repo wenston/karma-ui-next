@@ -1,28 +1,30 @@
-import { reactive, ref, Ref } from "vue"
+import { reactive, ref, Ref, isRef } from "vue"
 
 interface ToggleType<T> {
   data: Array<T>
-  currentVal: T
-}
-
-interface ToggleMethodsType {
+  value: T
   set?: () => void
   get?: () => void
   toggle?: () => void
 }
-
-export default function useToggle(para: any) {
-  const base = ref(para.data)
-  const val = ref(para.currentVal)
-  function set(para: any) {
+export {ToggleType}
+export default function useToggle<T>(para: ToggleType<T>) {
+  const base = ref<T[]>(para.data)
+  const val = ref<T>(para.value)
+  function set(para: {
+    index?:number;
+    item?:string | number | boolean;
+  } ) {
     if ("item" in para) {
-      if (base.value.some((_v: any) => _v === para.item)) {
-        val.value = para.item
+      if (base.value.some((_v) => _v === para.item)) {
+        (val.value as any) = para.item
       } else {
         console.warn(`数据里没有${para.item}`)
       }
     } else if ("index" in para) {
-      val.value = base.value[para.index]
+      if(para.index!==undefined) {
+        (val.value as any) = base.value[para.index]
+      }
     }
   }
   function get() {
