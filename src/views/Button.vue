@@ -9,8 +9,10 @@ export default defineComponent({
   setup(props, ctx) {
     const a = ref("一个按钮")
     const buttonProps = computed(() => ({
-      tag: "div",
+      tag: "a",
       "data-index": 3,
+      href: "https://www.baidu.com",
+      target: "_blank",
       // 问题：将事件直接写到组件上会出现类型上的错误！为什么？
       onClick: handleClick,
       onMouseover: () => {

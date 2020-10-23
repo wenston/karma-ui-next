@@ -3,13 +3,16 @@ import { reactive, ref, Ref, isRef } from "vue"
 interface ToggleType<T> {
   data: Array<T>
   value: T
-  set?: () => void
-  get?: () => void
-  toggle?: () => void
+  set: () => void
+  get: () => {item: T, index: number}
+  toggle: () => void
 }
 export {ToggleType}
-export default function useToggle<T>(para: ToggleType<T>) {
-  const base = ref<T[]>(para.data)
+export default function useToggle<T>(para: {
+  data: Array<T>
+  value: T
+}) {
+  const base = ref(para.data)
   const val = ref<T>(para.value)
   function set(para: {
     index?:number;

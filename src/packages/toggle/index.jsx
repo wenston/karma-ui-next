@@ -19,4 +19,4 @@ const Comp = defineComponent({
   }
 })
 export default Comp
-export {ToggleType} from '@/use/useToggle'
+// export {ToggleType} from '@/use/useToggle'
