@@ -1,10 +1,14 @@
 <template>
   <div class="home">
+    <div>
+      <Checkbox v-model="check"
+        @change="onChangeAll">{{check?'取消全选':'全选区域'}}</Checkbox>
+    </div>
     <Checkbox v-for="item in baseData"
       :key="item"
       :data="item"
-      :value="arr"
-      @update:value="onUpdate">{{item}}</Checkbox>
+      v-model="arr"
+      @change="onChangeOne">{{item}}</Checkbox>
   </div>
 </template>
 
@@ -18,17 +22,24 @@ export default defineComponent({
     Checkbox
   },
   setup() {
-    let arr = ref([])
-    let baseData = ref(['北京', '广州', '上海'])
-    watch(arr, a => {
-      console.log(a)
-    })
-    function onUpdate(e) {
-      console.log(e)
-      arr.value = e;
+    const check = ref(0)
+    const arr = ref([])
+    const baseData = ref(['北京', '广州', '上海'])
+    // watch([check, arr], ([c, a]) => {
+    //   console.log(c, a)
+    // })
+    function onChangeAll() {
+      if (check.value) {
+        arr.value = baseData.value
+      } else {
+        arr.value = []
+      }
+    }
+    function onChangeOne() {
+      check.value = Number(arr.value.length > 0 && arr.value.length === baseData.value.length)
     }
     return {
-      arr, baseData, onUpdate
+      check, arr, baseData, onChangeAll, onChangeOne
     }
   }
 });

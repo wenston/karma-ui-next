@@ -1,85 +1,108 @@
 import { defineComponent, ref,watch, computed, watchEffect } from 'vue'
+import {isArray} from '@vue/shared'
 import useToggle from '@/use/useToggle'
+import Icon from '@/packages/icon'
 
-const isArray = (arg) => Array.isArray(arg)
-
-function one(props, {attrs, emit, slots}) {
-    const {value:v, set, toggle} = useToggle(props)
-    watch(()=>props.value,newValue=>{
+function componentWrapper(content, wrapperProps) {
+    return (<span {...wrapperProps}>
+        {content}
+    </span>)
+}
+function one(props, {emit, slots}) {
+    const {value:v, set, toggle} = useToggle(ref(props.data), ref(props.value))
+    watch(()=>props.modelValue,newValue=>{
         set({item:newValue})
-    })
+    }, {immediate: true})
+    
     function onToggle(e) {
         toggle()
-        emit('update:value',v.value)
+        emit('update:modelValue',v.value)
         emit('change',v.value)
     }
-    return () => (
-        <label onClick={onToggle}>
-            <i class={
-                ["iconfont",v.value?'k-icon-checkbox-fill':'k-icon-checkbox']
-            }></i>
-            {slots.default?.()}
-        </label>
-    )
-}
-function more(props, {attrs, emit, slots}) {
-
-    const symbol = ref(Symbol(props.data))
-    let {value: v,set,toggle} = useToggle({
-        data: [props.data,symbol.value],
-        value: props.value.some(_v=>_v===props.data)?props.data:symbol.value
-    })
-    const has = computed(()=>props.value.some(v=>v===props.data))
-
-    // const 
-
-    watchEffect(()=>{
-        const u = useToggle({
-            data: [props.data,symbol.value],
-            value: props.value.some(_v=>_v===props.data)?props.data:symbol.value
-        })
-        v = u.value
-        set=u.set
-        toggle=u.toggle
-    })
-    function onToggle() {
-        toggle()
-        const _v = v.value;
-        const isAdd = _v === props.data
-        if(isAdd) {
-            if(!has.value) {
-                emit('update:value',[...props.value, props.data])
-            }
-        } else {
-            if(has.value) {
-                emit('update:value', props.value.filter(v=>v!==props.data))
+    const wrapperProps = {
+        tabindex: 0,
+        onClick: onToggle,
+        onKeyUp: e=> {
+            if(e.key.toLowerCase()==='enter') {
+                onToggle()
             }
         }
     }
-    return ()=> (
-        <label onClick={onToggle}>
-            <i class={
-                ["iconfont",v.value===symbol.value?'k-icon-checkbox':'k-icon-checkbox-fill']
-            }></i>
-            {slots.default?.()}
-        </label>
+    return ()=> componentWrapper(
+        (
+            <>
+                <Icon name={v.value?'k-icon-checkbox-fill':'k-icon-checkbox'} />
+                {slots.default?.()}
+            </>
+        ),
+        wrapperProps
+    )
+}
+function more(props, {emit, slots}) {
+
+    const symbol = ref(Symbol(props.data))
+    let {value: v,set,toggle} = useToggle(
+        ref([props.data,symbol.modelValue]),
+        ref(props.modelValue.some(_v=>_v===props.data)?props.data:symbol.value)
+    )
+    const has = computed(()=>props.modelValue.some(v=>v===props.data))
+
+    watchEffect(()=>{
+        ({value:v,set,toggle} = useToggle(
+            ref([props.data,symbol.value]),
+            ref(props.modelValue.some(_v=>_v===props.data)?props.data:symbol.value)
+        ))
+    })
+    function onToggle() {
+        toggle()
+        const _v = v.value
+        const isAdd = _v === props.data
+        if(isAdd) {
+            if(!has.value) {
+                emit('update:modelValue',[...props.modelValue, props.data])
+                emit('change', true)
+            }
+        } else {
+            if(has.value) {
+                emit('update:modelValue', props.modelValue.filter(v=>v!==props.data))
+                emit('change',false)
+            }
+        }
+    }
+    const wrapperProps = {
+        tabindex: 0,
+        onClick: onToggle,
+        onKeyUp: e=> {
+            if(e.key.toLowerCase()==='enter') {
+                onToggle()
+            }
+        }
+    }
+    return ()=> componentWrapper(
+        (
+            <>
+                <Icon name={v.value===symbol.value?'k-icon-checkbox':'k-icon-checkbox-fill'} />
+                {slots.default?.()}
+            </>
+        ),
+        wrapperProps
     )
 }
 
 export default defineComponent({
+    components: {Icon},
     props: {
         data: {
             type: [Array,Number,String],
             default: ()=> [0,1]
         },
-        value: {
+        modelValue: {
             type: [Number, Boolean, Array],
             default: 0
         }
     },
-    emits: ['change','update:value'],
+    emits: ['change','update:modelValue'],
     setup(props, ctx) {
-        console.log(isArray(props.value))
-        return isArray(props.value)?more(props,ctx):one(props,ctx)
+        return isArray(props.modelValue)?more(props,ctx):one(props,ctx)
     }
 })

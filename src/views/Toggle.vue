@@ -17,26 +17,23 @@ export default defineComponent({
     const arr = ref([])
     const baseArea = ref([])
 
-    watch(arr,a=>{
-      console.log(a)
-    })
+    // watch(arr,_v=>{
+    //   console.log(_v)
+    // })
     onMounted(()=> {
       setTimeout(()=>{
         baseArea.value = ['红','黄','蓝','白','黑']
-      },1000)
+      },300)
       setTimeout(()=>{
         arr.value = ['红','白','黑']
-      },1000)
+      },600)
     })
     return () => (
       <>
         <h1>Toggle</h1>
         <section>
           <div>
-            <Checkbox value={v.value}
-              onUpdate:value={e=>{
-                v.value=e
-              }}>选择</Checkbox>
+            <Checkbox v-model={v.value}>选择</Checkbox>
           </div>
           <div>
             <label>
@@ -48,10 +45,7 @@ export default defineComponent({
           {
             baseArea.value.map(area=>{
               return (
-                <Checkbox data={area} value={arr.value}
-                  onUpdate:value={e=>{
-                    arr.value = e
-                  }}>{area}</Checkbox>
+                <Checkbox data={area} v-model={arr.value}>{area}</Checkbox>
               )
             })
           }
