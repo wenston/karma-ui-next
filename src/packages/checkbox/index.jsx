@@ -9,7 +9,7 @@ function componentWrapper(content, wrapperProps) {
     </span>)
 }
 function one(props, {emit, slots}) {
-    const {value:v, set, toggle} = useToggle(ref(props.data), ref(props.value))
+    const {value:v, set, toggle} = useToggle(props.data, props.value)
     watch(()=>props.modelValue,newValue=>{
         set({item:newValue})
     }, {immediate: true})
@@ -42,15 +42,16 @@ function more(props, {emit, slots}) {
 
     const symbol = ref(Symbol(props.data))
     let {value: v,set,toggle} = useToggle(
-        ref([props.data,symbol.modelValue]),
-        ref(props.modelValue.some(_v=>_v===props.data)?props.data:symbol.value)
+        [props.data,symbol.modelValue],
+        props.modelValue.some(_v=>_v===props.data)?props.data:symbol.value
     )
     const has = computed(()=>props.modelValue.some(v=>v===props.data))
 
+    //需要再次useToggle一下，如何精简掉？
     watchEffect(()=>{
         ({value:v,set,toggle} = useToggle(
-            ref([props.data,symbol.value]),
-            ref(props.modelValue.some(_v=>_v===props.data)?props.data:symbol.value)
+            [props.data,symbol.value],
+            props.modelValue.some(_v=>_v===props.data)?props.data:symbol.value
         ))
     })
     function onToggle() {

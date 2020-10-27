@@ -4,13 +4,13 @@ export default function useToggle(refData,refValue) {
   const base = ref(refData)
   const val = ref(refValue)
 
-  watch(refData,d=>{
-    console.log(d)
-    base.value = d
-  })
-  watch(refValue,v=>{
-    val.value=v
-  })
+  // watch(refData,d=>{
+  //   console.log(d)
+  //   base.value = d
+  // })
+  // watch(refValue,v=>{
+  //   val.value=v
+  // })
 
   function set(para) {
     if ("item" in para) {
