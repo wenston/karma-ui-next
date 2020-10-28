@@ -9,7 +9,7 @@ function componentWrapper(content, wrapperProps) {
     </span>)
 }
 function one(props, {emit, slots}) {
-    const {value:v, set, toggle} = useToggle(props.data, props.value)
+    const {value:v, set, toggle} = useToggle(props.data, props.modelValue)
     watch(()=>props.modelValue,newValue=>{
         set({item:newValue})
     }, {immediate: true})
@@ -40,7 +40,7 @@ function one(props, {emit, slots}) {
 }
 function more(props, {emit, slots}) {
 
-    const symbol = ref(Symbol(props.data))
+    const symbol = computed(()=>Symbol(props.data))
     let {value: v,set,toggle} = useToggle(
         [props.data,symbol.modelValue],
         props.modelValue.some(_v=>_v===props.data)?props.data:symbol.value

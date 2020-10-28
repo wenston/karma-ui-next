@@ -25,6 +25,30 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       title: "切换 Toggle"
     }
+  },
+  {
+    path: "/checkbox",
+    name: "checkbox",
+    component: () => import("../views/Checkbox.vue"),
+    meta: {
+      title: "复选 Checkbox"
+    }
+  },
+  {
+    path: "/radio",
+    name: "radio",
+    component: () => import("../views/Radio.vue"),
+    meta: {
+      title: "单选 Radio"
+    }
+  },
+  {
+    path: "/popup",
+    name: "popup",
+    component: () => import("../views/Popup.vue"),
+    meta: {
+      title: "弹框 Popup"
+    }
   }
 ]
 
