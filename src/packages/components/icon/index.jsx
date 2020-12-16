@@ -1,5 +1,5 @@
 import {defineComponent, computed} from 'vue'
-import {hasUnit} from '@/packages/_util'
+import {hasUnit} from '@/packages/util'
 export default defineComponent({
     props: {
         name: String,
@@ -10,7 +10,8 @@ export default defineComponent({
             hasUnit(props.size)?props.size:props.size + 'px'
         })
         return ()=> (
-            <i class={["iconfont", props.name]} style={{fontSize:fontSize.value}}></i>
+            <i class={["iconfont", props.name]} 
+            style={{fontSize:fontSize.value}}></i>
         )
     }
 })

@@ -1,7 +1,7 @@
 import { defineComponent, ref,watch, computed, watchEffect } from 'vue'
 import {isArray} from '@vue/shared'
-import useToggle from '@/use/useToggle'
-import Icon from '@/packages/icon'
+import useToggle from '@/packages/use/useToggle'
+import Icon from '@/packages/components/icon'
 
 function componentWrapper(content, wrapperProps) {
     return (<span {...wrapperProps}>

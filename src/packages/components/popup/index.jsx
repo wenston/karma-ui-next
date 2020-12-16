@@ -1,5 +1,5 @@
 import { defineComponent } from "vue"
-import Mask from '@/packages/mask'
+import Mask from '@/packages/components/mask'
 export default defineComponent({
     components: {
         Mask

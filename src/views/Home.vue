@@ -9,8 +9,8 @@
 
 <script>
 import { defineComponent, ref, watch } from "vue";
-import Checkbox from "@/packages/checkbox"
-import useMouse from '@/use/useMouse'
+import Checkbox from "@/packages/components/checkbox"
+import useMouse from '@/packages/use/useMouse'
 
 export default defineComponent({
   name: "Home",

@@ -1,6 +1,6 @@
 import { defineComponent, computed } from "vue"
-import Icon from '@/packages/icon'
-import useToggle from '@/use/useToggle'
+import Icon from '@/packages/components/icon'
+import useToggle from '@/packages/use/useToggle'
 export default defineComponent({
     components: {Icon},
     props: {

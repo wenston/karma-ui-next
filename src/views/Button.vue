@@ -1,6 +1,6 @@
 <script lang="tsx">
 import { ref, defineComponent, computed } from "vue"
-import Button from "@/packages/button"
+import Button from "@/packages/components/button"
 
 export default defineComponent({
   components: {

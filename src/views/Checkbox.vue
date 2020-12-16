@@ -1,9 +1,9 @@
 
 <script lang="jsx">
 import { ref, defineComponent, getCurrentInstance, watch, onMounted } from "vue"
-import Button from "@/packages/button"
-import Toggle from "@/packages/toggle"
-import Checkbox from "@/packages/checkbox"
+import Button from "@/packages/components/button"
+import Toggle from "@/packages/components/toggle"
+import Checkbox from "@/packages/components/checkbox"
 
 export default defineComponent({
   components: {
