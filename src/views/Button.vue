@@ -1,13 +1,13 @@
 <script lang="jsx">
 import { ref, defineComponent, computed } from "vue"
 import Button from "@/packages/components/button"
-import Filter from "@/packages/components/filter"
+// import Filter from "@/packages/components/filter"
 import Title from "@/packages/components/title"
 
 export default defineComponent({
   components: {
     Button,
-    Filter,
+    // Filter,
     Title
   },
   setup(props, ctx) {
@@ -29,7 +29,6 @@ export default defineComponent({
     }
     return () => (
       <>
-        <Filter />
         <div>
           <h1>button</h1>
           <div>

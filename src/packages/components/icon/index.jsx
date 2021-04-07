@@ -7,7 +7,7 @@ export default defineComponent({
     },
     setup(props,{emit, slots}) {
         const fontSize = computed(()=>{
-            hasUnit(props.size)?props.size:props.size + 'px'
+            return hasUnit(props.size)?props.size:props.size + 'px'
         })
         return ()=> (
             <i class={["iconfont", props.name]} 

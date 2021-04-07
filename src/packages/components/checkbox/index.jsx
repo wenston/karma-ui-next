@@ -1,4 +1,4 @@
-import { defineComponent, ref,watch, computed, watchEffect } from 'vue'
+import { defineComponent,watch, computed, watchEffect } from 'vue'
 import {isArray} from '@vue/shared'
 import useToggle from '@/packages/use/useToggle'
 import Icon from '@/packages/components/icon'
@@ -22,7 +22,7 @@ function one(props, {emit, slots}) {
     const wrapperProps = {
         tabindex: 0,
         onClick: onToggle,
-        onKeyUp: e=> {
+        onKeyup: e=> {
             if(e.key.toLowerCase()==='enter') {
                 onToggle()
             }
@@ -41,11 +41,11 @@ function one(props, {emit, slots}) {
 function more(props, {emit, slots}) {
 
     const symbol = computed(()=>Symbol(props.data))
+    const has = computed(()=>props.modelValue.some(v=>v===props.data))
     let {value: v,set,toggle} = useToggle(
-        [props.data,symbol.modelValue],
+        [props.data,symbol.value],
         props.modelValue.some(_v=>_v===props.data)?props.data:symbol.value
     )
-    const has = computed(()=>props.modelValue.some(v=>v===props.data))
 
     //需要再次useToggle一下，如何精简掉？
     watchEffect(()=>{
@@ -73,7 +73,7 @@ function more(props, {emit, slots}) {
     const wrapperProps = {
         tabindex: 0,
         onClick: onToggle,
-        onKeyUp: e=> {
+        onKeyup: e=> {
             if(e.key.toLowerCase()==='enter') {
                 onToggle()
             }
@@ -97,7 +97,7 @@ export default defineComponent({
             type: [Array,Number,String],
             default: ()=> [0,1]
         },
-        modelValue: {
+        modelValue: {//多选时，modelValue是数组！
             type: [Number, Boolean, Array],
             default: 0
         }

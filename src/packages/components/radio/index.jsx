@@ -21,7 +21,13 @@ export default defineComponent({
             }
         }
         return ()=> (
-            <span onClick={onSet} tabindex="0">
+            <span tabindex="0"
+            onClick={onSet}
+            onKeyup={(e)=>{
+                if(e.key.toLowerCase()==='enter') {
+                    onSet()
+                }
+            }}>
                 <Icon name={
                     props.modelValue===props.data
                         ?'k-icon-radio-fill'
