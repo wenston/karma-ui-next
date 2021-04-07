@@ -1,10 +1,14 @@
-<script lang="tsx">
+<script lang="jsx">
 import { ref, defineComponent, computed } from "vue"
 import Button from "@/packages/components/button"
+import Filter from "@/packages/components/filter"
+import Title from "@/packages/components/title"
 
 export default defineComponent({
   components: {
     Button,
+    Filter,
+    Title
   },
   setup(props, ctx) {
     const a = ref("一个按钮")
@@ -20,17 +24,22 @@ export default defineComponent({
       },
       onMousedown: () => {},
     }))
-    function handleClick(e: MouseEvent) {
+    function handleClick() {
       // console.log(e, 222)
     }
     return () => (
-      <div>
-        <h1>button</h1>
+      <>
+        <Filter />
         <div>
-          <Button>{a.value}</Button>
-          <Button {...buttonProps.value}>另外一个按钮</Button>
+          <h1>button</h1>
+          <div>
+            <Title>
+              <Button>{a.value}</Button>
+            </Title>
+            <Button {...buttonProps.value}>另外一个按钮</Button>
+          </div>
         </div>
-      </div>
+      </>
     )
   },
 })

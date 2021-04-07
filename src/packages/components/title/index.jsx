@@ -13,13 +13,13 @@ export default defineComponent({
         onMounted(()=>{
             const elem = slots.default()[0]
             if(elem) {
-                console.log(elem.el)
-                elem.el.addEventListener('mouseenter',e=>{
-                    show.value = true
-                })
-                elem.el.addEventListener('mouseleave',(e)=>{
-                    show.value = false
-                })
+                console.log(slots.default)
+                // elem.el.addEventListener('mouseenter',e=>{
+                //     show.value = true
+                // })
+                // elem.el.addEventListener('mouseleave',(e)=>{
+                //     show.value = false
+                // })
             }
         })
         return () => (

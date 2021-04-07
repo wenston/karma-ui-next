@@ -1,0 +1,13 @@
+.k-filter {
+  /* background-color: rgba(0, 0, 0, 0.2); */
+  width: 50px;
+  height: 50px;
+  position: fixed;
+  top: -9999px;
+  left: 0;
+  /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); */
+  backdrop-filter: saturate(80%) hue-rotate(140deg) opacity(60%);
+  z-index: 99999999999;
+  pointer-events: none;
+  border-radius: 100%;
+}

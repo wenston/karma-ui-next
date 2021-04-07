@@ -12,7 +12,7 @@ export default defineComponent({
         const symbol = computed(()=>Symbol(props.data))
         const {value, set} = useToggle(
             [props.data, symbol.value], props.modelValue
-            )
+        )
         function onSet(e) {
             set({item: props.data})
             if(props.data===value.value) {
@@ -22,7 +22,11 @@ export default defineComponent({
         }
         return ()=> (
             <span onClick={onSet} tabindex="0">
-                <Icon name={props.modelValue===props.data?'k-icon-radio-fill':'k-icon-radio'} />
+                <Icon name={
+                    props.modelValue===props.data
+                        ?'k-icon-radio-fill'
+                        :'k-icon-radio'
+                    } />
                 {slots.default?.()}
             </span>
         )
