@@ -1,4 +1,4 @@
-import {defineComponent, ref, Teleport, Transition} from 'vue'
+import {defineComponent, computed, Teleport, Transition} from 'vue'
 
 export default defineComponent({
     props: {
@@ -9,33 +9,36 @@ export default defineComponent({
         modelValue: {//控制遮罩的显隐
             type: Boolean,
             default: false
+        },
+        canCloseByClickSelf: {
+            type: Boolean,
+            default: false
         }
     },
     emits: ['update:modelValue'],
     setup(props, {slots, emit}) {
-        // const show = ref(false)
+        
         function onClickMask() {
-            emit('update:modelValue', !props.modelValue)
+            emit('update:modelValue', false)
         }
-        return () => (
-            <Teleport to={props.to}>
-                <Transition>
-                    {/* {
-                        props.modelValue && (
-                            <div class="k-mask-body"
-                                onClick={onClickMask}>
+        
+        return () => {
+            const p = {
+                class: 'k-mask-body',
+            }
+            if(props.canCloseByClickSelf) {
+                p.onClick = onClickMask
+            }
+            return (
+                <Teleport to={props.to}>
+                    <Transition>
+                        <div v-show={props.modelValue}
+                            {...p}>
                                 {slots.default?.()}
-                            </div>
-                        )
-                    } */}
-                    <div v-show={props.modelValue}
-                        class="k-mask-body"
-                        onClick={onClickMask}>
-                            {slots.default?.()}
-                    </div>
-                    
-                </Transition>
-            </Teleport>
-        )
+                        </div>
+                    </Transition>
+                </Teleport>
+            )
+        }
     }
 })

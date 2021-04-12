@@ -43,7 +43,7 @@ export default defineComponent({
           {
             baseArea.value.map(area=>{
               return (
-                <Checkbox data={area} v-model={arr.value}>{area}</Checkbox>
+                <Checkbox value={area} v-model={arr.value}>{area}</Checkbox>
               )
             })
           }

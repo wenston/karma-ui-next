@@ -4,20 +4,20 @@ import useToggle from '@/packages/use/useToggle'
 export default defineComponent({
     components: {Icon},
     props: {
-        data: [Number, String],//本radio代表的值
+        value: [Number, String],//本radio代表的值
         modelValue: [Number, String]//用以双向绑定
     },
     emits: ['update:modelValue','change'],
     setup( props, {slots,emit} ) {
-        const symbol = computed(()=>Symbol(props.data))
-        const {value, set} = useToggle(
-            [props.data, symbol.value], props.modelValue
+        const symbol = computed(()=>Symbol(props.value))
+        const {value:v, set} = useToggle(
+            [props.value, symbol.value], props.modelValue
         )
         function onSet(e) {
-            set({item: props.data})
-            if(props.data===value.value) {
-                emit('update:modelValue', value.value)
-                emit('change',value.value)
+            set({item: props.value})
+            if(props.value===v.value) {
+                emit('update:modelValue', v.value)
+                emit('change',v.value)
             }
         }
         return ()=> (
@@ -29,7 +29,7 @@ export default defineComponent({
                 }
             }}>
                 <Icon name={
-                    props.modelValue===props.data
+                    props.modelValue===props.value
                         ?'k-icon-radio-fill'
                         :'k-icon-radio'
                     } />

@@ -9,7 +9,7 @@ function componentWrapper(content, wrapperProps) {
     </span>)
 }
 function one(props, {emit, slots}) {
-    const {value:v, set, toggle} = useToggle(props.data, props.modelValue)
+    const {value:v, set, toggle} = useToggle(props.value, props.modelValue)
     watch(()=>props.modelValue,newValue=>{
         set({item:newValue})
     }, {immediate: true})
@@ -40,32 +40,32 @@ function one(props, {emit, slots}) {
 }
 function more(props, {emit, slots}) {
 
-    const symbol = computed(()=>Symbol(props.data))
-    const has = computed(()=>props.modelValue.some(v=>v===props.data))
+    const symbol = computed(()=>Symbol(props.value))
+    const has = computed(()=>props.modelValue.some(v=>v===props.value))
     let {value: v,set,toggle} = useToggle(
-        [props.data,symbol.value],
-        props.modelValue.some(_v=>_v===props.data)?props.data:symbol.value
+        [props.value,symbol.value],
+        props.modelValue.some(_v=>_v===props.value)?props.value:symbol.value
     )
 
     //需要再次useToggle一下，如何精简掉？
     watchEffect(()=>{
         ({value:v,set,toggle} = useToggle(
-            [props.data,symbol.value],
-            props.modelValue.some(_v=>_v===props.data)?props.data:symbol.value
+            [props.value,symbol.value],
+            props.modelValue.some(_v=>_v===props.value)?props.value:symbol.value
         ))
     })
     function onToggle() {
         toggle()
         const _v = v.value
-        const isAdd = _v === props.data
+        const isAdd = _v === props.value
         if(isAdd) {
             if(!has.value) {
-                emit('update:modelValue',[...props.modelValue, props.data])
+                emit('update:modelValue',[...props.modelValue, props.value])
                 emit('change', true)
             }
         } else {
             if(has.value) {
-                emit('update:modelValue', props.modelValue.filter(v=>v!==props.data))
+                emit('update:modelValue', props.modelValue.filter(v=>v!==props.value))
                 emit('change',false)
             }
         }
@@ -93,7 +93,7 @@ function more(props, {emit, slots}) {
 export default defineComponent({
     components: {Icon},
     props: {
-        data: {
+        value: {
             type: [Array,Number,String],
             default: ()=> [0,1]
         },
