@@ -13,9 +13,9 @@ export default defineComponent({
   setup(props, ctx) {
     const a = ref("一个按钮")
     const buttonProps = computed(() => ({
-      tag: "a",
+      tag: "em",
       "data-index": 3,
-      href: "https://www.baidu.com",
+      href: "###",
       target: "_blank",
       // 问题：将事件直接写到组件上会出现类型上的错误！为什么？
       onClick: handleClick,
@@ -33,9 +33,12 @@ export default defineComponent({
           <h1>button</h1>
           <div>
             <Title>
-              <Button>{a.value}</Button>
+              <Button type="primary">{a.value}</Button>
             </Title>
             <Button {...buttonProps.value}>另外一个按钮</Button>
+            <Button type="danger">danger</Button>
+            <Button type="success">success</Button>
+            <Button type="warning">warning</Button>
           </div>
         </div>
       </>

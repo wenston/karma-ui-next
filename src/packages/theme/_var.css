@@ -1,0 +1,34 @@
+:root {
+  --radius: 4px;
+  --gap: 15px;
+  --color-primary: #4693ff;
+  --color-danger: #ff7070;
+  --color-success: #3ecc56;
+  --color-warning: #e1b205;
+  --color-default: #acafb5;
+
+  --color-1: #1f2e43;
+  --color-2: #414b5a;
+  --color-3: #666c72;
+  --color-4: #9ca3aa;
+  --color-5: #c4cacf;
+  --color-6: #dfe5e9;
+
+  --color-dividing-line: var(--color-6);
+
+  --transition: 0.2s;
+
+  --button-height: 32px;
+  --button-padding: 0 12px;
+  --button-font-size: 12px;
+
+  --mask-bg-color: rgba(0, 0, 0, 0.45);
+
+  --popup-radius: var(--radius);
+  --popup-bg-color: white;
+  --popup-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  --popup-header-height: 25px;
+  --popup-header-padding: 20px 15px;
+  --popup-body-padding: 15px;
+  --popup-footer-padding: 10px 15px;
+}

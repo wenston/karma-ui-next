@@ -6,6 +6,13 @@
   "description": "for vue3",
   "glyphs": [
     {
+      "icon_id": "16013917",
+      "name": "close",
+      "font_class": "close-fill",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
       "icon_id": "4576516",
       "name": "icon-radio",
       "font_class": "radio",

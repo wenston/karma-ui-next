@@ -8,7 +8,7 @@ const Button = defineComponent({
       return [
         "k-button",
         {
-          "k-button-default": props.type === "default"
+          [`k-button-${props.type}`]: true
         },
         `k-button-${props.size}`
       ]
