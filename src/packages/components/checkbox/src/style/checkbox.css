@@ -1,0 +1,17 @@
+.k-checkbox {
+  outline: none;
+  cursor: default;
+  & .k-checkbox-icon {
+    font-size: 15px;
+    color: var(--color-3);
+    margin-right: 4px;
+  }
+  &.k-checkbox--checked {
+    & .k-checkbox-icon {
+      color: var(--color-primary);
+    }
+  }
+  & + .k-checkbox {
+    margin-left: var(--gap);
+  }
+}

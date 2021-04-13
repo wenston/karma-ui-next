@@ -19,7 +19,7 @@
   --transition: 0.2s;
 
   --button-height: 32px;
-  --button-padding: 0 12px;
+  --button-padding: 0 15px;
   --button-font-size: 12px;
 
   --mask-bg-color: rgba(0, 0, 0, 0.45);
@@ -27,8 +27,13 @@
   --popup-radius: var(--radius);
   --popup-bg-color: white;
   --popup-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-  --popup-header-height: 25px;
-  --popup-header-padding: 20px 15px;
+  --popup-header-height: 40px;
+  --popup-header-padding: 0 15px;
   --popup-body-padding: 15px;
-  --popup-footer-padding: 10px 15px;
+  --popup-body-max-height: calc(
+    100vh - var(--popup-header-height) - var(--popup-footer-height) - var(--gap) *
+      4
+  );
+  --popup-footer-padding: 0 15px;
+  --popup-footer-height: 50px;
 }

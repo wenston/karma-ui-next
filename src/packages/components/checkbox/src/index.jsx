@@ -1,13 +1,8 @@
-import { defineComponent,watch, computed, watchEffect } from 'vue'
+import { defineComponent,watch, computed, watchEffect,reactive,toRefs } from 'vue'
 import {isArray} from '@vue/shared'
 import useToggle from '../../../use/useToggle'
 import Icon from '../../icon'
 
-function componentWrapper(content, wrapperProps) {
-    return (<span {...wrapperProps}>
-        {content}
-    </span>)
-}
 function one(props, {emit, slots}) {
     const {value:v, set, toggle} = useToggle(props.value, props.modelValue)
     watch(()=>props.modelValue,newValue=>{
@@ -16,6 +11,7 @@ function one(props, {emit, slots}) {
     
     function onToggle(e) {
         toggle()
+        // console.log(v.value)
         emit('update:modelValue',v.value)
         emit('change',v.value)
     }
@@ -28,15 +24,19 @@ function one(props, {emit, slots}) {
             }
         }
     }
-    return ()=> componentWrapper(
-        (
-            <>
-                <Icon name={v.value?'k-icon-checkbox-fill':'k-icon-checkbox'} />
+
+    return ()=>  (
+            <span {...wrapperProps}
+            class={ ['k-checkbox',{
+                'k-checkbox--checked':v.value
+            }]}>
+                <Icon class="k-checkbox-icon" name={v.value
+                    ?'k-icon-checkbox-fill'
+                    :'k-icon-checkbox'} />
                 {slots.default?.()}
-            </>
-        ),
-        wrapperProps
-    )
+            </span>
+        )
+    
 }
 function more(props, {emit, slots}) {
 
@@ -44,14 +44,14 @@ function more(props, {emit, slots}) {
     const has = computed(()=>props.modelValue.some(v=>v===props.value))
     let {value: v,set,toggle} = useToggle(
         [props.value,symbol.value],
-        props.modelValue.some(_v=>_v===props.value)?props.value:symbol.value
+        has.value?props.value:symbol.value
     )
 
     //需要再次useToggle一下，如何精简掉？
     watchEffect(()=>{
         ({value:v,set,toggle} = useToggle(
             [props.value,symbol.value],
-            props.modelValue.some(_v=>_v===props.value)?props.value:symbol.value
+            has.value?props.value:symbol.value
         ))
     })
     function onToggle() {
@@ -79,14 +79,19 @@ function more(props, {emit, slots}) {
             }
         }
     }
-    return ()=> componentWrapper(
-        (
-            <>
-                <Icon name={v.value===symbol.value?'k-icon-checkbox':'k-icon-checkbox-fill'} />
+    return ()=> (
+            <span {...wrapperProps} 
+            class={[
+                'k-checkbox',{
+                    'k-checkbox--checked':has.value
+                }
+            ]}>
+                <Icon class="k-checkbox-icon" name={v.value===symbol.value
+                    ?'k-icon-checkbox'
+                    :'k-icon-checkbox-fill'} />
                 {slots.default?.()}
-            </>
-        ),
-        wrapperProps
+            </span>
+        
     )
 }
 

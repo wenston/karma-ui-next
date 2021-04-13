@@ -2,11 +2,17 @@
   <h1>Popup</h1>
   <Button @click="show=!show">点击弹框展示某些东西</Button>
   <Popup v-model="show"
-    title="这是自定义title">
-    <div>展示的内容</div>
-    <div>
-      <Button>按钮</Button>
-    </div>
+    :has-header="true"
+    :has-footer="true"
+    :body-class="css.bd"
+    title="这是自定义title"
+    :before-cancel="beforeCancel"
+    @after-cancel="afterCancel"
+    @after-ok="afterOk">
+    <div :class="css.body">展示的内容</div>
+    <template #footer-prepend>
+      底部左侧的插槽
+    </template>
   </Popup>
 </template>
 <script>
@@ -19,7 +25,37 @@ export default {
     const show = ref(false)
     return {
       show,
+      beforeCancel() {
+        return new Promise((res, rej) => {
+          setTimeout(() => {
+            const n = Math.random()
+            console.log(n > 0.5)
+            if (n > 0.5) {
+              res()
+            } else {
+              rej("呵呵，没有关闭这个弹框")
+            }
+          }, 100)
+        })
+      },
+      afterCancel() {
+        console.log("after cancel")
+      },
+      afterOk() {
+        console.log("afterok")
+        show.value = false
+      },
     }
   },
 }
 </script>
+<style lang="postcss" module="css">
+.bd {
+  padding: 20px 40px !important;
+  max-height: none !important;
+  background-color: #f1f1f1;
+}
+.body {
+  height: 300px;
+}
+</style>

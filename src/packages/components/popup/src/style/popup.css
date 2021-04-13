@@ -18,9 +18,15 @@
   & .k-popup__body {
     position: relative;
     padding: var(--popup-body-padding);
+    max-height: var(--popup-body-max-height);
+    overflow: auto;
   }
   & .k-popup__footer {
     border-top: 1px solid var(--color-dividing-line);
     padding: var(--popup-footer-padding);
+    height: var(--popup-footer-height);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 }

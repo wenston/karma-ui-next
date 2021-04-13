@@ -41,11 +41,13 @@ export default defineComponent({
           <h3>多选</h3>
           <div>
           {
+            
             baseArea.value.map(area=>{
               return (
                 <Checkbox value={area} v-model={arr.value}>{area}</Checkbox>
               )
             })
+            
           }
           </div>
         </section>

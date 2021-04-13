@@ -22,13 +22,19 @@ export default defineComponent({
         }
         return ()=> (
             <span tabindex="0"
-            onClick={onSet}
-            onKeyup={(e)=>{
-                if(e.key.toLowerCase()==='enter') {
-                    onSet()
-                }
-            }}>
-                <Icon name={
+                class={[
+                    'k-radio',
+                    {
+                        'k-radio--checked': props.modelValue===props.value
+                    }
+                ]} 
+                onClick={onSet}
+                onKeyup={(e)=>{
+                    if(e.key.toLowerCase()==='enter') {
+                        onSet()
+                    }
+                }}>
+                <Icon class="k-radio-icon" name={
                     props.modelValue===props.value
                         ?'k-icon-radio-fill'
                         :'k-icon-radio'

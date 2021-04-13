@@ -1,0 +1,17 @@
+.k-radio {
+  outline: none;
+  cursor: default;
+  & .k-radio-icon {
+    font-size: 15px;
+    color: var(--color-3);
+    margin-right: 4px;
+  }
+  &.k-radio--checked {
+    & .k-radio-icon {
+      color: var(--color-primary);
+    }
+  }
+  & + .k-radio {
+    margin-left: var(--gap);
+  }
+}

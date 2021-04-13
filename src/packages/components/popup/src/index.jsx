@@ -3,22 +3,36 @@ import {hasUnit} from '../../../util'
 import Mask from '../../mask'
 import Icon from '../../icon'
 import Button from '../../button'
+import Close from '../../close'
 export default defineComponent({
     setup(props, {slots,emit}) {
         const width = computed(()=>{
             const _w = props.width
             return hasUnit(_w)?_w:`${_w}px`
         })
-        function onClose(e) {
-            emit('update:modelValue', false)
+        async function onClose(e) {
+            try {
+                if(props.beforeCancel) {
+                    await props.beforeCancel()
+                    emit('update:modelValue', false)
+                    emit('after-cancel')
+                } else {
+                    emit('after-cancel')
+                    emit('update:modelValue', false)
+                }
+            } catch(err) {
+                console.warn(err)
+            }
+        }
+        function onOk() {
+            emit('after-ok')
         }
         function rHeader() {
             if(props.hasHeader) {
                 return (
                     <div class="k-popup__header">
                         <span class="k-popup__title">{props.title}</span>
-                        <Icon name="k-icon-close-fill" 
-                            onClick={onClose} />
+                        <Close onClick={onClose} />
                     </div>
                 )
             }
@@ -30,14 +44,20 @@ export default defineComponent({
                     footerSlots = slots.footer()
                 } else {
                     footerSlots = [
-                        <Button >{props.cancelText}</Button>,
-                        <Button type="primary">{props.okText}</Button>
+                        <Button onClick={onClose}>{props.cancelText}</Button>,
+                        <Button type="primary"
+                            onClick={onOk}>{props.okText}</Button>
                     ]
                 }
                 
                 return (
                     <div class="k-popup__footer">
-                        {footerSlots}
+                        {
+                            slots['footer-prepend']
+                                ?<div>{slots['footer-prepend']()}</div>
+                                :<span />
+                        }
+                        <div>{footerSlots}</div>
                     </div>
                 )
 
@@ -53,7 +73,7 @@ export default defineComponent({
                 <div class="k-popup"
                     style={{width:width.value}}>
                     {rHeader()}
-                    <div class="k-popup__body">
+                    <div class={["k-popup__body",{[props.bodyClass]:!!props.bodyClass}]}>
                         {
                             slots.default?.()
                         }
@@ -63,9 +83,13 @@ export default defineComponent({
             </Mask>
         )
     },
-    emits: ['update:modelValue'],
+    emits: [
+        'update:modelValue',
+        'after-cancel',
+        'after-ok'
+    ],
     components: {
-        Mask, Icon, Button
+        Mask, Icon, Button, Close
     },
     props: {
         ...Mask.props,
@@ -85,6 +109,7 @@ export default defineComponent({
             type: [String,Number],
             default: '700px'
         },
+        bodyClass: String,
         hasHeader: {
             type: Boolean,
             default: true
@@ -92,6 +117,7 @@ export default defineComponent({
         hasFooter: {
             type: Boolean,
             default: true
-        }
+        },
+        beforeCancel: Function
     },
 })

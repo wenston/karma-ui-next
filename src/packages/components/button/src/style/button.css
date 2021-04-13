@@ -6,6 +6,7 @@
   cursor: pointer;
   height: var(--button-height);
   padding: var(--button-padding);
+  font-size: var(--button-font-size);
   transition: var(--transition);
   outline: none;
 
