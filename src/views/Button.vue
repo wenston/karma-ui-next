@@ -1,14 +1,10 @@
 <script lang="jsx">
 import { ref, defineComponent, computed } from "vue"
-import Button from "@/packages/components/button"
-// import Filter from "@/packages/components/filter"
-import Title from "@/packages/components/title"
+import Button from "../packages/components/button"
 
 export default defineComponent({
   components: {
     Button,
-    // Filter,
-    Title
   },
   setup(props, ctx) {
     const a = ref("一个按钮")
@@ -32,9 +28,6 @@ export default defineComponent({
         <div>
           <h1>button</h1>
           <div>
-            <Title>
-              <Button type="primary">{a.value}</Button>
-            </Title>
             <Button {...buttonProps.value}>另外一个按钮</Button>
             <Button type="danger">danger</Button>
             <Button type="success">success</Button>

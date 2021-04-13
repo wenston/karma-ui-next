@@ -8,24 +8,26 @@
 </template>
 
 <script>
-import { defineComponent, ref, watch } from "vue";
-import Checkbox from "@/packages/components/checkbox"
-import useMouse from '@/packages/use/useMouse'
+import { defineComponent, ref, watch } from "vue"
+import Checkbox from "../packages/components/checkbox"
+import useMouse from "../packages/use/useMouse"
 
 export default defineComponent({
   name: "Home",
   components: {
-    Checkbox
+    Checkbox,
   },
   setup() {
     const check = ref(0)
     const { client, page } = useMouse()
 
     return {
-      check, client, page
+      check,
+      client,
+      page,
     }
-  }
-});
+  },
+})
 </script>
 <style scoped>
 .home {

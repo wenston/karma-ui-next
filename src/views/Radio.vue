@@ -1,6 +1,6 @@
 <script lang="jsx">
 import { defineComponent, ref, onMounted, watch } from "vue";
-import Radio from '@/packages/components/radio'
+import Radio from '../packages/components/radio'
 
 export default defineComponent({
     components: {Radio},

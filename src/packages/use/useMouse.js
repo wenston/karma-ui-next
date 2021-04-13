@@ -1,5 +1,5 @@
 import {reactive, onMounted, onUnmounted} from 'vue'
-import useListener from '@/packages/use/useListener'
+import useListener from './useListener'
 
 export default function useMouse() {
     const client = reactive({x: 0,y : 0})

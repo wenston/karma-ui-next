@@ -16,6 +16,7 @@ const Button = defineComponent({
     const ps = reactive({
       ...ctx.emit,
       ...ctx.attrs,
+      is: props.tag,
       tabindex: 0,
       class: klass.value
     })

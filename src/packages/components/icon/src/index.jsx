@@ -1,5 +1,5 @@
 import {defineComponent, computed} from 'vue'
-import {hasUnit} from '@/packages/util'
+import {hasUnit} from '../../../util'
 export default defineComponent({
     props: {
         name: String,

@@ -1,5 +1,5 @@
 import { defineComponent, ref, reactive } from "vue"
-import useToggle from "@/packages/use/useToggle"
+import useToggle from "../../../use/useToggle"
 const Comp = defineComponent({
   setup(props, ctx) {
     const { data, value, set, get, toggle } = useToggle({

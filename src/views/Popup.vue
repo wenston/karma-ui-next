@@ -11,8 +11,8 @@
 </template>
 <script>
 import { ref } from "vue"
-import Popup from "@/packages/components/popup"
-import Button from "@/packages/components/button"
+import Popup from "../packages/components/popup"
+import Button from "../packages/components/button"
 export default {
   components: { Popup, Button },
   setup() {

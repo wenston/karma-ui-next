@@ -1,8 +1,8 @@
 import { computed, defineComponent } from "vue"
-import {hasUnit} from '../../util'
-import Mask from '../mask'
-import Icon from '../icon'
-import Button from '../button'
+import {hasUnit} from '../../../util'
+import Mask from '../../mask'
+import Icon from '../../icon'
+import Button from '../../button'
 export default defineComponent({
     setup(props, {slots,emit}) {
         const width = computed(()=>{
