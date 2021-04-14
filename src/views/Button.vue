@@ -1,5 +1,5 @@
 <script lang="jsx">
-import { ref, defineComponent, computed } from "vue"
+import { ref, defineComponent, computed, useCssModule } from "vue"
 import Button from "../packages/components/button"
 
 export default defineComponent({
@@ -7,6 +7,7 @@ export default defineComponent({
     Button,
   },
   setup(props, ctx) {
+    const css  = useCssModule('css')
     const a = ref("一个按钮")
     const buttonProps = computed(() => ({
       tag: "em",
@@ -28,10 +29,13 @@ export default defineComponent({
         <div>
           <h1>button</h1>
           <div>
-            <Button {...buttonProps.value}>另外一个按钮</Button>
-            <Button type="danger">danger</Button>
-            <Button type="success">success</Button>
-            <Button type="warning">warning</Button>
+            <Button type="danger" class={[css.danger,css.d]} disabled  onClick={e=>{
+              console.log('danger button')
+            }}>danger button</Button>
+            <Button type="primary"
+              onClick={e=>{
+                console.log('primary button')
+              }}>primary button</Button>
           </div>
         </div>
       </>
@@ -39,3 +43,12 @@ export default defineComponent({
   },
 })
 </script>
+<style lang="postcss" module="css">
+.danger {
+  font-size: 18px;
+  border: 3px dashed red;
+}
+.d {
+  color: green !important;
+}
+</style>

@@ -32,8 +32,7 @@ body {
   height: 100%;
 }
 #nav {
-  background-color: #1f2e43;
-  color: white;
+  background-color: var(--color-6);
   float: right;
   width: 200px;
   height: 100%;
@@ -41,15 +40,14 @@ body {
   & a {
     font-weight: bold;
     display: block;
-    color: #ccc;
+    color: var(--color-4);
     padding: 10px 20px;
     text-decoration: none;
     &:hover {
-      color: white;
+      color: var(--color-2);
     }
     &:global(.router-link-exact-active) {
-      background-color: #112035;
-      color: white;
+      color: var(--color-2);
     }
   }
 }

@@ -3,24 +3,30 @@ import { computed, defineComponent, reactive } from "vue"
 const Button = defineComponent({
   inheritAttrs: false,
   setup(props, ctx) {
+    console.log(ctx.attrs)
     const tag = props.tag
     const klass = computed(() => {
       return [
         "k-button",
         {
-          [`k-button-${props.type}`]: true
+          [`k-button-${props.type}`]: true,
+          'k-button--disabled': props.disabled
         },
-        `k-button-${props.size}`
+        `k-button-${props.size}`,
+        ctx.attrs.class
       ]
     })
-    const ps = reactive({
-      ...ctx.emit,
-      ...ctx.attrs,
-      is: props.tag,
-      tabindex: 0,
-      class: klass.value
+    const ps = computed(()=>{
+      let o = {
+        tabindex: 0,
+        class: klass.value
+      }
+      if(!props.disabled) {
+        o = {...o, ...ctx.attrs}
+      }
+      return o
     })
-    return () => <tag {...ps}>{ctx.slots.default?.()}</tag>
+    return () => <tag {...ps.value}>{ctx.slots.default?.()}</tag>
   },
   props: {
     tag: {
