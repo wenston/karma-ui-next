@@ -26,7 +26,7 @@ export default defineComponent({
                     {
                         colors.value.map((color,i)=>{
                             return (
-                                <Radio v-model={currentColor.value}
+                                <Radio  v-model={currentColor.value}
                                     value={i}>
                                     {color}
                                 </Radio>

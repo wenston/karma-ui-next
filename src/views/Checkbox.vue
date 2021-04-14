@@ -12,7 +12,7 @@ export default defineComponent({
     Checkbox,
   },
   setup(props, ctx) {
-    const v = ref(1)
+    const v = ref(0)
     const ch = ref(true)
     const arr = ref([])
     const baseArea = ref([])
@@ -36,7 +36,8 @@ export default defineComponent({
         <h1>单选</h1>
         <section>
           <div>
-            <Checkbox v-model={v.value}>选择</Checkbox>
+            <Checkbox disabled v-model={v.value}>选择</Checkbox>
+
           </div>
           <h3>多选</h3>
           <div>
@@ -44,7 +45,7 @@ export default defineComponent({
             
             baseArea.value.map(area=>{
               return (
-                <Checkbox value={area} v-model={arr.value}>{area}</Checkbox>
+                <Checkbox value={area}  v-model={arr.value}>{area}</Checkbox>
               )
             })
             

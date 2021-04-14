@@ -1,4 +1,4 @@
-import { computed, defineComponent } from "vue"
+import { computed, defineComponent, ref, nextTick, watch } from "vue"
 import {hasUnit} from '../../../util'
 import Mask from '../../mask'
 import Icon from '../../icon'
@@ -6,6 +6,7 @@ import Button from '../../button'
 import Close from '../../close'
 export default defineComponent({
     setup(props, {slots,emit}) {
+        const popup = ref(null)
         const width = computed(()=>{
             const _w = props.width
             return hasUnit(_w)?_w:`${_w}px`
@@ -63,6 +64,13 @@ export default defineComponent({
 
             }
         }
+
+        watch(()=>props.modelValue,v=>{
+            if(v) {
+                nextTick(()=>{popup.value.focus()})
+            }
+        })
+        
         return () => (
             <Mask modelValue={props.modelValue} 
                 onUpdate:modelValue={
@@ -71,6 +79,8 @@ export default defineComponent({
                     }
                 }>
                 <div class="k-popup"
+                    ref={popup}
+                    tabindex="-1"
                     style={{width:width.value}}>
                     {rHeader()}
                     <div class={["k-popup__body",{[props.bodyClass]:!!props.bodyClass}]}>

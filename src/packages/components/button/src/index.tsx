@@ -3,7 +3,6 @@ import { computed, defineComponent, reactive } from "vue"
 const Button = defineComponent({
   inheritAttrs: false,
   setup(props, ctx) {
-    console.log(ctx.attrs)
     const tag = props.tag
     const klass = computed(() => {
       return [

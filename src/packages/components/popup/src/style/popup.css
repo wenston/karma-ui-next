@@ -2,6 +2,7 @@
   background-color: var(--popup-bg-color);
   box-shadow: var(--popup-box-shadow);
   border-radius: var(--popup-radius);
+  outline: 0;
   & .k-popup__header {
     height: var(--popup-header-height);
     padding: var(--popup-header-padding);

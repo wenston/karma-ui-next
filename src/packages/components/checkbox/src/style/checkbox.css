@@ -11,6 +11,10 @@
       color: var(--color-primary);
     }
   }
+  &.k-checkbox--disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+  }
   & + .k-checkbox {
     margin-left: var(--gap);
   }

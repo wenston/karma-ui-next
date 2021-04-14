@@ -11,24 +11,30 @@ function one(props, {emit, slots}) {
     
     function onToggle(e) {
         toggle()
-        // console.log(v.value)
         emit('update:modelValue',v.value)
         emit('change',v.value)
     }
-    const wrapperProps = {
-        tabindex: 0,
-        onClick: onToggle,
-        onKeyup: e=> {
-            if(e.key.toLowerCase()==='enter') {
-                onToggle()
+    const wrapperProps = computed(()=>{
+        let o = {}
+        if(!props.disabled) {
+            o = {
+                tabindex: 0,
+                onClick: onToggle,
+                onKeyup: e=> {
+                    if(e.key.toLowerCase()==='enter') {
+                        onToggle()
+                    }
+                }
             }
         }
-    }
+        return o
+    })
 
     return ()=>  (
-            <span {...wrapperProps}
+            <span {...wrapperProps.value}
             class={ ['k-checkbox',{
-                'k-checkbox--checked':v.value
+                'k-checkbox--checked':v.value,
+                'k-checkbox--disabled':props.disabled
             }]}>
                 <Icon class="k-checkbox-icon" name={v.value
                     ?'k-icon-checkbox-fill'
@@ -70,20 +76,27 @@ function more(props, {emit, slots}) {
             }
         }
     }
-    const wrapperProps = {
-        tabindex: 0,
-        onClick: onToggle,
-        onKeyup: e=> {
-            if(e.key.toLowerCase()==='enter') {
-                onToggle()
+    const wrapperProps = computed(()=>{
+        let o = {}
+        if(!props.disabled) {
+            o = {
+                tabindex: 0,
+                onClick: onToggle,
+                onKeyup: e=> {
+                    if(e.key.toLowerCase()==='enter') {
+                        onToggle()
+                    }
+                }
             }
         }
-    }
+        return o
+    })
     return ()=> (
-            <span {...wrapperProps} 
+            <span {...wrapperProps.value} 
             class={[
                 'k-checkbox',{
-                    'k-checkbox--checked':has.value
+                    'k-checkbox--checked':has.value,
+                    'k-checkbox--disabled':props.disabled
                 }
             ]}>
                 <Icon class="k-checkbox-icon" name={v.value===symbol.value
@@ -105,7 +118,8 @@ export default defineComponent({
         modelValue: {//多选时，modelValue是数组！
             type: [Number, Boolean, Array],
             default: 0
-        }
+        },
+        disabled: Boolean
     },
     emits: ['change','update:modelValue'],
     setup(props, ctx) {

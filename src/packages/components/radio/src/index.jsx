@@ -4,6 +4,7 @@ import useToggle from '../../../use/useToggle'
 export default defineComponent({
     components: {Icon},
     props: {
+        disabled: Boolean,
         value: [Number, String],//本radio代表的值
         modelValue: [Number, String]//用以双向绑定
     },
@@ -20,20 +21,30 @@ export default defineComponent({
                 emit('change',v.value)
             }
         }
+        const on = computed(()=>{
+            if(!props.disabled) {
+                return {
+                    tabindex: 0,
+                    onClick: onSet,
+                    onKeyup:e=>{
+                        if(e.key.toLowerCase()==='enter') {
+                            onSet()
+                        }
+                    }
+                }
+            }
+            return {}
+        })
         return ()=> (
-            <span tabindex="0"
+            <span 
                 class={[
                     'k-radio',
                     {
-                        'k-radio--checked': props.modelValue===props.value
+                        'k-radio--checked': props.modelValue===props.value,
+                        "k-radio--disabled": props.disabled
                     }
                 ]} 
-                onClick={onSet}
-                onKeyup={(e)=>{
-                    if(e.key.toLowerCase()==='enter') {
-                        onSet()
-                    }
-                }}>
+                {...on.value}>
                 <Icon class="k-radio-icon" name={
                     props.modelValue===props.value
                         ?'k-icon-radio-fill'
