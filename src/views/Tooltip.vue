@@ -2,15 +2,35 @@
   <h1>Tooltip</h1>
   <div>
 
-    <Tooltip title="提示的内容"><Button type="primary">鼠标滑入</Button>
+    <Tooltip title="提示的内容"
+      trigger="click">
+      <Button type="primary">鼠标滑入</Button>
     </Tooltip>
 
-    <!-- <component :is="Tooltip"
-      :class="css.item"
-      title="一个比较长比较长的提示">详细答复</component> -->
+    <Tooltip :class="css.item"
+      placement="top-start"
+      title="一个比较长比较长的提示">top-start</Tooltip>
+    <Tooltip :class="css.item"
+      placement="top-end"
+      title="位置在top-end">top-end</Tooltip>
     <Tooltip :title="tip"
       :class="css.item">
       <span :class="css.item">tip</span>
+    </Tooltip>
+    <Tooltip title="one tip"
+      bind="v-show"
+      placement="bottom">下方出现提示</Tooltip>
+    <Tooltip title="在左侧出现一个提示"
+      bind="v-show"
+      placement="left"
+      :class="css.item">
+      <div style="background-color:green;">左侧</div>
+    </Tooltip>
+    <Tooltip title="right"
+      bind="v-show"
+      placement="right"
+      :class="css.item">
+      <div style="background-color:green;">右边出现一个提示</div>
     </Tooltip>
   </div>
   <div style="height:500px;background-color:#f1f1f1;margin-top:10px;
@@ -33,7 +53,7 @@ export default defineComponent({
   components: { Tooltip, Button },
   setup(props) {
     return {
-      Tooltip: shallowRef(Tooltip),
+      // Tooltip: shallowRef(Tooltip),
       onClick: (e) => {
         console.log("click 啦")
       },

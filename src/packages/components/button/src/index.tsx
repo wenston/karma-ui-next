@@ -23,7 +23,7 @@ const Button = defineComponent({
         const {class:_class,..._attrs} = ctx.attrs
         o = {...o, ..._attrs}
       }
-      console.log(ctx.attrs)
+      // console.log(ctx.attrs)
       return o
     })
     onUpdated(()=>{

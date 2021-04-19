@@ -1,13 +1,10 @@
 .k-overlay {
   position: absolute;
-  top: -999100px;
-  left: 100px;
   background-color: rgba(0, 0, 0, 0.8);
   color: white;
   padding: 7px 12px;
   border-radius: var(--radius);
   font-size: 12px;
-
   &:after {
     content: "";
     position: absolute;
@@ -15,8 +12,47 @@
     height: 0;
     border-width: 4px;
     border-style: solid;
-    border-color: rgba(0, 0, 0, 0.9) transparent transparent transparent;
-    bottom: -8px;
-    left: calc(50% - 3px);
+  }
+  &.k-overlay--top {
+    &:after {
+      border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+      bottom: -8px;
+      left: calc(50% - 3px);
+    }
+  }
+  &.k-overlay--top-start {
+    &:after {
+      border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+      bottom: -8px;
+      left: 12px;
+    }
+  }
+  &.k-overlay--top-end {
+    &:after {
+      border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+      bottom: -8px;
+      right: 12px;
+    }
+  }
+  &.k-overlay--bottom {
+    &:after {
+      border-color: transparent transparent rgba(0, 0, 0, 0.8) transparent;
+      top: -8px;
+      left: calc(50% - 3px);
+    }
+  }
+  &.k-overlay--left {
+    &:after {
+      border-color: transparent transparent transparent rgba(0, 0, 0, 0.8);
+      top: calc(50% - 3px);
+      right: -8px;
+    }
+  }
+  &.k-overlay--right {
+    &:after {
+      border-color: transparent rgba(0, 0, 0, 0.8) transparent transparent;
+      top: calc(50% - 3px);
+      left: -8px;
+    }
   }
 }

@@ -3,6 +3,12 @@
  */
 import {defineComponent, ref, computed} from 'vue'
 import Overlay from '../../overlay'
+//检验slot插槽内容是否为有效的节点
+//文本节点视为无效
+//其他如组件、原生html标签视为有效
+// function isValidElement(slot) {
+//     return slot.children && slot.type && typeof slot.type!=='symbol'
+// }
 export default defineComponent({
     inheritAttrs: false,
     components: {Overlay},
@@ -17,7 +23,7 @@ export default defineComponent({
     setup(props, {attrs,slots}) {
         const t = props.tag
         const root = ref(null)
-        
+        // const defaultSlot = slots.default?.()[0]
         const p = computed(()=>{
             const o = {
                 class: ['k-tooltip',attrs.class],
@@ -26,13 +32,17 @@ export default defineComponent({
             }
             return o
         })
+        const op = computed(()=>{
+            return props
+        })
 
         return () => {
             return (
-            <>
-                <t {...p.value}>{slots.default?.()}</t>
-                <Overlay relate-element={root}>{props.title}</Overlay>
-            </>
-        )}
+                <>
+                    <t {...p.value}>{slots.default?.()}</t>
+                    <Overlay {...op.value} relate-element={root}>{props.title}</Overlay>
+                </>
+            )
+        }
     }
 })

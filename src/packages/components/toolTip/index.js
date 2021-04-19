@@ -1,2 +1,2 @@
 import './src/style/tooltip.css'
-export {default } from './src'
+export { default } from './src'

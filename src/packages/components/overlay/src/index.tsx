@@ -3,7 +3,12 @@
  */
 import { defineComponent, Teleport, reactive, ref,watch, computed } from 'vue';
 import useEvent from '../../../use/useEvent'
+import useDelay from '../../../use/useDelay'
 import {getElementPositionInPage} from '../../../util'
+import {get} from '../../../util/placement'
+interface sty {
+    [key: string]: any
+}
 export default defineComponent({
     inheritAttrs: false,
     props: {
@@ -27,19 +32,28 @@ export default defineComponent({
             type: Element,
             default: ()=>document.body
         },
-        direction: {
+        placement: {
             type: String,
             default: 'top'
         },
         gap: {
             type: Number,
             default: 9
+        },
+        showDelay: {
+            type: Number,
+            default: 200
+        },
+        hideDelay: {
+            type: Number,
+            default: 200
         }
     },
     emits: ['update:show'],
     setup(props, ctx){
         const visible = ref(props.show)
         const elem = ref(props.relateElement)
+        const {start,stop} = useDelay()
         const pos = reactive({
             top:0,
             left:0,
@@ -52,32 +66,70 @@ export default defineComponent({
             const _p = {
                 class: [
                     ctx.attrs.class,
-                    'k-overlay'
+                    'k-overlay',
+                    [`k-overlay--${props.placement}`]
                 ]
             }
-            let sty = {
-                top: '',left: '', transform: ''
-            }
-            if(props.direction==='top') {
+            let sty:sty = {}
+            if(props.placement==='top') {
                 sty.top = `${pos.top+props.gap*-1}px`
-                sty.left = `${pos.left+pos.width/2}px`,
+                sty.left = `${pos.left+pos.width/2}px`
                 sty.transform = `translate(-50%,-100%)`
+            } else if(props.placement==='top-start') {
+                sty.top = `${pos.top+props.gap*-1}px`
+                sty.left = `${pos.left}px`
+                sty.transform = `translate(0,-100%)`
+            } else if(props.placement==='top-end') {
+                sty.top = `${pos.top+props.gap*-1}px`
+                sty.left = `${pos.left + pos.width}px`
+                sty.transform = `translate(-100%,-100%)`
+            } else if(props.placement==='bottom') {
+                sty.top = `${pos.top+pos.height+props.gap}px`
+                sty.left = `${pos.left+pos.width/2}px`
+                sty.transform = `translate(-50%,0)`
+            } else if(props.placement === 'left') {
+                sty.top = `${pos.top + pos.height/2}px`
+                sty.left = `${pos.left + props.gap*-1}px`
+                sty.transform = `translate(-100%, -50%)`
+            } else if(props.placement==='right') {
+                sty.top = `${pos.top + pos.height/2}px`
+                sty.left = `${pos.left + pos.width + props.gap}px`
+                sty.transform = `translate(0, -50%)`
             }
             return {..._p, style: sty}
         })
         if(props.trigger === 'hover') {
             useEvent(elem, 'mouseenter', ()=>{
-                getPos()
-                visible.value=true
+                start(()=>{
+                    getPos()
+                    const p = get({
+                        elem:elem.value,
+                        placement:props.placement,
+                        gap: props.gap,
+                        offset:0
+                    })
+                    console.log(p)
+                    // set({
+                    //     elem:elem.value,
+                    //     placement:props.placement,
+                    //     gap: props.gap,
+                    //     offset:0
+                    // })
+                    visible.value=true
+                }, props.showDelay)
+                
             })
             useEvent(elem, 'mouseleave',()=>{
-                visible.value=false
+                stop(()=>{
+                    visible.value=false
+                }, props.hideDelay)
+                
             })
 
         } else if(props.trigger==='click') {
             useEvent(elem,'click',()=>{
                 getPos()
-                ctx.emit('update:show', !visible.value)
+                visible.value = !visible.value
             })
         }
         function getPos() {
@@ -91,15 +143,17 @@ export default defineComponent({
         watch(visible,v=>{
             ctx.emit('update:show',v)
         })
+        function cont(c:any) {
+            return <Teleport to={props.to}>{c}</Teleport>
+        }
         return ()=>{
             const defaultSlot = ctx.slots.default?.()
-            const cont = (<Teleport to={props.to}>
-                <div {...ps.value}>{defaultSlot}</div>
-            </Teleport>)
             if(props.bind==='v-if') {
-                return visible.value?cont: null
-            }else{
-                
+                return visible.value?cont(<div {...ps.value}>{defaultSlot}</div>): null
+            }else if(props.bind==='v-show'){
+                return cont(
+                    <div v-show={visible.value} {...ps.value}>{defaultSlot}</div>
+                )
             }
         }
     }
