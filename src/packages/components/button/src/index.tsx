@@ -1,5 +1,4 @@
-import { computed, defineComponent, reactive } from "vue"
-
+import { computed, defineComponent, onUpdated,onRenderTracked,onRenderTriggered } from "vue"
 const Button = defineComponent({
   inheritAttrs: false,
   setup(props, ctx) {
@@ -21,10 +20,22 @@ const Button = defineComponent({
         class: klass.value
       }
       if(!props.disabled) {
-        o = {...o, ...ctx.attrs}
+        const {class:_class,..._attrs} = ctx.attrs
+        o = {...o, ..._attrs}
       }
+      console.log(ctx.attrs)
       return o
     })
+    onUpdated(()=>{
+      console.log('update 了')
+    })
+    onRenderTriggered((e)=>{
+      console.log(e)
+    })
+    onRenderTracked(e=>{
+      // console.log('组件tracked：',e)
+    })
+    
     return () => <tag {...ps.value}>{ctx.slots.default?.()}</tag>
   },
   props: {
@@ -40,7 +51,7 @@ const Button = defineComponent({
       type: String,
       default: "medium"
     },
-    disabled: Boolean
+    disabled: Boolean,
   },
   emits: {}
 })

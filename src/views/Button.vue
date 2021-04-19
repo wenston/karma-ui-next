@@ -6,7 +6,13 @@ export default defineComponent({
   components: {
     Button,
   },
+  data() {
+    return {
+      color: 'blue'
+    }
+  },
   setup(props, ctx) {
+    const buttonType = ref('primary')
     const css  = useCssModule('css')
     const a = ref("一个按钮")
     const buttonProps = computed(() => ({
@@ -32,9 +38,9 @@ export default defineComponent({
             <Button type="danger" class={[css.danger,css.d]} disabled  onClick={e=>{
               console.log('danger button')
             }}>danger button</Button>
-            <Button type="primary"
+            <Button type={buttonType.value}
               onClick={e=>{
-                console.log('primary button')
+                buttonType.value="success"
               }}>primary button</Button>
           </div>
         </div>
@@ -49,6 +55,6 @@ export default defineComponent({
   border: 3px dashed red;
 }
 .d {
-  color: green !important;
+  color: v-bind(color) !important;
 }
 </style>

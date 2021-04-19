@@ -43,6 +43,14 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: '/tooltip',
+    name: 'tooltip',
+    component: ()=> import('../views/Tooltip.vue'),
+    meta: {
+      title: '小提示 Tooltip'
+    }
+  },
+  {
     path: "/popup",
     name: "popup",
     component: () => import("../views/Popup.vue"),

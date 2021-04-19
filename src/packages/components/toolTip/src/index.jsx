@@ -1,36 +1,38 @@
-import {defineComponent, ref, Teleport, onMounted} from 'vue'
+/**
+ * 待改进问题点：如何在没有根节点（没有tag）的情况下，获取到插槽里第一个有效节点（非Comment）
+ */
+import {defineComponent, ref, computed} from 'vue'
+import Overlay from '../../overlay'
 export default defineComponent({
+    inheritAttrs: false,
+    components: {Overlay},
     props: {
+        ...Overlay.props,
         title: [String,Object],
-        //插入在dom中的位置
-        to: {
-            type: Element,
-            default: document.body
+        tag: {
+            type: String,
+            default: 'div'
         }
     },
-    setup(props,{slots}) {
-        const show = ref(false)
-        onMounted(()=>{
-            const elem = slots.default()[0]
-            if(elem) {
-                console.log(slots.default)
-                // elem.el.addEventListener('mouseenter',e=>{
-                //     show.value = true
-                // })
-                // elem.el.addEventListener('mouseleave',(e)=>{
-                //     show.value = false
-                // })
+    setup(props, {attrs,slots}) {
+        const t = props.tag
+        const root = ref(null)
+        
+        const p = computed(()=>{
+            const o = {
+                class: ['k-tooltip',attrs.class],
+                ref: root,
+                style: attrs.style
             }
+            return o
         })
-        return () => (
+
+        return () => {
+            return (
             <>
-                {slots.default?.()}
-                {show.value?(
-                <Teleport to={props.to}>
-                    <div>{props.title}</div>
-                </Teleport>
-                ):null}
+                <t {...p.value}>{slots.default?.()}</t>
+                <Overlay relate-element={root}>{props.title}</Overlay>
             </>
-        )
+        )}
     }
 })
