@@ -50,7 +50,12 @@
   <div style="height:500px;background-color:#f1f1f1;margin-top:10px;
     overflow:auto">
     <div style="height:1000px;padding-top:500px;">
-
+      <Tooltip title="right"
+        bind="v-if"
+        placement="right"
+        :class="css.item">
+        <div style="background-color:green;">右边出现一个提示</div>
+      </Tooltip>
     </div>
   </div>
   <div>

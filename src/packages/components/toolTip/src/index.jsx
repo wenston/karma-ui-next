@@ -2,6 +2,8 @@
  * 待改进问题点：如何在没有根节点（没有tag）的情况下，获取到插槽里第一个有效节点（非Comment）
  */
 import {defineComponent, ref, computed} from 'vue'
+import {withDirectives, resolveDirective} from 'vue'
+import clickOutside from '../../../directives/clickOutside'
 import Overlay from '../../overlay'
 //检验slot插槽内容是否为有效的节点
 //文本节点视为无效
@@ -12,6 +14,7 @@ import Overlay from '../../overlay'
 export default defineComponent({
     inheritAttrs: false,
     components: {Overlay},
+    directives: {clickOutside},
     props: {
         ...Overlay.props,
         title: [String,Object],
@@ -20,10 +23,12 @@ export default defineComponent({
             default: 'div'
         }
     },
-    setup(props, {attrs,slots}) {
+    // emits: ['update:show'],
+    setup(props, {attrs,slots,emit}) {
+        const visible = ref(false)
+        const clickOutside = resolveDirective('clickOutside')
         const t = props.tag
         const root = ref(null)
-        // const defaultSlot = slots.default?.()[0]
         const p = computed(()=>{
             const o = {
                 class: ['k-tooltip',attrs.class],
@@ -33,13 +38,26 @@ export default defineComponent({
             return o
         })
         const op = computed(()=>{
-            return props
+            const p = {...props, show:visible.value,"onUpdate:show":v=>{
+                visible.value=v
+            }}
+            return p
         })
 
         return () => {
+            const main = <t {...p.value}>{slots.default?.()}</t>
+            const direc = [[clickOutside, ()=>{
+                    visible.value=false
+                    emit('update:show',false)
+                }
+            ]]
+            let trigger = main
+            if(props.trigger==='click') {
+                trigger = withDirectives( main,direc)
+            }
             return (
                 <>
-                    <t {...p.value}>{slots.default?.()}</t>
+                    {trigger}
                     <Overlay {...op.value} relate-element={root}>{props.title}</Overlay>
                 </>
             )

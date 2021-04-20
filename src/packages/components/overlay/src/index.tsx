@@ -1,18 +1,13 @@
 /**
  * 覆盖层，用以辅助展示一些东西，给出一个relateElement时，会根据此元素定位
  */
-import { defineComponent, Teleport, ref,watch, computed, h } from 'vue';
-import {withDirectives, resolveDirective} from 'vue'
-import clickOutside from '../../../directives/clickOutside'
+import { defineComponent, Teleport, ref,watch, computed } from 'vue';
 import useEvent from '../../../use/useEvent'
 import useDelay from '../../../use/useDelay'
 import usePlacement from '../../../use/usePlacement'
 
 export default defineComponent({
     inheritAttrs: false,
-    directives: {
-        clickOutside
-    },
     props: {
         bind: {
             type: String,
@@ -53,7 +48,6 @@ export default defineComponent({
     },
     emits: ['update:show'],
     setup(props, ctx){
-        const clickOutside = resolveDirective('clickOutside')
         const root=ref<any>(null)
         const visible = ref(props.show)
         const elem = ref(props.relateElement)
@@ -73,9 +67,13 @@ export default defineComponent({
             const style = {
                 left: place.left,top:place.top,transform:place.transform
             }
-            return  {
-                class:_class, style
+            const o: {[key:string]:any} = {
+                class:_class,style,ref:root
             }
+            if(props.bind==='v-show') {
+                o['v-show'] = visible.value
+            }
+            return  o
         })
 
         if(props.trigger === 'hover') {
@@ -101,39 +99,22 @@ export default defineComponent({
 
         watch(()=>props.show,v=>{
             visible.value=v
+            console.log('overlay:',v)
         })
         watch(visible,v=>{
             ctx.emit('update:show',v)
         })
         function cont(c:any) {
-            return <Teleport to={props.to}>{c}</Teleport>
+            return <Teleport to={props.to}>{c}</Teleport>//一样
         }
         return ()=>{
             const defaultSlot = ctx.slots.default?.()
+            const main = cont(<div  {...overlayProps.value}>{defaultSlot}</div>)
+
             if(props.bind==='v-if') {
-                if(props.trigger==='click') {
-                    if(visible.value) {
-                        return withDirectives(
-                            h('div',overlayProps.value,defaultSlot),
-                            [
-                                [clickOutside!, ()=>{visible.value=false}]
-                            ]
-                        )
-                    }
-                }
-                return visible.value?cont(<div {...overlayProps.value}>{defaultSlot}</div>): null
-            }else if(props.bind==='v-show'){
-                if(props.trigger === 'click') {
-                    return withDirectives(
-                        cont(
-                            <div v-show={visible.value}  {...overlayProps.value}>{defaultSlot}</div>
-                        ),
-                        [[clickOutside!, ()=>{visible.value=false}]]
-                    )
-                }
-                return cont(
-                    <div v-show={visible.value}  {...overlayProps.value}>{defaultSlot}</div>
-                )
+                return visible.value?main:null
+            }else if(props.bind==='v-show') {
+                return main
             }
         }
     }
