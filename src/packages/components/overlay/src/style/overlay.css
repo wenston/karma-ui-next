@@ -41,6 +41,20 @@
       left: calc(50% - 3px);
     }
   }
+  &.k-overlay--bottom-start {
+    &:after {
+      border-color: transparent transparent rgba(0, 0, 0, 0.8) transparent;
+      top: -8px;
+      left: 12px;
+    }
+  }
+  &.k-overlay--bottom-end {
+    &:after {
+      border-color: transparent transparent rgba(0, 0, 0, 0.8) transparent;
+      top: -8px;
+      right: 12px;
+    }
+  }
   &.k-overlay--left {
     &:after {
       border-color: transparent transparent transparent rgba(0, 0, 0, 0.8);

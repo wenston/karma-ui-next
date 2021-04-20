@@ -4,10 +4,12 @@
 
     <Tooltip title="提示的内容"
       trigger="click">
-      <Button type="primary">鼠标滑入</Button>
+      <Button type="primary">点击</Button>
     </Tooltip>
 
     <Tooltip :class="css.item"
+      trigger="click"
+      bind="v-if"
       placement="top-start"
       title="一个比较长比较长的提示">top-start</Tooltip>
     <Tooltip :class="css.item"
@@ -18,16 +20,28 @@
       <span :class="css.item">tip</span>
     </Tooltip>
     <Tooltip title="one tip"
-      bind="v-show"
+      bind="v-if"
       placement="bottom">下方出现提示</Tooltip>
     <Tooltip title="在左侧出现一个提示"
-      bind="v-show"
+      bind="v-if"
       placement="left"
       :class="css.item">
       <div style="background-color:green;">左侧</div>
     </Tooltip>
+    <Tooltip title="bs"
+      bind="v-if"
+      placement="bottom-start"
+      :class="css.item">
+      <div style="background-color:green;">bottom-start</div>
+    </Tooltip>
+    <Tooltip title="右下方出现一个小提示"
+      bind="v-if"
+      placement="bottom-end"
+      :class="css.item">
+      <div style="background-color:green;">bottom-end</div>
+    </Tooltip>
     <Tooltip title="right"
-      bind="v-show"
+      bind="v-if"
       placement="right"
       :class="css.item">
       <div style="background-color:green;">右边出现一个提示</div>

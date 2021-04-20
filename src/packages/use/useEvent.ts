@@ -11,9 +11,9 @@ export default function useListener(
         elem.value.removeEventListener(type, listener)
         elem.value.addEventListener(type, listener)
     })
-    onUpdated(()=>{
-        console.log('useEvent updated')
-    })
+    // onUpdated(()=>{
+    //     console.log('useEvent updated')
+    // })
 
     onUnmounted(()=>{
         if(elem.value) {

@@ -1,16 +1,18 @@
 /**
  * 覆盖层，用以辅助展示一些东西，给出一个relateElement时，会根据此元素定位
  */
-import { defineComponent, Teleport, reactive, ref,watch, computed } from 'vue';
+import { defineComponent, Teleport, ref,watch, computed, h } from 'vue';
+import {withDirectives, resolveDirective} from 'vue'
+import clickOutside from '../../../directives/clickOutside'
 import useEvent from '../../../use/useEvent'
 import useDelay from '../../../use/useDelay'
-import {getElementPositionInPage} from '../../../util'
-import {get} from '../../../util/placement'
-interface sty {
-    [key: string]: any
-}
+import usePlacement from '../../../use/usePlacement'
+
 export default defineComponent({
     inheritAttrs: false,
+    directives: {
+        clickOutside
+    },
     props: {
         bind: {
             type: String,
@@ -29,7 +31,7 @@ export default defineComponent({
             default: false
         },
         to: {
-            type: Element,
+            type: HTMLElement,
             default: ()=>document.body
         },
         placement: {
@@ -38,7 +40,7 @@ export default defineComponent({
         },
         gap: {
             type: Number,
-            default: 9
+            default: 8
         },
         showDelay: {
             type: Number,
@@ -51,70 +53,35 @@ export default defineComponent({
     },
     emits: ['update:show'],
     setup(props, ctx){
+        const clickOutside = resolveDirective('clickOutside')
+        const root=ref<any>(null)
         const visible = ref(props.show)
         const elem = ref(props.relateElement)
         const {start,stop} = useDelay()
-        const pos = reactive({
-            top:0,
-            left:0,
-            right:0,
-            bottom:0,
-            width:0,
-            height:0
+        const {getPlace,place} = usePlacement({
+            relateElement: elem,
+            el: root,
+            placement: props.placement,
+            gap: props.gap
         })
-        const ps = computed(()=>{
-            const _p = {
-                class: [
-                    ctx.attrs.class,
-                    'k-overlay',
-                    [`k-overlay--${props.placement}`]
-                ]
+        const overlayProps = computed(()=>{
+            const _class = [
+                ctx.attrs.class,
+                'k-overlay',
+                [`k-overlay--${props.placement}`]
+            ]
+            const style = {
+                left: place.left,top:place.top,transform:place.transform
             }
-            let sty:sty = {}
-            if(props.placement==='top') {
-                sty.top = `${pos.top+props.gap*-1}px`
-                sty.left = `${pos.left+pos.width/2}px`
-                sty.transform = `translate(-50%,-100%)`
-            } else if(props.placement==='top-start') {
-                sty.top = `${pos.top+props.gap*-1}px`
-                sty.left = `${pos.left}px`
-                sty.transform = `translate(0,-100%)`
-            } else if(props.placement==='top-end') {
-                sty.top = `${pos.top+props.gap*-1}px`
-                sty.left = `${pos.left + pos.width}px`
-                sty.transform = `translate(-100%,-100%)`
-            } else if(props.placement==='bottom') {
-                sty.top = `${pos.top+pos.height+props.gap}px`
-                sty.left = `${pos.left+pos.width/2}px`
-                sty.transform = `translate(-50%,0)`
-            } else if(props.placement === 'left') {
-                sty.top = `${pos.top + pos.height/2}px`
-                sty.left = `${pos.left + props.gap*-1}px`
-                sty.transform = `translate(-100%, -50%)`
-            } else if(props.placement==='right') {
-                sty.top = `${pos.top + pos.height/2}px`
-                sty.left = `${pos.left + pos.width + props.gap}px`
-                sty.transform = `translate(0, -50%)`
+            return  {
+                class:_class, style
             }
-            return {..._p, style: sty}
         })
+
         if(props.trigger === 'hover') {
             useEvent(elem, 'mouseenter', ()=>{
                 start(()=>{
-                    getPos()
-                    const p = get({
-                        elem:elem.value,
-                        placement:props.placement,
-                        gap: props.gap,
-                        offset:0
-                    })
-                    console.log(p)
-                    // set({
-                    //     elem:elem.value,
-                    //     placement:props.placement,
-                    //     gap: props.gap,
-                    //     offset:0
-                    // })
+                    getPlace()
                     visible.value=true
                 }, props.showDelay)
                 
@@ -123,20 +90,15 @@ export default defineComponent({
                 stop(()=>{
                     visible.value=false
                 }, props.hideDelay)
-                
             })
 
         } else if(props.trigger==='click') {
             useEvent(elem,'click',()=>{
-                getPos()
+                getPlace()
                 visible.value = !visible.value
             })
         }
-        function getPos() {
-            ({left:pos.left,top:pos.top,bottom:pos.bottom,right:pos.bottom,
-                width:pos.width,height:pos.height} 
-                = getElementPositionInPage(elem.value))
-        }
+
         watch(()=>props.show,v=>{
             visible.value=v
         })
@@ -149,10 +111,28 @@ export default defineComponent({
         return ()=>{
             const defaultSlot = ctx.slots.default?.()
             if(props.bind==='v-if') {
-                return visible.value?cont(<div {...ps.value}>{defaultSlot}</div>): null
+                if(props.trigger==='click') {
+                    if(visible.value) {
+                        return withDirectives(
+                            h('div',overlayProps.value,defaultSlot),
+                            [
+                                [clickOutside!, ()=>{visible.value=false}]
+                            ]
+                        )
+                    }
+                }
+                return visible.value?cont(<div {...overlayProps.value}>{defaultSlot}</div>): null
             }else if(props.bind==='v-show'){
+                if(props.trigger === 'click') {
+                    return withDirectives(
+                        cont(
+                            <div v-show={visible.value}  {...overlayProps.value}>{defaultSlot}</div>
+                        ),
+                        [[clickOutside!, ()=>{visible.value=false}]]
+                    )
+                }
                 return cont(
-                    <div v-show={visible.value} {...ps.value}>{defaultSlot}</div>
+                    <div v-show={visible.value}  {...overlayProps.value}>{defaultSlot}</div>
                 )
             }
         }
