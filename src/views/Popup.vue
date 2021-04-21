@@ -9,7 +9,9 @@
     :before-cancel="beforeCancel"
     @after-cancel="afterCancel"
     @after-ok="afterOk">
-    <div :class="css.body">展示的内容</div>
+    <div :class="css.body">
+      <Tooltip title="给一个提示看看层级">提示</Tooltip>
+    </div>
     <template #footer-prepend>
       底部左侧的插槽
     </template>
@@ -19,8 +21,9 @@
 import { ref } from "vue"
 import Popup from "../packages/components/popup"
 import Button from "../packages/components/button"
+import Tooltip from "../packages/components/tooltip"
 export default {
-  components: { Popup, Button },
+  components: { Popup, Button, Tooltip },
   setup() {
     const show = ref(false)
     return {

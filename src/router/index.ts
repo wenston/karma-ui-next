@@ -51,6 +51,14 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: '/bubbleCard',
+    name: 'bubbleCard',
+    component: ()=> import('../views/BubbleCard.vue'),
+    meta: {
+      title: '气泡卡 BubbleCard'
+    }
+  },
+  {
     path: "/popup",
     name: "popup",
     component: () => import("../views/Popup.vue"),

@@ -51,7 +51,7 @@ export default defineComponent({
         const root=ref<any>(null)
         const visible = ref(props.show)
         const elem = ref(props.relateElement)
-        const {start,stop} = useDelay()
+        const {start,stop,clear} = useDelay()
         // console.log(props.placement)
         const {getPlace,place} = usePlacement({
             relateElement: elem,
@@ -73,9 +73,14 @@ export default defineComponent({
                 ...sty,
                 left: place.left,top:place.top,transform:place.transform
             }
-            const o: {[key:string]:any} = {
-                class:_class,style,ref:root
+            const o: {[key:string]:unknown} = {
+                class:_class,style,ref:root,
+                //以下写法报隐式类型any，应该怎么写？
+                // onClick:e=>{
+                //     e.stopPropagation()
+                // }
             }
+            
             if(props.bind==='v-show') {
                 o['v-show'] = visible.value
             }
@@ -110,8 +115,22 @@ export default defineComponent({
             ctx.emit('update:show',v)
         })
         
-        function cont(c:any) {
+        function teleport(c:any) {
             return <Teleport to={props.to}>{c}</Teleport>
+        }
+        function wrapper(con:any) {
+            if(props.trigger==='hover') {
+                return (
+                    <div {...overlayProps.value}
+                    onMouseenter={clear}
+                    onMouseleave={(e)=>{stop(()=>{visible.value=false})}}>{con}</div>
+                )
+            } else if(props.trigger==='click') {
+                return (
+                    <div {...overlayProps.value}
+                    onClick={e=>{e.stopImmediatePropagation()}}>{con}</div>
+                )
+            }
         }
         onMounted(()=>{
             if(props.show) {
@@ -119,8 +138,7 @@ export default defineComponent({
             }
         })
         return ()=>{
-            const defaultSlot = ctx.slots.default?.()
-            const main = cont(<div  {...overlayProps.value}>{defaultSlot}</div>)
+            const main = teleport(wrapper(ctx.slots.default?.()))
 
             if(props.bind==='v-if') {
                 return visible.value?main:null

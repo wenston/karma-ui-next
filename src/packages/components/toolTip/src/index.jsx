@@ -44,7 +44,8 @@ export default defineComponent({
                 class: 'k-tooltip-content',
                 style: {
                     '--__overlay-background-color': 'rgba(0,0,0,.8)',
-                    '--__overlay-text-color': 'rgba(255,255,255,.8)'
+                    '--__overlay-text-color': 'rgba(255,255,255,.8)',
+                    '--__overlay-z-index': 2000
                 },
                 "onUpdate:show":v=>{
                     visible.value=v

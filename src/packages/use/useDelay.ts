@@ -9,9 +9,10 @@ export default function useDelay(delay = 200) {
         clearTimeout(timer.value)
         timer.value = setTimeout(stopFn,stopDelay??delay)
     }
-    onUnmounted(()=>{
+    function clear() {
         clearTimeout(timer.value)
         timer.value=null
-    })
-    return {timer, start, stop}
+    }
+    onUnmounted(clear)
+    return {timer, start, stop, clear}
 }
