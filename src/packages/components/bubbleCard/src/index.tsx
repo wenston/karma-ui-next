@@ -51,9 +51,9 @@ export default defineComponent({
         function toggle(v:boolean) {
             visible.value=v
         }
-        const _titleSlot = computed(()=>useSlot(
-            {slot:slots.title!,tag:props.tag,attrs:{ref:relateElement}}))
-        console.log(_titleSlot)
+        // const _titleSlot = computed(()=>useSlot(
+        //     {slot:slots.title!,tag:props.tag}))
+        const {_titleSlot} = useSlot({slot:slots.title!,tag:props.tag})
         return ()=> {
             let t = <span />
             if(_titleSlot.value.length) {

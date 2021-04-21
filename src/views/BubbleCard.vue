@@ -4,8 +4,13 @@
     <bubble-card placement="bottom-start"
       v-model:show="showDel">
       <template #title>
-        <a href="javascript:;">删除</a>
-        <a href="javascript:;">其他操作</a>
+        <a href="javascript:;"
+          class="lin">点击有操作</a>
+        <template v-for="item in actions"
+          :key="item">
+          <a href="javascript:;">{{item}}</a>
+          <span>&#12288;</span>
+        </template>
       </template>
       <div>确定要删除吗？？？</div>
       <div>
@@ -14,10 +19,18 @@
           @click="onOk">确定</Button>
       </div>
     </bubble-card>
+    <div>
+      <Button @click="onAdd">添加一些操作</Button>
+    </div>
+    <template v-for="item in actions"
+      :key="item">
+      <a href="javascript:;">{{item}}</a>
+      <span>&#12288;</span>
+    </template>
   </section>
   <section>
     <bubble-card placement="bottom-start">
-      <template #title>没有标签包裹的提示</template>
+      <template #title>没有标签包裹的提示<span>3333333333</span></template>
       <div>
         提示一些东西
       </div>
@@ -32,8 +45,10 @@ export default defineComponent({
   components: { BubbleCard, Button },
   setup() {
     const showDel = ref(false)
+    const actions = ref(["删除"])
     return {
       showDel,
+      actions,
       onCancel() {
         console.log("你点了取消")
         showDel.value = false
@@ -41,6 +56,9 @@ export default defineComponent({
       onOk() {
         console.log("你点了确定！！")
         showDel.value = false
+      },
+      onAdd() {
+        actions.value.push(Math.random() * 1000)
       },
     }
   },

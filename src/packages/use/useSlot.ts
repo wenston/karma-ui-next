@@ -5,7 +5,7 @@
 如果有效，原样返回
  */
 
-import {cloneVNode,h, Slot, VNode} from 'vue'
+import {ref, onUpdated,cloneVNode,h, Slot, VNode, onMounted, toRefs} from 'vue'
 function isValidElement(vnode:VNode) {
     return vnode.children && vnode.type && typeof vnode.type!=='symbol'
 }
@@ -15,24 +15,41 @@ function getChildren(vnode:VNode) {
 interface SlotType {
     slot: Slot,
     tag: string,
-    attrs?: {[x:string]:unknown},
     slotArg?: any[]
 }
 function wrapper(tag:string,c:any) {
     return h(tag,{},c)
 }
-export default function useSlot({slot ,tag,attrs,slotArg}:SlotType):VNode[] {
+export default function useSlot({slot ,tag, slotArg}:SlotType) {
     let [vnode,...vnodes] = slot(slotArg)
 
     if(!isValidElement(vnode)) {
         const children = getChildren(vnode)
         vnode = cloneVNode(
             wrapper(tag,children),
-            attrs??{},
+            null,
             false
         )
-    }else{
-        // vnode=cloneVNode(vnode,attrs??{},false)
     }
-    return [vnode,...vnodes]
+    return {_titleSlot:ref([vnode,...vnodes])}
+    // let vnodes = ref(slot(slotArg)??[])
+    // let vnode = ref(vnodes.value[0])
+    // function fn() {
+    //     if(vnode) {
+    //         if(!isValidElement(vnode.value)) {
+    //             const children = getChildren(vnode.value)
+    //             vnode.value = cloneVNode(
+    //                 wrapper(tag,children),
+    //                 null,
+    //                 false
+    //             )
+    //             // vnodes.value[0] = vnode.value
+    //             vnodes.value.splice(0,1,vnode.value)
+    //         }
+    //     }
+
+    // }
+    // fn()
+    // onUpdated(fn)
+    // return {vnodes}
 }
