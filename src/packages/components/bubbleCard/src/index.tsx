@@ -55,10 +55,6 @@ export default defineComponent({
             {slot:slots.title!,tag:props.tag,attrs:{ref:relateElement}}))
         console.log(_titleSlot)
         return ()=> {
-            // const tit = <props.tag ref={relateElement}>{titleSlot}</props.tag>
-            // const tit = cloneVNode(<>{titleSlot?titleSlot[0]:<span >默认的</span>}</>,{ref:relateElement},false)
-            // let t  = cloneVNode(_titleSlot
-            //         ?_titleSlot[0]:<span >默认的</span>,{ref:relateElement},false)
             let t = <span />
             if(_titleSlot.value.length) {
                 t = cloneVNode(_titleSlot.value[0],{ref:relateElement})
