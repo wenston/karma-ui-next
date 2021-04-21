@@ -18,7 +18,7 @@
 
   --transition: 0.2s;
 
-  --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
 
   --button-height: 32px;
   --button-padding: 0 15px;
@@ -28,7 +28,7 @@
 
   --popup-radius: var(--radius);
   --popup-bg-color: white;
-  --popup-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  --popup-box-shadow: var(--box-shadow);
   --popup-header-height: 40px;
   --popup-header-padding: 0 15px;
   --popup-body-padding: 15px;

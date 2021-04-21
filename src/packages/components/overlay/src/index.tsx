@@ -1,7 +1,7 @@
 /**
  * 覆盖层，用以辅助展示一些东西，给出一个relateElement时，会根据此元素定位
  */
-import { defineComponent, Teleport, ref,watch, computed } from 'vue';
+import { defineComponent, Teleport, ref,watch, computed, onMounted, SetupContext } from 'vue';
 import useEvent from '../../../use/useEvent'
 import useDelay from '../../../use/useDelay'
 import usePlacement from '../../../use/usePlacement'
@@ -47,11 +47,12 @@ export default defineComponent({
         }
     },
     emits: ['update:show'],
-    setup(props, ctx){
+    setup(props, ctx:SetupContext){
         const root=ref<any>(null)
         const visible = ref(props.show)
         const elem = ref(props.relateElement)
         const {start,stop} = useDelay()
+        // console.log(props.placement)
         const {getPlace,place} = usePlacement({
             relateElement: elem,
             el: root,
@@ -64,7 +65,12 @@ export default defineComponent({
                 'k-overlay',
                 [`k-overlay--${props.placement}`]
             ]
+            let sty = {}
+            if(ctx.attrs.style) {
+                sty = ctx.attrs.style as object
+            }
             const style = {
+                ...sty,
                 left: place.left,top:place.top,transform:place.transform
             }
             const o: {[key:string]:any} = {
@@ -99,14 +105,19 @@ export default defineComponent({
 
         watch(()=>props.show,v=>{
             visible.value=v
-            console.log('overlay:',v)
         })
         watch(visible,v=>{
             ctx.emit('update:show',v)
         })
+        
         function cont(c:any) {
-            return <Teleport to={props.to}>{c}</Teleport>//一样
+            return <Teleport to={props.to}>{c}</Teleport>
         }
+        onMounted(()=>{
+            if(props.show) {
+                getPlace()
+            }
+        })
         return ()=>{
             const defaultSlot = ctx.slots.default?.()
             const main = cont(<div  {...overlayProps.value}>{defaultSlot}</div>)

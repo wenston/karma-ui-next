@@ -3,6 +3,8 @@
   <div>
 
     <Tooltip title="提示的内容"
+      v-model:show="show"
+      placement="bottom-start"
       trigger="click">
       <Button type="primary">点击</Button>
     </Tooltip>
@@ -65,18 +67,20 @@
   </div>
 </template>
 <script>
-import { defineComponent, shallowRef } from "vue"
+import { defineComponent, ref } from "vue"
 import Tooltip from "../packages/components/tooltip"
 import Button from "../packages/components/button"
 export default defineComponent({
   components: { Tooltip, Button },
   setup(props) {
+    const show = ref(true)
     return {
       // Tooltip: shallowRef(Tooltip),
       onClick: (e) => {
         console.log("click 啦")
       },
       tip: <div>这个提示也不短也不短也不短</div>,
+      show,
     }
   },
 })

@@ -1,7 +1,7 @@
 /**
  * 待改进问题点：如何在没有根节点（没有tag）的情况下，获取到插槽里第一个有效节点（非Comment）
  */
-import {defineComponent, ref, computed} from 'vue'
+import {defineComponent, ref, computed, watch} from 'vue'
 import {withDirectives, resolveDirective} from 'vue'
 import clickOutside from '../../../directives/clickOutside'
 import Overlay from '../../overlay'
@@ -23,9 +23,9 @@ export default defineComponent({
             default: 'div'
         }
     },
-    // emits: ['update:show'],
+    emits: ['update:show'],
     setup(props, {attrs,slots,emit}) {
-        const visible = ref(false)
+        const visible = ref(props.show)
         const clickOutside = resolveDirective('clickOutside')
         const t = props.tag
         const root = ref(null)
@@ -38,17 +38,28 @@ export default defineComponent({
             return o
         })
         const op = computed(()=>{
-            const p = {...props, show:visible.value,"onUpdate:show":v=>{
-                visible.value=v
-            }}
+            const p = {
+                ...props, 
+                show:visible.value,
+                class: 'k-tooltip-content',
+                style: {
+                    '--__overlay-background-color': 'rgba(0,0,0,.8)',
+                    '--__overlay-text-color': 'rgba(255,255,255,.8)'
+                },
+                "onUpdate:show":v=>{
+                    visible.value=v
+                }
+            }
             return p
         })
+
+        watch(()=>props.show,v=>{visible.value=v})
+        watch(visible,v=>{emit('update:show',v)})
 
         return () => {
             const main = <t {...p.value}>{slots.default?.()}</t>
             const direc = [[clickOutside, ()=>{
                     visible.value=false
-                    emit('update:show',false)
                 }
             ]]
             let trigger = main

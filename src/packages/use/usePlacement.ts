@@ -41,6 +41,7 @@ export default function usePlacement(placementOptions: PlacementOptions = {
             get(relateElem)
             const {gap = 9,offset = 0} = placementOptions
             const _plc = placement??placementOptions.placement??'top'
+            // console.log(_plc)
             let l:number = 0,t:number=-99999,trsfm:string = ''
             switch (_plc) {
                 case 'top':

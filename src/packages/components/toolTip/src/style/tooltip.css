@@ -1,3 +1,7 @@
 .k-tooltip {
   display: inline-flex;
 }
+.k-tooltip-content {
+  color: white;
+  padding: 7px 12px;
+}

@@ -27,10 +27,10 @@ const Button = defineComponent({
       return o
     })
     onUpdated(()=>{
-      console.log('update 了')
+      // console.log('update 了')
     })
     onRenderTriggered((e)=>{
-      console.log(e)
+      // console.log(e)
     })
     onRenderTracked(e=>{
       // console.log('组件tracked：',e)
