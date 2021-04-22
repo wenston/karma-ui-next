@@ -1,4 +1,4 @@
-import type {SetupContext, DirectiveArguments} from 'vue'
+import {SetupContext, DirectiveArguments, VNode} from 'vue'
 import { defineComponent, ref, cloneVNode, watch, computed } from 'vue'
 import {withDirectives, resolveDirective} from 'vue'
 import clickOutside from '../../../directives/clickOutside'
@@ -25,9 +25,11 @@ export default defineComponent({
         const visible = ref(props.show)
         const relateElement = ref(null)
         const overlay = ref(null)
-        const titleSlot = slots.title?.()
+        const titleSlot = computed(()=>{
+            return slots.title?.() || []
+        })
         const defaultSlot = slots.default?.()
-        console.log(titleSlot)
+        // console.log(titleSlot)
         watch(()=>props.show,v=>{
             visible.value=v
         })
@@ -53,7 +55,8 @@ export default defineComponent({
         }
         // const _titleSlot = computed(()=>useSlot(
         //     {slot:slots.title!,tag:props.tag}))
-        const {_titleSlot} = useSlot({slot:slots.title!,tag:props.tag})
+        const _titleSlot = useSlot({slot:titleSlot,tag:props.tag})
+
         return ()=> {
             let t = <span />
             if(_titleSlot.value.length) {
@@ -74,7 +77,8 @@ export default defineComponent({
                 <>
                     {trigger}
                     {_titleSlot.value.slice(1)}
-                    <Overlay {...op.value} relate-element={relateElement}>{defaultSlot}</Overlay>
+                    <Overlay {...op.value} 
+                        relate-element={relateElement}>{defaultSlot}</Overlay>
                 </>
             )
         }
