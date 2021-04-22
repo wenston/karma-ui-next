@@ -3,7 +3,7 @@ export function hasUnit(value:string|number) {
     return unit === 'px' || unit === 'em' || unit === 'pt'
 }
 
-export const getStyle = (elem:Element, prop:any) => {
+export const getStyle = (elem:HTMLElement, prop:any) => {
     return window.getComputedStyle(elem, null)[prop]
 }
 
@@ -14,11 +14,11 @@ export function getPageScroll() {
     }
 }
 
-export function getBoundingClientRect(elem:Element) {
+export function getBoundingClientRect(elem:HTMLElement) {
     return elem.getBoundingClientRect()
 }
 
-export function getElementPositionInPage(elem:Element) {
+export function getElementPositionInPage(elem:HTMLElement) {
     const {left,top} = getPageScroll()
     const rect = getBoundingClientRect(elem)
     // const marginLeft = getStyle(elem,'margin-left')

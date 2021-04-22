@@ -59,6 +59,14 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: '/layer',
+    name: 'layer',
+    component: ()=> import('../views/Layer.vue'),
+    meta: {
+      title: '图层 Layer'
+    }
+  },
+  {
     path: "/popup",
     name: "popup",
     component: () => import("../views/Popup.vue"),

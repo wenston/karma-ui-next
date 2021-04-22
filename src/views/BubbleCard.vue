@@ -29,12 +29,12 @@
     </template>
   </section>
   <section>
-    <bubble-card placement="bottom-start">
+    <!-- <bubble-card placement="bottom-start">
       <template #title>没有标签包裹的提示<span>3333333333</span></template>
       <div>
         提示一些东西
       </div>
-    </bubble-card>
+    </bubble-card> -->
   </section>
 </template>
 <script>

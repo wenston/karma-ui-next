@@ -3,13 +3,14 @@ import { defineComponent, ref, cloneVNode, watch, computed } from 'vue'
 import {withDirectives, resolveDirective} from 'vue'
 import clickOutside from '../../../directives/clickOutside'
 import Overlay from '../../overlay'
+import Layer from '../../layer'
 import useSlot from '../../../use/useSlot'
 export default defineComponent({
     inheritAttrs: false,
-    components: {Overlay},
+    components: {Overlay,Layer},
     directives: {clickOutside},
     props: {
-        ...Overlay.props,
+        ...Layer.props,
         trigger: {
             type: String,
             default:'click'
@@ -42,8 +43,8 @@ export default defineComponent({
                 show:visible.value,
                 ref:overlay,
                 style: {
-                    '--__overlay-background-color': 'rgba(255,255,255,.95)',
-                    '--__overlay-text-color': '#666',
+                    '--__layer-background-color': 'rgba(255,255,255,.95)',
+                    '--__layer-text-color': '#666',
                     '--__overlay-z-index': 2000
                 },
                 "onUpdate:show":toggle
@@ -77,8 +78,9 @@ export default defineComponent({
                 <>
                     {trigger}
                     {_titleSlot.value.slice(1)}
-                    <Overlay {...op.value} 
-                        relate-element={relateElement}>{defaultSlot}</Overlay>
+                    <Layer {...op.value} relate-element={relateElement}>{defaultSlot}</Layer>
+                    {/* <Overlay {...op.value} 
+                        relate-element={relateElement}>{defaultSlot}</Overlay> */}
                 </>
             )
         }

@@ -6,7 +6,7 @@ export interface PlacementOptions {
     //要计算位置的那个元素
     relateElement: Ref<HTMLElement>,
     //要设置位置的那个覆盖物元素
-    el: Ref<HTMLElement>,
+    el: Ref<HTMLElement|null>,
     gap?: number,
     offset?: number,//偏移，暂没实现
     placement?: Placement|string
@@ -25,7 +25,7 @@ export default function usePlacement(placementOptions: PlacementOptions = {
         left: '0',top:'0',transform:''
     })
     //获取相关元素的位置信息
-    function get(relateElem?:HTMLElement) {
+    function get(relateElem?:HTMLElement|null) {
         const p = getElementPositionInPage(relateElem??placementOptions.relateElement.value)
         left.value = p.left
         right.value = p.right
@@ -100,9 +100,12 @@ export default function usePlacement(placementOptions: PlacementOptions = {
         get(relateElem??placementOptions.el.value)
         getPlace(relateElem,el,placement)
         const _el = el??placementOptions.el.value
-        _el.style.top = `${place.top}px`
-        _el.style.left = `${place.left}px`
-        _el.style.transform = place.transform
+        if(_el) {
+            _el.style.top = `${place.top}px`
+            _el.style.left = `${place.left}px`
+            _el.style.transform = place.transform
+
+        }
     }
     return {
         place,getPlace,

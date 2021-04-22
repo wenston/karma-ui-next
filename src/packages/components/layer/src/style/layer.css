@@ -1,0 +1,81 @@
+.k-layer {
+  --layer-arrow-offset: -10px;
+  position: absolute;
+  border-radius: var(--radius);
+  padding: 15px;
+  background-color: var(--__layer-background-color);
+  color: var(--__layer-text-color);
+  filter: drop-shadow(var(--drop-shadow));
+  &:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-width: 5px;
+    border-style: solid;
+  }
+  &.k-layer--top {
+    &:after {
+      border-color: var(--__layer-background-color) transparent transparent
+        transparent;
+      bottom: var(--layer-arrow-offset);
+      left: calc(50% - 3px);
+    }
+  }
+  &.k-layer--top-start {
+    &:after {
+      border-color: var(--__layer-background-color) transparent transparent
+        transparent;
+      bottom: var(--layer-arrow-offset);
+      left: 12px;
+    }
+  }
+  &.k-layer--top-end {
+    &:after {
+      border-color: var(--__layer-background-color) transparent transparent
+        transparent;
+      bottom: var(--layer-arrow-offset);
+      right: 12px;
+    }
+  }
+  &.k-layer--bottom {
+    &:after {
+      border-color: transparent transparent var(--__layer-background-color)
+        transparent;
+      top: var(--layer-arrow-offset);
+      left: calc(50% - 3px);
+    }
+  }
+  &.k-layer--bottom-start {
+    &:after {
+      border-color: transparent transparent var(--__layer-background-color)
+        transparent;
+      top: var(--layer-arrow-offset);
+      left: 12px;
+    }
+  }
+  &.k-layer--bottom-end {
+    &:after {
+      border-color: transparent transparent var(--__layer-background-color)
+        transparent;
+      top: var(--layer-arrow-offset);
+      right: 12px;
+    }
+  }
+  &.k-layer--left {
+    &:after {
+      border-color: transparent transparent transparent
+        var(--__layer-background-color);
+      top: calc(50% - 3px);
+      right: var(--layer-arrow-offset);
+    }
+  }
+  &.k-layer--right {
+    &:after {
+      border-color: transparent var(--__layer-background-color) transparent
+        transparent;
+      top: calc(50% - 3px);
+      left: var(--layer-arrow-offset);
+    }
+  }
+}
