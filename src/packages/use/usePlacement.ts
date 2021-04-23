@@ -1,8 +1,9 @@
-import {Ref,ref,reactive} from 'vue'
+import {Ref,ref,reactive,onMounted} from 'vue'
 import {getElementPositionInPage, getOffset,getBoundingClientRect} from '../util/index'
 export type Placement = 'top'|'top-start'|'top-end'|'bottom'
 |'bottom-start'|'bottom-end'|'left'|'right'
 
+// 获取相关元素（relateElement）的boundingClientRect，并设置el在页面中相对于相关元素的位置
 //注意：传入的relateElement有可能是个经过ref过的组件！，
 //所以需要拿出组件中的$el
 export interface PlacementOptions {
@@ -110,7 +111,7 @@ export default function usePlacement(placementOptions: PlacementOptions = {
         el?:HTMLElement/*要设置的那个元素*/,
         placement?:Placement|string/*位置*/
     ) {
-        get(relateElem??placementOptions.el.value)
+        // get(relateElem??placementOptions.el.value)
         getPlace(relateElem,el,placement)
         const _el = el??placementOptions.el.value
         if(_el) {
@@ -120,6 +121,8 @@ export default function usePlacement(placementOptions: PlacementOptions = {
 
         }
     }
+
+    onMounted(set)
     return {
         //需要定位的那个元素的位置信息
         place,getPlace,

@@ -22,7 +22,7 @@ export default function useBoundingClientRect(elem:any) {
             height.value=r.height
             top.value = r.top
             bottom.value=r.bottom
-            console.log(r)
+            // console.log(r)
         }
     }
     onMounted(get)

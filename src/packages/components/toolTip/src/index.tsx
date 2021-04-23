@@ -1,9 +1,11 @@
-import {SetupContext, DirectiveArguments} from 'vue'
+import {SetupContext, DirectiveArguments, Teleport, onMounted} from 'vue'
 import { defineComponent, ref, cloneVNode, watch, computed } from 'vue'
 import {withDirectives, resolveDirective} from 'vue'
 import clickOutside from '../../../directives/clickOutside'
 import Layer from '../../layer'
 import useSlot from '../../../use/useSlot'
+import useEvent from '../../../use/useEvent'
+import useDelay from '../../../use/useDelay'
 export default defineComponent({
     inheritAttrs: false,
     components: {Layer},
@@ -13,6 +15,9 @@ export default defineComponent({
         trigger: {
             type: String,
             default:'click'
+        },
+        toBody: {
+            type: Boolean,default: true
         },
         title: {
             type: [String,Object],
@@ -31,6 +36,23 @@ export default defineComponent({
         const defaultSlot = computed(()=>{
             return slots.default?.() || []
         })
+        const _defaultSlot = useSlot({slot:defaultSlot,tag:props.tag})
+        const {start,stop,clear} = useDelay()
+        
+        if(props.trigger==='hover') {
+            useEvent(relateElement,'mouseenter',()=>{
+                start(()=>{visible.value=true},props.showDelay)
+            })
+            useEvent(relateElement,'mouseleave',()=>{
+                stop(()=>{visible.value=false},props.hideDelay)
+            })
+
+        }else if(props.trigger==='click' ) {
+            useEvent(relateElement,'click',()=>{
+                visible.value=!visible.value
+            })
+
+        }
 
         watch(()=>props.show,v=>{
             visible.value=v
@@ -38,25 +60,40 @@ export default defineComponent({
         watch(visible,v=>{
             emit('update:show',v)
         })
-        const op = computed(()=>{
-            const _ = {
-                ...props,
+        const layerProps = computed(()=>{
+            const {tag,title,..._props} = props
+            const _:{[key:string]:any} = {
+                ..._props,
                 show:visible.value,
                 style: {
                     '--__layer-background-color': 'rgba(0,0,0,.8)',
                     '--__layer-text-color': 'rgba(255,255,255,.8)',
                     '--__layer-z-index': props.zIndex
                 },
-                "onUpdate:show":toggle
+                "onUpdate:show":toggle,
+            }
+            if(props.trigger==='hover') {
+                _.onMouseenter=clear
+                _.onMouseleave=()=>{
+                    stop(()=>{
+                        visible.value=false
+                    },props.hideDelay)
+                }
+            }else if(props.trigger==='click'){
+                _.onClick=()=>{
+                    // visible.value=!visible.value
+                    // console.log('你想干什么')
+                }
             }
             return _
         })
-        function toggle(v:boolean) {
-            visible.value=v
+        function toggle() {
+            visible.value=!visible.value
         }
 
-        const _defaultSlot = useSlot({slot:defaultSlot,tag:props.tag})
-
+        function teleport(con:any){
+            return <Teleport to={document.body}>{con}</Teleport>
+        }
         return ()=> {
             let t = <span />
             if(_defaultSlot.value.length) {
@@ -76,13 +113,14 @@ export default defineComponent({
             if(props.trigger==='click') {
                 trigger = withDirectives(trigger, direc)
             }
+            const layer = <Layer {...layerProps.value} relate-element={relateElement}>{props.title}</Layer>
+            const tit = props.toBody?teleport(layer):layer
             // console.log(trigger)
             return (
                 <>
                     {trigger}
                     {_defaultSlot.value.slice(1)}
-                    {visible.value&&<Layer {...op.value} 
-                        relate-element={relateElement}>{props.title}</Layer>}
+                    {visible.value&&tit}
                 </>
             )
         }

@@ -6,7 +6,6 @@ import useBoundingCientRect from '../../../use/useBoundingClientRect'
 import useParentNode from '../../../use/useParentNode'
 import {isTopBottom,isLeftRight} from '../../../util'
 export default defineComponent({
-    inheritAttrs: false,
     props: {
         bind: {
             type: String, default: 'v-if'
@@ -28,8 +27,8 @@ export default defineComponent({
             type: Number,
             default: 8
         },
-        showDelay: {type: Number,default: 200},
-        hideDelay: {type: Number,default: 200},
+        // showDelay: {type: Number,default: 200},
+        // hideDelay: {type: Number,default: 200},
         zIndex: {type:[Number,String],default: 100},//用于层级管理
         toBody: Boolean,//是否插入body中
         hasArrow: {
@@ -43,8 +42,9 @@ export default defineComponent({
         const zi = ref(props.zIndex)
         const root = ref(null)
         //没有用到parentNode，但不要删除，因为给直接父级一个定位了
-        const {parentNode} = useParentNode(re)
-        const {start,stop,clear} = useDelay()
+        if(!props.toBody) {
+            useParentNode(re)
+        }
         const {getPlace,place,width:relate_elem_w,height:relate_elem_h} = usePlacement({
             relateElement: re,
             el: root,
@@ -83,58 +83,19 @@ export default defineComponent({
             
         })
 
-        if(props.trigger === 'hover') {
-            useEvent(re, 'mouseenter', ()=>{
-                start(()=>{
-                    getPlace()
-                    visible.value=true
-                }, props.showDelay)
-                
-            })
-            useEvent(re, 'mouseleave',()=>{
-                stop(()=>{
-                    visible.value=false
-                }, props.hideDelay)
-            })
-
-        } else if(props.trigger==='click') {
-            useEvent(re,'click',()=>{
-                getPlace()
-                visible.value = !visible.value
-            })
-        }
-
         watch(visible,v=>{emit('update:show',v)})
         watch(()=>props.show,v=>{visible.value=v})
         watch(()=>props.zIndex,z=>{zi.value=z})
 
-        onMounted(()=>{
-            if(props.show) {
-                getPlace()
-            }
-        })
         function wrapper(con:any) {
-            const t = props.trigger
-            if(t==='hover') {
-                return (
-                    <div {...layerProps.value}
-                        onMouseenter={clear}
-                        onMouseleave={(e=>{stop(()=>visible.value=false)})}>{con}</div>
-                )
-            } else if(props.trigger==='click') {
-                return (
-                    <div {...layerProps.value} onClick={e=>{e.stopImmediatePropagation()}}>{con}</div>
-                )
-            }
-        }
-        function teleport(con:any){
-            return <Teleport to={document.body}>{con}</Teleport>
+            return (
+                <div {...layerProps.value} 
+                    onClick={e=>{e.stopPropagation()}}>{con}</div>
+            )
         }
 
         return ()=> {
-            console.log('到这里了吗')
-            const vnode = wrapper(slots.default?.())
-            const main = props.toBody?teleport(vnode):vnode
+            const main = wrapper(slots.default?.())
             if(props.bind==='v-if') {
                 return visible.value?main:null
             }

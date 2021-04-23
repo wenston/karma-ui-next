@@ -3,14 +3,15 @@
   <div>
 
     <Tooltip title="提示的内容"
-      v-model:show="show"
       placement="bottom-start"
+      v-model:show="show"
       trigger="click">
       <Button>点击</Button>
     </Tooltip>
 
     <Tooltip :class="css.item"
       placement="top-start"
+      trigger="click"
       title="一个比较长比较长的提示">
       top-start </Tooltip>
     <Tooltip :class="css.item"
@@ -53,16 +54,17 @@
     <div style="height:1000px;padding-top:500px;">
       <Tooltip title="right"
         bind="v-if"
-        placement="right"
+        placement="bottom-start"
+        :toBody="false"
         :class="css.item">
         <div style="background-color:green;">右边出现一个提示</div>
       </Tooltip>
     </div>
   </div>
   <div>
-    <!-- <Tooltip content="提示的内容">
+    <Tooltip title="提示的内容">
       <span>再次提示</span>
-    </Tooltip> -->
+    </Tooltip>
   </div>
 </template>
 <script>
