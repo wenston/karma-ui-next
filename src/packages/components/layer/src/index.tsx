@@ -1,7 +1,8 @@
-import { defineComponent,Teleport,ref, isRef,watch,computed,onMounted,SetupContext, toRef, toRaw } from 'vue'
+import { defineComponent,Teleport,ref, isRef,watch,computed,onMounted,SetupContext, toRef, toRaw, getCurrentInstance } from 'vue'
 import useEvent from '../../../use/useEvent'
 import useDelay from '../../../use/useDelay'
 import usePlacement from '../../../use/usePlacement'
+import useBoundingCientRect from '../../../use/useBoundingClientRect'
 import useParentNode from '../../../use/useParentNode'
 import {isTopBottom,isLeftRight} from '../../../util'
 export default defineComponent({
@@ -37,36 +38,27 @@ export default defineComponent({
     },
     emits: ['update:show'],
     setup(props,{slots,emit,attrs}:SetupContext) {
-        function get$el(v:any) {
-            // console.log(toRaw(props.relateElement))
-            let _el = null
-            if(isRef(v)) {
-                _el = v.value
-            } else if(v instanceof HTMLElement) {
-                _el = v
-            }
-            // console.log(_el)
-        }
-        const re = ref(props.relateElement)
-        get$el(re)
+        const re = toRef(props, 'relateElement')
         const visible=ref(props.show)
         const zi = ref(props.zIndex)
         const root = ref(null)
         //没有用到parentNode，但不要删除，因为给直接父级一个定位了
         const {parentNode} = useParentNode(re)
         const {start,stop,clear} = useDelay()
-        const {getPlace,place,width:root_width,height:root_height} = usePlacement({
+        const {getPlace,place,width:relate_elem_w,height:relate_elem_h} = usePlacement({
             relateElement: re,
             el: root,
             isRelative: !props.toBody,
             gap: props.gap,
             placement: props.placement
         })
+        const {width:root_w,height:root_h} = useBoundingCientRect(root)
+
 
         const layerProps = computed(()=>{
             let sty = attrs.style || {}
-            const arrowPosition = isLeftRight(props.placement)?root_height.value*0.3
-                :isTopBottom(props.placement)?root_width.value*0.3:12
+            const arrowPosition = isLeftRight(props.placement)?relate_elem_h.value*0.3
+                :isTopBottom(props.placement)?relate_elem_w.value*0.3:12
             let o:{[key:string]:any} = {
 
                 ref: root,
@@ -80,7 +72,7 @@ export default defineComponent({
                     left: place.left,
                     top: place.top,
                     transform: place.transform,
-                    "--__layer-arrow-position": `${arrowPosition}px`
+                    "--__layer-arrow-position": `30%`
                 }
 
             }
@@ -140,6 +132,7 @@ export default defineComponent({
         }
 
         return ()=> {
+            console.log('到这里了吗')
             const vnode = wrapper(slots.default?.())
             const main = props.toBody?teleport(vnode):vnode
             if(props.bind==='v-if') {

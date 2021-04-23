@@ -6,14 +6,13 @@
       v-model:show="show"
       placement="bottom-start"
       trigger="click">
-      <Button type="primary">点击</Button>
+      <Button>点击</Button>
     </Tooltip>
 
     <Tooltip :class="css.item"
-      trigger="click"
-      bind="v-if"
       placement="top-start"
-      title="一个比较长比较长的提示">top-start</Tooltip>
+      title="一个比较长比较长的提示">
+      top-start </Tooltip>
     <Tooltip :class="css.item"
       placement="top-end"
       title="位置在top-end">top-end</Tooltip>

@@ -1,27 +1,20 @@
 import {onMounted, onUnmounted, onUpdated, Ref} from 'vue'
+import useElement from './useElement'
 export default function useListener(
-    elem:Ref, 
+    elem:Ref, //elem.value可能是HTMLElement，也可能个组件！
     type:string, 
     listener:EventListener) {
-
+    const el = useElement(elem)
     function add() {
-        // console.log(elem.value,isProxy(elem))
-        if(elem.value.addEventListener) {
-            elem.value.addEventListener(type,listener)
-        }else{
-            console.log(elem.value)
-        }
-        // console.log('上榜')
+        el.value?.addEventListener(type,listener)
     }
     function remove() {
-        if(elem.value) {
-            elem.value.removeEventListener(type, listener)
-            // console.log('解绑')
-        }
+        el.value?.removeEventListener(type,listener)
     }
-    onMounted(add)
+    onMounted(()=>{
+        add()
+    })
     onUpdated(()=>{
-        // console.log('useEvent updated')
         remove()
         add()
     })

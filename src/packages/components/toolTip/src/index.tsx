@@ -10,6 +10,10 @@ export default defineComponent({
     directives: {clickOutside},
     props: {
         ...Layer.props,
+        trigger: {
+            type: String,
+            default:'click'
+        },
         title: {
             type: [String,Object],
             default:''
@@ -72,12 +76,13 @@ export default defineComponent({
             if(props.trigger==='click') {
                 trigger = withDirectives(trigger, direc)
             }
+            // console.log(trigger)
             return (
                 <>
                     {trigger}
                     {_defaultSlot.value.slice(1)}
-                    <Layer {...op.value} 
-                        relate-element={relateElement}>{props.title}</Layer>
+                    {visible.value&&<Layer {...op.value} 
+                        relate-element={relateElement}>{props.title}</Layer>}
                 </>
             )
         }

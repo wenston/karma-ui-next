@@ -2,6 +2,9 @@ import {Ref,ref,reactive} from 'vue'
 import {getElementPositionInPage, getOffset,getBoundingClientRect} from '../util/index'
 export type Placement = 'top'|'top-start'|'top-end'|'bottom'
 |'bottom-start'|'bottom-end'|'left'|'right'
+
+//注意：传入的relateElement有可能是个经过ref过的组件！，
+//所以需要拿出组件中的$el
 export interface PlacementOptions {
     //要计算位置的那个元素
     relateElement: Ref<HTMLElement>,
@@ -27,7 +30,8 @@ export default function usePlacement(placementOptions: PlacementOptions = {
     })
     //获取相关元素的位置信息
     function get(relateElem?:HTMLElement|null) {
-        const _el = relateElem??placementOptions.relateElement.value
+        let _el = relateElem??placementOptions.relateElement.value
+        _el = _el instanceof HTMLElement?_el:(_el as {[key:string]:any}).$el
         if(placementOptions.isRelative) {
             ({left:left.value,top:top.value} = getOffset(_el));
             ({width:width.value,height:height.value}=getBoundingClientRect(_el))
