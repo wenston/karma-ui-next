@@ -5,7 +5,12 @@ export default function useListener(
     listener:EventListener) {
 
     function add() {
-        elem.value.addEventListener(type,listener)
+        // console.log(elem.value,isProxy(elem))
+        if(elem.value.addEventListener) {
+            elem.value.addEventListener(type,listener)
+        }else{
+            console.log(elem.value)
+        }
         // console.log('上榜')
     }
     function remove() {

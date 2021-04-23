@@ -73,7 +73,7 @@ import Button from "../packages/components/button"
 export default defineComponent({
   components: { Tooltip, Button },
   setup(props) {
-    const show = ref(true)
+    const show = ref(false)
     return {
       // Tooltip: shallowRef(Tooltip),
       onClick: (e) => {

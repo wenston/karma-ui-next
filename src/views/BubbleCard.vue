@@ -1,11 +1,10 @@
 <template>
   <h1>气泡卡</h1>
   <section>
-    <bubble-card placement="bottom-start"
+    <bubble-card placement="right"
       v-model:show="showDel">
       <template #title>
-        <a href="javascript:;"
-          class="lin">点击有操作</a>
+        <Button>点击展示气泡卡</Button>
         <template v-for="item in actions"
           :key="item">
           <a href="javascript:;">{{item}}</a>

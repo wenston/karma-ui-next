@@ -1,3 +1,5 @@
+export const topBottom:string[] = ['top','top-start','top-end','bottom','bottom-start','bottom-end']
+export const leftRight:string[] = ['left','left-start','left-end','right','right-start','right-end']
 export function hasUnit(value:string|number) {
     const unit = String(value).slice(-2).toLowerCase()
     return unit === 'px' || unit === 'em' || unit === 'pt'
@@ -18,6 +20,13 @@ export function getBoundingClientRect(elem:HTMLElement) {
     return elem.getBoundingClientRect()
 }
 
+export function getOffset(elem:HTMLElement) {
+    return {
+        left: elem.offsetLeft,
+        top: elem.offsetTop
+    }
+}
+
 export function getElementPositionInPage(elem:HTMLElement) {
     const {left,top} = getPageScroll()
     const rect = getBoundingClientRect(elem)
@@ -33,3 +42,7 @@ export function getElementPositionInPage(elem:HTMLElement) {
         height: rect.height
     }
 }
+
+
+export function isTopBottom(p:string){return topBottom.some(_p=>_p===p)}
+export function isLeftRight(p:string){return leftRight.some(_p=>_p===p)}

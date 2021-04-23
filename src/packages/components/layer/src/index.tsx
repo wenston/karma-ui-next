@@ -1,64 +1,86 @@
-import { defineComponent,Teleport,ref,watch,computed,onMounted,SetupContext } from 'vue'
+import { defineComponent,Teleport,ref, isRef,watch,computed,onMounted,SetupContext, toRef, toRaw } from 'vue'
 import useEvent from '../../../use/useEvent'
 import useDelay from '../../../use/useDelay'
 import usePlacement from '../../../use/usePlacement'
 import useParentNode from '../../../use/useParentNode'
+import {isTopBottom,isLeftRight} from '../../../util'
 export default defineComponent({
     inheritAttrs: false,
     props: {
         bind: {
             type: String, default: 'v-if'
         },
-        //
+        //传过来的有可能是个vue组件！
         relateElement: {
-            type: [Element,Object],
+            type: [HTMLElement,Object],
             default: ()=>document.body
         },
         trigger: {
             type: String, default: 'click'
         },
         show: Boolean,
-        to: [HTMLElement,String],//插入位置，没有的话，默认是挨着relateElement
         placement: {
             type: String,
             default: 'bottom'
         },
         gap: {
             type: Number,
-            default: 9
+            default: 8
         },
         showDelay: {type: Number,default: 200},
-        hideDelay: {type: Number,default: 200}
+        hideDelay: {type: Number,default: 200},
+        zIndex: {type:[Number,String],default: 100},//用于层级管理
+        toBody: Boolean,//是否插入body中
+        hasArrow: {
+            type: Boolean,default: true
+        },//是否有箭头
     },
     emits: ['update:show'],
     setup(props,{slots,emit,attrs}:SetupContext) {
+        function get$el(v:any) {
+            // console.log(toRaw(props.relateElement))
+            let _el = null
+            if(isRef(v)) {
+                _el = v.value
+            } else if(v instanceof HTMLElement) {
+                _el = v
+            }
+            // console.log(_el)
+        }
         const re = ref(props.relateElement)
+        get$el(re)
         const visible=ref(props.show)
+        const zi = ref(props.zIndex)
         const root = ref(null)
-        const {parentNode} = useParentNode(props.to||re)
+        //没有用到parentNode，但不要删除，因为给直接父级一个定位了
+        const {parentNode} = useParentNode(re)
         const {start,stop,clear} = useDelay()
-        const {getPlace,place} = usePlacement({
+        const {getPlace,place,width:root_width,height:root_height} = usePlacement({
             relateElement: re,
             el: root,
+            isRelative: !props.toBody,
             gap: props.gap,
             placement: props.placement
         })
 
         const layerProps = computed(()=>{
             let sty = attrs.style || {}
-
+            const arrowPosition = isLeftRight(props.placement)?root_height.value*0.3
+                :isTopBottom(props.placement)?root_width.value*0.3:12
             let o:{[key:string]:any} = {
 
                 ref: root,
                 class:[
                     attrs.class,
-                    'k-layer',`k-layer--${props.placement}`
+                    'k-layer',`k-layer--${props.placement}`,
+                    {'k-layer-has-arrow': props.hasArrow}
                 ],
                 style: {
                     ...(sty as object),
                     left: place.left,
                     top: place.top,
-                    transform: place.transform
+                    transform: place.transform,
+                    "--__layer-arrow-position": `${arrowPosition}px`
                 }
 
             }
@@ -92,6 +114,7 @@ export default defineComponent({
 
         watch(visible,v=>{emit('update:show',v)})
         watch(()=>props.show,v=>{visible.value=v})
+        watch(()=>props.zIndex,z=>{zi.value=z})
 
         onMounted(()=>{
             if(props.show) {
@@ -113,15 +136,16 @@ export default defineComponent({
             }
         }
         function teleport(con:any){
-            return <Teleport to={parentNode.value}>{con}</Teleport>
+            return <Teleport to={document.body}>{con}</Teleport>
         }
 
         return ()=> {
-            const vnode = teleport(wrapper(slots.default?.()))
+            const vnode = wrapper(slots.default?.())
+            const main = props.toBody?teleport(vnode):vnode
             if(props.bind==='v-if') {
-                return visible.value?vnode:null
+                return visible.value?main:null
             }
-            return vnode
+            return main
         }
     }
 })

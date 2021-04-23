@@ -1,5 +1,5 @@
 import {Ref,ref,reactive} from 'vue'
-import {getElementPositionInPage} from '../util/index'
+import {getElementPositionInPage, getOffset,getBoundingClientRect} from '../util/index'
 export type Placement = 'top'|'top-start'|'top-end'|'bottom'
 |'bottom-start'|'bottom-end'|'left'|'right'
 export interface PlacementOptions {
@@ -7,6 +7,7 @@ export interface PlacementOptions {
     relateElement: Ref<HTMLElement>,
     //要设置位置的那个覆盖物元素
     el: Ref<HTMLElement|null>,
+    isRelative?: boolean,//是否是相对于有定位的父级计算位置
     gap?: number,
     offset?: number,//偏移，暂没实现
     placement?: Placement|string
@@ -26,13 +27,21 @@ export default function usePlacement(placementOptions: PlacementOptions = {
     })
     //获取相关元素的位置信息
     function get(relateElem?:HTMLElement|null) {
-        const p = getElementPositionInPage(relateElem??placementOptions.relateElement.value)
-        left.value = p.left
-        right.value = p.right
-        width.value = p.width
-        height.value=p.height
-        top.value=p.top
-        bottom.value=p.bottom
+        const _el = relateElem??placementOptions.relateElement.value
+        if(placementOptions.isRelative) {
+            ({left:left.value,top:top.value} = getOffset(_el));
+            ({width:width.value,height:height.value}=getBoundingClientRect(_el))
+        }
+        else {
+            const p = getElementPositionInPage(_el)
+            left.value = p.left
+            right.value = p.right
+            width.value = p.width
+            height.value=p.height
+            top.value=p.top
+            bottom.value=p.bottom
+
+        }
     }
     //获取要定位的元素的位置信息
     function getPlace(relateElem?:HTMLElement/*根据此元素计算位置*/,
@@ -108,7 +117,9 @@ export default function usePlacement(placementOptions: PlacementOptions = {
         }
     }
     return {
+        //需要定位的那个元素的位置信息
         place,getPlace,
+        //相关元素的信息relateElement
         left,right,width,height,top,bottom,get,set
     }
 }
