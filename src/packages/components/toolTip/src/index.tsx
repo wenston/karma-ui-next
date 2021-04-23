@@ -67,8 +67,7 @@ export default defineComponent({
                 show:visible.value,
                 style: {
                     '--__layer-background-color': 'rgba(0,0,0,.8)',
-                    '--__layer-text-color': 'rgba(255,255,255,.8)',
-                    '--__layer-z-index': props.zIndex
+                    '--__layer-text-color': 'rgba(255,255,255,.8)'
                 },
                 "onUpdate:show":toggle,
             }

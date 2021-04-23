@@ -57,7 +57,7 @@
         placement="bottom-start"
         :toBody="false"
         :class="css.item">
-        <div style="background-color:green;">右边出现一个提示</div>
+        <div style="background-color:green;">下方出现一个提示</div>
       </Tooltip>
     </div>
   </div>

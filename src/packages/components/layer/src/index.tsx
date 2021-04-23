@@ -1,9 +1,12 @@
-import { defineComponent,Teleport,ref, isRef,watch,computed,onMounted,SetupContext, toRef, toRaw, getCurrentInstance } from 'vue'
-import useEvent from '../../../use/useEvent'
-import useDelay from '../../../use/useDelay'
+/**
+ * TODO: 1：layer框体在隐藏时自动调整位置；2：框体位置跟随鼠标进行自动调整
+ * 
+ */
+import { defineComponent,ref,watch,computed,SetupContext, toRef } from 'vue'
 import usePlacement from '../../../use/usePlacement'
 import useBoundingCientRect from '../../../use/useBoundingClientRect'
 import useParentNode from '../../../use/useParentNode'
+import useGlobalZIndex from '../../../use/useGlobalZIndex'
 import {isTopBottom,isLeftRight} from '../../../util'
 export default defineComponent({
     props: {
@@ -29,7 +32,7 @@ export default defineComponent({
         },
         // showDelay: {type: Number,default: 200},
         // hideDelay: {type: Number,default: 200},
-        zIndex: {type:[Number,String],default: 100},//用于层级管理
+        zIndex: {type:[Number,String]},//用于层级管理
         toBody: Boolean,//是否插入body中
         hasArrow: {
             type: Boolean,default: true
@@ -39,13 +42,13 @@ export default defineComponent({
     setup(props,{slots,emit,attrs}:SetupContext) {
         const re = toRef(props, 'relateElement')
         const visible=ref(props.show)
-        const zi = ref(props.zIndex)
         const root = ref(null)
-        //没有用到parentNode，但不要删除，因为给直接父级一个定位了
+        const {zIndex,add} = useGlobalZIndex()
+        
         if(!props.toBody) {
             useParentNode(re)
         }
-        const {getPlace,place,width:relate_elem_w,height:relate_elem_h} = usePlacement({
+        const {place,width:relate_elem_w,height:relate_elem_h} = usePlacement({
             relateElement: re,
             el: root,
             isRelative: !props.toBody,
@@ -53,12 +56,17 @@ export default defineComponent({
             placement: props.placement
         })
         const {width:root_w,height:root_h} = useBoundingCientRect(root)
-
+        const c_w_h = computed(()=>{
+            const min_w = Math.min(root_w.value,relate_elem_w.value)
+            const min_h = Math.min(root_h.value, relate_elem_h.value)
+            return {min_h,min_w}
+        })
 
         const layerProps = computed(()=>{
             let sty = attrs.style || {}
-            const arrowPosition = isLeftRight(props.placement)?relate_elem_h.value*0.3
-                :isTopBottom(props.placement)?relate_elem_w.value*0.3:12
+            const {min_w,min_h} = c_w_h.value
+            const arrowPosition = isLeftRight(props.placement)?min_h*0.45
+                :isTopBottom(props.placement)?min_w*0.45:12
             let o:{[key:string]:any} = {
 
                 ref: root,
@@ -72,7 +80,8 @@ export default defineComponent({
                     left: place.left,
                     top: place.top,
                     transform: place.transform,
-                    "--__layer-arrow-position": `30%`
+                    "--__layer-arrow-position": `${arrowPosition}px`,
+                    "--__layer-z-index": props.zIndex??zIndex.value
                 }
 
             }
@@ -84,8 +93,9 @@ export default defineComponent({
         })
 
         watch(visible,v=>{emit('update:show',v)})
-        watch(()=>props.show,v=>{visible.value=v})
-        watch(()=>props.zIndex,z=>{zi.value=z})
+        watch(()=>props.show,v=>{
+            visible.value=v
+        })
 
         function wrapper(con:any) {
             return (

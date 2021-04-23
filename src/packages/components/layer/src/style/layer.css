@@ -3,7 +3,7 @@
 
   position: absolute;
   border-radius: var(--radius);
-  padding: 15px;
+  padding: 8px 15px;
   background-color: var(--__layer-background-color);
   color: var(--__layer-text-color);
   z-index: var(--__layer-z-index, 100);

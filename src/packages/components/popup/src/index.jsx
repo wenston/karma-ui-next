@@ -1,4 +1,4 @@
-import { computed, defineComponent, ref, nextTick, watch } from "vue"
+import { computed, defineComponent, ref, onMounted, watch } from "vue"
 import {hasUnit} from '../../../util'
 import Mask from '../../mask'
 import Icon from '../../icon'
@@ -65,33 +65,35 @@ export default defineComponent({
             }
         }
 
-        watch(()=>props.modelValue,v=>{
-            if(v) {
-                nextTick(()=>{popup.value.focus()})
-            }
+        onMounted(()=>{
+            popup.value?.focus()
         })
         
-        return () => (
-            <Mask modelValue={props.modelValue} 
-                onUpdate:modelValue={
-                    ()=>{
-                        emit('update:modelValue', !props.modelValue)
-                    }
-                }>
-                <div class="k-popup"
-                    ref={popup}
-                    tabindex="-1"
-                    style={{width:width.value}}>
-                    {rHeader()}
-                    <div class={["k-popup__body",{[props.bodyClass]:!!props.bodyClass}]}>
-                        {
-                            slots.default?.()
-                        }
-                    </div>
-                    {rFooter()}
-                </div>
-            </Mask>
-        )
+        return () => {
+            if(props.modelValue) {
+                return (
+                    <Mask modelValue={props.modelValue} 
+                        onUpdate:modelValue={
+                            ()=>{
+                                emit('update:modelValue', !props.modelValue)
+                            }
+                        }>
+                        <div class="k-popup"
+                            ref={popup}
+                            tabindex="-1"
+                            style={{width:width.value}}>
+                            {rHeader()}
+                            <div class={["k-popup__body",{[props.bodyClass]:!!props.bodyClass}]}>
+                                {
+                                    slots.default?.()
+                                }
+                            </div>
+                            {rFooter()}
+                        </div>
+                    </Mask>
+                    )
+                }
+            }
     },
     emits: [
         'update:modelValue',
@@ -102,7 +104,10 @@ export default defineComponent({
         Mask, Icon, Button, Close
     },
     props: {
-        ...Mask.props,
+        modelValue: {
+            type: Boolean,
+            default: false
+        },
         title: {
             type: String,
             default: ''
