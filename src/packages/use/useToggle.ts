@@ -1,18 +1,12 @@
-import { ref, watch } from "vue"
+import { Ref, ref, watch } from "vue"
 
-export default function useToggle(refData,refValue) {
+type ToggleData = Ref<unknown[]>
+type ToggleValue = Ref<any>
+export default function useToggle(refData:ToggleData,refValue:ToggleValue) {
   const base = ref(refData)
   const val = ref(refValue)
 
-  // watch(refData,d=>{
-  //   console.log(d)
-  //   base.value = d
-  // })
-  // watch(refValue,v=>{
-  //   val.value=v
-  // })
-
-  function set(para) {
+  function set(para:any) {
     if ("item" in para) {
       if (base.value.some((_v) => _v === para.item)) {
         val.value = para.item
