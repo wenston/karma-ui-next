@@ -1,150 +1,113 @@
-/**
- * 覆盖层，用以辅助展示一些东西，给出一个relateElement时，会根据此元素定位
- */
-import { defineComponent, Teleport, ref,watch, computed, onMounted, SetupContext } from 'vue';
-import useEvent from '../../../use/useEvent'
+import {SetupContext, DirectiveArguments, getCurrentInstance, onMounted, Teleport} from 'vue'
+import { defineComponent, ref, cloneVNode, watch, computed } from 'vue'
+import {withDirectives, resolveDirective} from 'vue'
+import clickOutside from '../../../directives/clickOutside'
+import Layer from '../../layer'
+import useSlot from '../../../use/useSlot'
 import useDelay from '../../../use/useDelay'
-import usePlacement from '../../../use/usePlacement'
-
+import useEvent from '../../../use/useEvent'
 export default defineComponent({
     inheritAttrs: false,
+    components: {Layer},
+    directives: {clickOutside},
     props: {
-        bind: {
-            type: String,
-            default: 'v-if'//v-show
-        },
-        relateElement: {
-            type: [Element,Object],
-            default: ()=>document.body
-        },
+        ...Layer.props,
         trigger: {
             type: String,
-            default: 'hover'//click
+            default:'click'
         },
-        show: {
-            type: Boolean,
-            default: false
-        },
-        to: {
-            type: HTMLElement,
-            default: ()=>document.body
-        },
-        placement: {
+        tag: {
             type: String,
-            default: 'top'
-        },
-        gap: {
-            type: Number,
-            default: 8
-        },
-        showDelay: {
-            type: Number,
-            default: 200
-        },
-        hideDelay: {
-            type: Number,
-            default: 200
+            default: 'span'
         }
     },
     emits: ['update:show'],
-    setup(props, ctx:SetupContext){
-        const root=ref<any>(null)
+    setup(props,{slots,emit,attrs}:SetupContext) {
+        const clickOutside = resolveDirective('clickOutside')
         const visible = ref(props.show)
-        const elem = ref(props.relateElement)
+        const relateElement = ref(null)
         const {start,stop,clear} = useDelay()
-        // console.log(props.placement)
-        const {getPlace,place} = usePlacement({
-            relateElement: elem,
-            el: root,
-            placement: props.placement,
-            gap: props.gap
+        const titleSlot = computed(()=>{
+            return slots.title?.() || []
         })
-        const overlayProps = computed(()=>{
-            const _class = [
-                ctx.attrs.class,
-                'k-overlay',
-                [`k-overlay--${props.placement}`]
-            ]
-            let sty = {}
-            if(ctx.attrs.style) {
-                sty = ctx.attrs.style as object
-            }
-            const style = {
-                ...sty,
-                left: place.left,top:place.top,transform:place.transform
-            }
-            const o: {[key:string]:unknown} = {
-                class:_class,style,ref:root,
-                //以下写法报隐式类型any，应该怎么写？
-                // onClick:e=>{
-                //     e.stopPropagation()
-                // }
-            }
-            
-            if(props.bind==='v-show') {
-                o['v-show'] = visible.value
-            }
-            return  o
-        })
-
-        if(props.trigger === 'hover') {
-            useEvent(elem, 'mouseenter', ()=>{
-                start(()=>{
-                    getPlace()
-                    visible.value=true
-                }, props.showDelay)
-                
+        const defaultSlot = slots.default?.()
+        // console.log(titleSlot)
+        if(props.trigger==='hover') {
+            useEvent(relateElement,'mouseenter',()=>{
+                start(()=>{visible.value=true},props.showDelay)
             })
-            useEvent(elem, 'mouseleave',()=>{
-                stop(()=>{
-                    visible.value=false
-                }, props.hideDelay)
+            useEvent(relateElement,'mouseleave',()=>{
+                stop(()=>{visible.value=false},props.hideDelay)
             })
 
-        } else if(props.trigger==='click') {
-            useEvent(elem,'click',()=>{
-                getPlace()
-                visible.value = !visible.value
+        }else if(props.trigger==='click' ) {
+            useEvent(relateElement,'click',()=>{
+                visible.value=!visible.value
             })
+
         }
-
         watch(()=>props.show,v=>{
             visible.value=v
         })
         watch(visible,v=>{
-            ctx.emit('update:show',v)
+            emit('update:show',v)
         })
-        
-        function teleport(c:any) {
-            return <Teleport to={props.to}>{c}</Teleport>
-        }
-        function wrapper(con:any) {
+        const op = computed(()=>{
+            const _:{[key:string]:any} = {
+                ...props,
+                show:visible.value,
+                style: {
+                    '--__layer-background-color': 'rgba(255,255,255,.95)',
+                    '--__layer-text-color': '#666'
+                },
+                "onUpdate:show":toggle
+            }
             if(props.trigger==='hover') {
-                return (
-                    <div {...overlayProps.value}
-                    onMouseenter={clear}
-                    onMouseleave={(e)=>{stop(()=>{visible.value=false})}}>{con}</div>
-                )
-            } else if(props.trigger==='click') {
-                return (
-                    <div {...overlayProps.value}
-                    onClick={e=>{e.stopImmediatePropagation()}}>{con}</div>
-                )
+                _.onMouseenter=clear
+                _.onMouseleave=()=>{
+                    stop(()=>{
+                        visible.value=false
+                    },props.hideDelay)
+                }
+            }else if(props.trigger==='click'){
+                _.onClick=()=>{
+                    // visible.value=!visible.value
+                    // console.log('你想干什么')
+                }
             }
-        }
-        onMounted(()=>{
-            if(props.show) {
-                getPlace()
-            }
+            return _
         })
-        return ()=>{
-            const main = teleport(wrapper(ctx.slots.default?.()))
+        function toggle() {
+            visible.value=!visible.value
+        }
 
-            if(props.bind==='v-if') {
-                return visible.value?main:null
-            }else if(props.bind==='v-show') {
-                return main
+        const _titleSlot = useSlot({slot:titleSlot,tag:props.tag})
+        return ()=> {
+            let t = <span />
+            if(_titleSlot.value.length) {
+                //注意：由于是clone出的节点，所以ref指向的有可能是个组件，而不是原生html标签！！
+                t = cloneVNode(_titleSlot.value[0],{ref:relateElement})
             }
+            const direc:DirectiveArguments = [[
+                clickOutside!, 
+                {
+                    handler:()=>{visible.value=false},
+                    exclude: []
+                }
+            ]]
+            let trigger = t
+            if(props.trigger==='click') {
+                trigger = withDirectives(trigger, direc)
+            }
+            const _layer = <Layer {...op.value} relate-element={relateElement}>{defaultSlot}</Layer>
+            const layer = props.toBody?<Teleport to={document.body}>{_layer}</Teleport>:_layer
+            return (
+                <>
+                    {trigger}
+                    {_titleSlot.value.slice(1)}
+                    {visible.value && layer}
+                </>
+            )
         }
     }
 })

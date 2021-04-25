@@ -17,7 +17,7 @@ export default defineComponent({
             default:'click'
         },
         toBody: {
-            type: Boolean,default: true
+            type: Boolean,default: false
         },
         title: {
             type: [String,Object],

@@ -1,7 +1,8 @@
 import {Ref,ref,reactive,onMounted} from 'vue'
 import {getElementPositionInPage, getOffset,getBoundingClientRect} from '../util/index'
 export type Placement = 'top'|'top-start'|'top-end'|'bottom'
-|'bottom-start'|'bottom-end'|'left'|'right'
+|'bottom-start'|'bottom-end'|'left'|'left-start'|'left-end'
+|'right'|'right-start'|'right-end'
 
 // 获取相关元素（relateElement）的boundingClientRect，并设置el在页面中相对于相关元素的位置
 //注意：传入的relateElement有可能是个经过ref过的组件！，
@@ -93,10 +94,30 @@ export default function usePlacement(placementOptions: PlacementOptions = {
                     l=left.value+gap*-1
                     trsfm=`translate(-100%,-50%)`
                     break
+                case 'left-start': 
+                    t = top.value
+                    l = left.value + gap*-1
+                    trsfm = `translate(-100%, 0)`
+                    break
+                case 'left-end': 
+                    t = top.value
+                    l = left.value + gap*-1
+                    trsfm = `translate(-100%, calc(-100% + ${height.value}px))`
+                    break
                 case 'right':
                     t = top.value+height.value/2
                     l = left.value+width.value+gap
                     trsfm=`translate(0,-50%)`
+                    break
+                case 'right-start':
+                    t = top.value
+                    l = left.value+width.value+gap
+                    trsfm = `translate(0, 0)`
+                    break
+                case 'right-end':
+                    t = top.value
+                    l = left.value+width.value+gap
+                    trsfm = `translate(0, calc(-100% + ${height.value}px)`
                     break
                 default:
                     break

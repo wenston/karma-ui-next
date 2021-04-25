@@ -73,11 +73,43 @@
         right: var(--layer-arrow-offset);
       }
     }
+    &.k-layer--left-start {
+      &:after {
+        border-color: transparent transparent transparent
+          var(--__layer-background-color);
+        top: var(--__layer-arrow-position, 12px);
+        right: var(--layer-arrow-offset);
+      }
+    }
+    &.k-layer--left-end {
+      &:after {
+        border-color: transparent transparent transparent
+          var(--__layer-background-color);
+        bottom: var(--__layer-arrow-position, 12px);
+        right: var(--layer-arrow-offset);
+      }
+    }
     &.k-layer--right {
       &:after {
         border-color: transparent var(--__layer-background-color) transparent
           transparent;
         top: calc(50% - 3px);
+        left: var(--layer-arrow-offset);
+      }
+    }
+    &.k-layer--right-start {
+      &:after {
+        border-color: transparent var(--__layer-background-color) transparent
+          transparent;
+        top: var(--__layer-arrow-position, 12px);
+        left: var(--layer-arrow-offset);
+      }
+    }
+    &.k-layer--right-end {
+      &:after {
+        border-color: transparent var(--__layer-background-color) transparent
+          transparent;
+        bottom: var(--__layer-arrow-position, 12px);
         left: var(--layer-arrow-offset);
       }
     }

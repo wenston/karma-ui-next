@@ -51,11 +51,11 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/bubbleCard',
-    name: 'bubbleCard',
-    component: ()=> import('../views/BubbleCard.vue'),
+    path: '/overlay',
+    name: 'overlay',
+    component: ()=> import('../views/Overlay.vue'),
     meta: {
-      title: '气泡卡 BubbleCard'
+      title: '覆盖层 Overlay'
     }
   },
   {
