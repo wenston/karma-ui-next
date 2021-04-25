@@ -52,15 +52,16 @@ export default defineComponent({
         watch(visible,v=>{
             emit('update:show',v)
         })
-        const op = computed(()=>{
+        const layerProps = computed(()=>{
+            const {tag,...rest} = props
             const _:{[key:string]:any} = {
-                ...props,
+                ...rest,
                 show:visible.value,
                 style: {
                     '--__layer-background-color': 'rgba(255,255,255,.95)',
                     '--__layer-text-color': '#666'
                 },
-                "onUpdate:show":toggle
+                // "onUpdate:show":toggle
             }
             if(props.trigger==='hover') {
                 _.onMouseenter=clear
@@ -71,15 +72,11 @@ export default defineComponent({
                 }
             }else if(props.trigger==='click'){
                 _.onClick=()=>{
-                    // visible.value=!visible.value
-                    // console.log('你想干什么')
+                    // 无事可做
                 }
             }
             return _
         })
-        function toggle() {
-            visible.value=!visible.value
-        }
 
         const _titleSlot = useSlot({slot:titleSlot,tag:props.tag})
         return ()=> {
@@ -99,13 +96,13 @@ export default defineComponent({
             if(props.trigger==='click') {
                 trigger = withDirectives(trigger, direc)
             }
-            const _layer = <Layer {...op.value} relate-element={relateElement}>{defaultSlot}</Layer>
+            const _layer = <Layer {...layerProps.value} relate-element={relateElement}>{defaultSlot}</Layer>
             const layer = props.toBody?<Teleport to={document.body}>{_layer}</Teleport>:_layer
             return (
                 <>
                     {trigger}
                     {_titleSlot.value.slice(1)}
-                    {visible.value && layer}
+                    {layer}
                 </>
             )
         }

@@ -2,6 +2,8 @@
   <h1>气泡卡</h1>
   <section style="margin: 200px;">
     <Overlay :placement="placement"
+      trigger="click"
+      to-body
       v-model:show="showDel">
       <template #title>
         <Button>点击展示覆盖层</Button>
@@ -30,13 +32,16 @@
       <span>&#12288;</span>
     </template>
   </section>
+  <h3>动画测试</h3>
   <section>
-    <!-- <Overlay placement="bottom-start">
-      <template #title>没有标签包裹的提示<span>3333333333</span></template>
-      <div>
-        提示一些东西
-      </div>
-    </Overlay> -->
+    <Button @click="onToggleAni">动画测试</Button>
+    <transition name="k-fade">
+      <div class="ani"
+        v-show="showAni"></div>
+    </transition>
+  </section>
+  <section style="height:300px">
+
   </section>
 </template>
 <script>
@@ -65,11 +70,13 @@ export default defineComponent({
       "top"
     )
     const showDel = ref(false)
+    const showAni = ref(false)
     const actions = ref(["删除"])
     return {
       showDel,
       actions,
       placement,
+      showAni,
       toggle() {
         toggle()
         nextTick(() => {
@@ -87,7 +94,17 @@ export default defineComponent({
       onAdd() {
         actions.value.push(Math.random() * 1000)
       },
+      onToggleAni() {
+        showAni.value = !showAni.value
+      },
     }
   },
 })
 </script>
+<style scoped>
+.ani {
+  width: 100px;
+  height: 100px;
+  background-color: #333;
+}
+</style>

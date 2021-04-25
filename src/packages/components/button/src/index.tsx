@@ -1,6 +1,5 @@
 import { computed, defineComponent, onUpdated,onRenderTracked,onRenderTriggered } from "vue"
 const Button = defineComponent({
-  inheritAttrs: false,
   setup(props, ctx) {
     const tag = props.tag
     const klass = computed(() => {

@@ -2,7 +2,8 @@
  * TODO: 1：layer框体在隐藏时自动调整位置；2：框体位置跟随鼠标进行自动调整
  * 
  */
-import { defineComponent,ref,watch,computed,SetupContext, toRef } from 'vue'
+import { defineComponent,ref,watch,computed,SetupContext, toRef, Transition, 
+    withDirectives, DirectiveArguments, resolveDirective, vShow } from 'vue'
 import usePlacement from '../../../use/usePlacement'
 import useBoundingCientRect from '../../../use/useBoundingClientRect'
 import useParentNode from '../../../use/useParentNode'
@@ -11,7 +12,7 @@ import {isTopBottom,isLeftRight} from '../../../util'
 export default defineComponent({
     props: {
         bind: {
-            type: String, default: 'v-if'
+            type: String, default: 'v-show'
         },
         //传过来的有可能是个vue组件！
         relateElement: {
@@ -79,35 +80,36 @@ export default defineComponent({
                     ...(sty as object),
                     left: place.left,
                     top: place.top,
-                    transform: place.transform,
+                    // transform: place.transform,//此属性要留给动画，故取消掉！
                     "--__layer-arrow-position": `${arrowPosition}px`,
                     "--__layer-z-index": props.zIndex??zIndex.value
                 }
 
             }
-            if(props.bind==='v-show') {
-                o['v-show'] = visible.value
-            }
             return o
             
         })
 
-        watch(visible,v=>{emit('update:show',v)})
         watch(()=>props.show,v=>{
-            visible.value=v
+            if(v) {
+                add()
+            }
         })
 
         function wrapper(con:any) {
+            const vnode = <div {...layerProps.value} v-show={props.show}
+                        onClick={e=>{e.stopPropagation()}}>{con}</div>
             return (
-                <div {...layerProps.value} 
-                    onClick={e=>{e.stopPropagation()}}>{con}</div>
+                <Transition name="k-layer-scale">
+                    {vnode}
+                </Transition>
             )
         }
 
         return ()=> {
             const main = wrapper(slots.default?.())
             if(props.bind==='v-if') {
-                return visible.value?main:null
+                return props.show?main:null
             }
             return main
         }
