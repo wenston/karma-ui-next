@@ -1,5 +1,5 @@
 .k-layer {
-  --layer-arrow-offset: -10px;
+  --layer-arrow-offset: calc(-2 * var(--layer-arrow-size));
 
   position: absolute;
   border-radius: var(--radius);
@@ -8,13 +8,14 @@
   color: var(--__layer-text-color);
   z-index: var(--__layer-z-index, 100);
   filter: drop-shadow(var(--drop-shadow));
+  transform-origin: var(--__layer-transform-origin, 0 0);
   &.k-layer-has-arrow {
     &:after {
       content: "";
       position: absolute;
       width: 0;
       height: 0;
-      border-width: 5px;
+      border-width: var(--layer-arrow-size);
       border-style: solid;
     }
     &.k-layer--top {
@@ -22,7 +23,7 @@
         border-color: var(--__layer-background-color) transparent transparent
           transparent;
         bottom: var(--layer-arrow-offset);
-        left: calc(50% - 3px);
+        left: var(--__layer-arrow-position, 12px);
       }
     }
     &.k-layer--top-start {
@@ -38,7 +39,7 @@
         border-color: var(--__layer-background-color) transparent transparent
           transparent;
         bottom: var(--layer-arrow-offset);
-        right: var(--__layer-arrow-position, 12px);
+        left: var(--__layer-arrow-position, 12px);
       }
     }
     &.k-layer--bottom {
@@ -46,7 +47,7 @@
         border-color: transparent transparent var(--__layer-background-color)
           transparent;
         top: var(--layer-arrow-offset);
-        left: calc(50% - 3px);
+        left: var(--__layer-arrow-position, 12px);
       }
     }
     &.k-layer--bottom-start {
@@ -62,14 +63,14 @@
         border-color: transparent transparent var(--__layer-background-color)
           transparent;
         top: var(--layer-arrow-offset);
-        right: var(--__layer-arrow-position, 12px);
+        left: var(--__layer-arrow-position, 12px);
       }
     }
     &.k-layer--left {
       &:after {
         border-color: transparent transparent transparent
           var(--__layer-background-color);
-        top: calc(50% - 3px);
+        top: var(--__layer-arrow-position, 12px);
         right: var(--layer-arrow-offset);
       }
     }
@@ -85,7 +86,7 @@
       &:after {
         border-color: transparent transparent transparent
           var(--__layer-background-color);
-        bottom: var(--__layer-arrow-position, 12px);
+        top: var(--__layer-arrow-position, 12px);
         right: var(--layer-arrow-offset);
       }
     }
@@ -109,7 +110,7 @@
       &:after {
         border-color: transparent var(--__layer-background-color) transparent
           transparent;
-        bottom: var(--__layer-arrow-position, 12px);
+        top: var(--__layer-arrow-position, 12px);
         left: var(--layer-arrow-offset);
       }
     }
@@ -118,10 +119,10 @@
 
 .k-layer-scale-enter-active,
 .k-layer-scale-leave-active {
-  transition: transform 0.618s cubic-bezier(0.4, 1, 0, 1);
+  transition: transform 0.4s cubic-bezier(0.4, 1, 0, 1);
 }
 .k-layer-scale-leave-active {
-  transition: transform 0.35s cubic-bezier(0.39, 0.95, 0, 1);
+  transition: transform 0.2s cubic-bezier(0.39, 0.95, 0, 1);
 }
 
 .k-layer-scale-enter-from,

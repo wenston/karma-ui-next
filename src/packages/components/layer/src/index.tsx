@@ -3,12 +3,11 @@
  * 
  */
 import { defineComponent,ref,watch,computed,SetupContext, toRef, Transition, 
-    withDirectives, DirectiveArguments, resolveDirective, vShow } from 'vue'
+     vShow, nextTick } from 'vue'
 import usePlacement from '../../../use/usePlacement'
 import useBoundingCientRect from '../../../use/useBoundingClientRect'
 import useParentNode from '../../../use/useParentNode'
 import useGlobalZIndex from '../../../use/useGlobalZIndex'
-import {isTopBottom,isLeftRight} from '../../../util'
 export default defineComponent({
     props: {
         bind: {
@@ -34,7 +33,9 @@ export default defineComponent({
         // showDelay: {type: Number,default: 200},
         // hideDelay: {type: Number,default: 200},
         zIndex: {type:[Number,String]},//用于层级管理
-        toBody: Boolean,//是否插入body中
+        toBody: {
+            type: Boolean,default: false
+        },//是否插入body中
         hasArrow: {
             type: Boolean,default: true
         },//是否有箭头
@@ -49,27 +50,17 @@ export default defineComponent({
         if(!props.toBody) {
             useParentNode(re)
         }
-        const {place,width:relate_elem_w,height:relate_elem_h} = usePlacement({
+        const {place,setPlace} = usePlacement({
             relateElement: re,
             el: root,
             isRelative: !props.toBody,
             gap: props.gap,
             placement: props.placement
         })
-        const {width:root_w,height:root_h} = useBoundingCientRect(root)
-        const c_w_h = computed(()=>{
-            const min_w = Math.min(root_w.value,relate_elem_w.value)
-            const min_h = Math.min(root_h.value, relate_elem_h.value)
-            return {min_h,min_w}
-        })
 
         const layerProps = computed(()=>{
             let sty = attrs.style || {}
-            const {min_w,min_h} = c_w_h.value
-            const arrowPosition = isLeftRight(props.placement)?min_h*0.45
-                :isTopBottom(props.placement)?min_w*0.45:12
             let o:{[key:string]:any} = {
-
                 ref: root,
                 class:[
                     attrs.class,
@@ -81,8 +72,9 @@ export default defineComponent({
                     left: place.left,
                     top: place.top,
                     // transform: place.transform,//此属性要留给动画，故取消掉！
-                    "--__layer-arrow-position": `${arrowPosition}px`,
-                    "--__layer-z-index": props.zIndex??zIndex.value
+                    "--__layer-arrow-position": `${place.arrowPosition}px`,
+                    "--__layer-z-index": props.zIndex??zIndex.value,
+                    "--__layer-transform-origin": `${place.transformOrigin}`
                 }
 
             }
@@ -97,21 +89,23 @@ export default defineComponent({
         })
 
         function wrapper(con:any) {
-            const vnode = <div {...layerProps.value} v-show={props.show}
-                        onClick={e=>{e.stopPropagation()}}>{con}</div>
+            if(props.bind==='v-show') {
+                return (
+                    <Transition name="k-layer-scale">
+                        <div {...layerProps.value} 
+                            v-show={props.show}
+                            onClick={e=>{e.stopPropagation()}}>{con}</div>
+                    </Transition>
+                )
+            }
             return (
                 <Transition name="k-layer-scale">
-                    {vnode}
+                    {props.show && <div {...layerProps.value}
+                            onClick={e=>{e.stopPropagation()}}>{con}</div>}
                 </Transition>
             )
         }
 
-        return ()=> {
-            const main = wrapper(slots.default?.())
-            if(props.bind==='v-if') {
-                return props.show?main:null
-            }
-            return main
-        }
+        return ()=> wrapper(slots.default?.())
     }
 })

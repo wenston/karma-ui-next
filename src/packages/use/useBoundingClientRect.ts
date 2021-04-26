@@ -10,7 +10,7 @@ export default function useBoundingClientRect(elem:any) {
     const height = ref(0)
     const top =  ref(0)
     const bottom = ref(0)
-    const el = useElement(elem)
+    const {el} = useElement(elem)
     
     function get() {
         const _el = el.value

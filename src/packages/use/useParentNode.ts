@@ -6,7 +6,7 @@ export default function useParentNode(
     elem:any
 ){
     const parentNode = ref<HTMLElement>()
-    const el = useElement(elem)
+    const {el} = useElement(elem)
     function getPNode() {
         let _node:any = null
         const _el = el.value

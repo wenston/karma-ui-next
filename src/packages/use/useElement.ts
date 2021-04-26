@@ -1,5 +1,6 @@
-import { isRef, onMounted, ref, Ref } from 'vue'
+import { isRef, nextTick, onMounted, ref, Ref } from 'vue'
 import {isString, isObject} from '@vue/shared'
+import {isDisplayNone, getBoundingClientRect} from '../util'
 function isElement(v:any) {
     return v instanceof HTMLElement
 }
@@ -15,9 +16,17 @@ function $(str:string) {
 function isDocumentBody(str:any) {
     return str === 'body' || str === document.body
 }
-export default function useElement(v:any):Ref<HTMLElement|undefined> {
+/**
+ * 获取真实的元素。并获取元素的宽高（元素display:none时，通过其他方式获取！）
+ * @param 
+ * @returns 
+ */
+export default function useElement(v?:any) {
     const el = ref()
-    function get() {
+    const width = ref(0)
+    const height = ref(0)
+    function get(val?:any) {
+        v = val??v
         let _v = undefined
         let _el = undefined
         if(isRef(v)) {
@@ -37,7 +46,23 @@ export default function useElement(v:any):Ref<HTMLElement|undefined> {
             } 
         }
         el.value = _el
+        if(_el) {
+            if(isDisplayNone(_el)) {
+                const node = _el.cloneNode(true)
+                node.style.display = 'block'
+                node.style.opacity = 0
+                _el.parentNode.appendChild(node)
+                const {width:_w,height:_h} = getBoundingClientRect(node)
+                // console.log(width,height)
+                width.value = _w
+                height.value = _h
+                _el.parentNode.removeChild(node)
+                //需要注意的一点：原样复制出来的也会出现宽度差异！
+            }
+
+        }
+        return {el:_el,width:width.value,height:height.value}
     }
     onMounted(get)
-    return el
+    return {el,get,width,height}
 }

@@ -1,8 +1,16 @@
 import {Ref,ref,reactive,onMounted} from 'vue'
-import {getElementPositionInPage, getOffset,getBoundingClientRect} from '../util/index'
+import useElement from './useElement'
+import {
+    getElementPositionInPage, 
+    getOffset,
+    getBoundingClientRect,
+    isTopBottom, isLeftRight} from '../util/index'
 export type Placement = 'top'|'top-start'|'top-end'|'bottom'
 |'bottom-start'|'bottom-end'|'left'|'left-start'|'left-end'
 |'right'|'right-start'|'right-end'
+
+const ARROW_OFFSET_PERCENT = 0.35
+const ARROW_OFFSET = 3.5
 
 // 获取相关元素（relateElement）的boundingClientRect，并设置el在页面中相对于相关元素的位置
 //注意：传入的relateElement有可能是个经过ref过的组件！，
@@ -21,6 +29,9 @@ export default function usePlacement(placementOptions: PlacementOptions = {
     relateElement: ref(document.body),
     el: ref(document.body)
 }) {
+    const {get:getElement} = useElement(placementOptions.el)
+    const elem = ref(null)
+    const rElem = ref(null)
     const left = ref(0)
     const right = ref(0)
     const width = ref(0)
@@ -28,12 +39,13 @@ export default function usePlacement(placementOptions: PlacementOptions = {
     const top =  ref(0)
     const bottom = ref(0)
     const place = reactive({
-        left: '0',top:'0',transform:'',width:0,height:0
+        left: 0,top:0,width:0,height:0,right:0,arrowPosition: 12,transformOrigin:''
     })
     //获取相关元素的位置信息
-    function get(relateElem?:HTMLElement|null,el?:HTMLElement) {
-        let _el = relateElem??placementOptions.relateElement.value
-        _el = _el instanceof HTMLElement?_el:(_el as {[key:string]:any}).$el
+    function getRelatePos(relateElem?:HTMLElement|null) {
+        // let _el = relateElem??placementOptions.relateElement.value
+        // _el = _el instanceof HTMLElement?_el:(_el as {[key:string]:any}).$el
+        const {el:_el} = getElement(relateElem??placementOptions.relateElement)
         if(placementOptions.isRelative) {
             ({left:left.value,top:top.value} = getOffset(_el));
             ({width:width.value,height:height.value}=getBoundingClientRect(_el))
@@ -48,108 +60,142 @@ export default function usePlacement(placementOptions: PlacementOptions = {
             bottom.value=p.bottom
 
         }
+        rElem.value = _el
     }
-    //获取要定位的元素的位置信息
+    //当el状态是display:none或者在dom还不存在时，获取位置信息没有意义！
+    function getElPostion(el?:HTMLElement) {
+        const {el:_el,width,height} = getElement(el??placementOptions.el)
+        if(_el) {
+            const p = getBoundingClientRect(_el)
+            place.left = p.left
+            place.top = p.top
+            //通过getElement获取的宽高，是元素的真实宽高，就算是display:none了，也可以获取到哦
+            place.width = width
+            place.height = height
+            place.right = p.right
+            elem.value = _el
+            // console.log('覆盖层宽和高',width,height)
+        } else {
+            console.warn('参数有问题？')
+        }
+    }
+    //获取两个元素的位置信息
     function getPlace(relateElem?:HTMLElement/*根据此元素计算位置*/,
         el?:HTMLElement/*要设置的那个元素*/,
         placement?:Placement|string/*位置*/) {
-            get(relateElem,el)
-            const {gap = 9,offset = 0} = placementOptions
-            const _plc = placement??placementOptions.placement??'top'
-            // console.log(_plc)
-            let l:number = 0,t:number=-99999,trsfm:string = ''
-            switch (_plc) {
-                case 'top':
-                    // t = top.value+gap*-1
-                    // l = left.value+width.value/2
-                    // trsfm=`translate(-50%,-100%)`
-                    t = top.value - height.value + -1 * gap
-                    l = left.value - width.value / 2
-                    break
-                case 'top-start':
-                    t = top.value+gap*-1
-                    l = left.value
-                    trsfm = `translate(0,-100%)`
-                    break
-                case 'top-end':
-                    t = top.value+gap*-1
-                    l = left.value+width.value
-                    trsfm = `translate(-100%,-100%)`
-                    break
-                case 'bottom':
-                    t = top.value+height.value+gap
-                    l = left.value+width.value/2
-                    trsfm = `translate(-50%,0)`
-                    break
-                case 'bottom-start':
-                    t = top.value+height.value+gap
-                    l = left.value
-                    trsfm = `translate(0,0)`
-                    break
-                case 'bottom-end':
-                    t = top.value+height.value+gap
-                    l = left.value+width.value
-                    trsfm = `translate(-100%,0)`
-                    break
-                case 'left':
-                    t = top.value+height.value/2
-                    l=left.value+gap*-1
-                    trsfm=`translate(-100%,-50%)`
-                    break
-                case 'left-start': 
-                    t = top.value
-                    l = left.value + gap*-1
-                    trsfm = `translate(-100%, 0)`
-                    break
-                case 'left-end': 
-                    t = top.value
-                    l = left.value + gap*-1
-                    trsfm = `translate(-100%, calc(-100% + ${height.value}px))`
-                    break
-                case 'right':
-                    t = top.value+height.value/2
-                    l = left.value+width.value+gap
-                    trsfm=`translate(0,-50%)`
-                    break
-                case 'right-start':
-                    t = top.value
-                    l = left.value+width.value+gap
-                    trsfm = `translate(0, 0)`
-                    break
-                case 'right-end':
-                    t = top.value
-                    l = left.value+width.value+gap
-                    trsfm = `translate(0, calc(-100% + ${height.value}px)`
-                    break
-                default:
-                    break
-            }
-        place.left = l+'px'
-        place.top = t+'px'
-        // place.transform = trsfm
+            getRelatePos(relateElem)
+            getElPostion(el)
     }
     //set是一步到位的设置。每个参数都有效的情况，可以用此方法
-    function set(
+    function setPlace(
         relateElem?:HTMLElement/*根据此元素计算位置*/,
         el?:HTMLElement/*要设置的那个元素*/,
         placement?:Placement|string/*位置*/
     ) {
-        // get(relateElem??placementOptions.el.value)
         getPlace(relateElem,el,placement)
-        const _el = el??placementOptions.el.value
-        if(_el) {
-            _el.style.top = `${place.top}px`
-            _el.style.left = `${place.left}px`
-            _el.style.transform = place.transform
-
+        const {gap = 9,offset = 0} = placementOptions
+        const _plc = placement??placementOptions.placement??'top'
+        let l:number = 0,t:number=-99999
+        const offset_left = (width.value - place.width)/2
+        const offset_height = (height.value - place.height)/2
+        const min_width = Math.min(width.value, place.width)
+        const min_height = Math.min(height.value, place.height)
+        let arrow_position:number = isLeftRight(_plc)?min_height*0.5:
+            isTopBottom(_plc)?min_width*0.5:12
+        let t_o = '';
+        switch (_plc) {
+            case 'top':
+                t = top.value - place.height + -1 * gap
+                l = left.value + offset_left
+                arrow_position = place.width /2  -ARROW_OFFSET
+                t_o = `${arrow_position}px bottom`
+                break
+            case 'top-start':
+                t = top.value-place.height+gap*-1
+                l = left.value
+                arrow_position = min_width*ARROW_OFFSET_PERCENT
+                t_o = `${arrow_position}px bottom`
+                break
+            case 'top-end':
+                t = top.value-place.height+gap*-1
+                l = left.value+width.value-place.width
+                arrow_position = place.width - min_width*ARROW_OFFSET_PERCENT
+                t_o = `${arrow_position}px bottom`
+                break
+            case 'bottom':
+                t = top.value+height.value+gap
+                l = left.value+offset_left
+                arrow_position = place.width /2 -ARROW_OFFSET
+                t_o = `${arrow_position}px top`
+                break
+            case 'bottom-start':
+                t = top.value + height.value + gap
+                l = left.value
+                arrow_position = min_width*ARROW_OFFSET_PERCENT -ARROW_OFFSET
+                t_o = `${arrow_position}px top`
+                break
+            case 'bottom-end':
+                t = top.value + height.value + gap
+                l = left.value+offset_left
+                arrow_position = place.width - min_width*ARROW_OFFSET_PERCENT -ARROW_OFFSET
+                t_o = `${arrow_position}px top`
+                break
+            case 'left':
+                t = top.value+offset_height
+                l=left.value-place.width+gap*-1
+                arrow_position = min_height*ARROW_OFFSET_PERCENT -ARROW_OFFSET
+                t_o = `right ${arrow_position}px`
+                break
+            case 'left-start': 
+                t = top.value
+                l = left.value - place.width  + gap*-1
+                arrow_position = min_height*ARROW_OFFSET_PERCENT -ARROW_OFFSET
+                t_o = `right ${arrow_position}px`
+                break
+            case 'left-end': 
+                t = top.value+height.value-place.height
+                l = left.value-place.width+gap*-1
+                arrow_position = place.height - min_height*ARROW_OFFSET_PERCENT - ARROW_OFFSET
+                t_o = `right ${arrow_position}px`
+                break
+            case 'right':
+                t = top.value+offset_height
+                l = left.value+width.value+gap
+                arrow_position = place.height / 2
+                t_o = `left ${arrow_position}px`
+                break
+            case 'right-start':
+                t = top.value
+                l = left.value+place.width+gap
+                arrow_position = min_height*ARROW_OFFSET_PERCENT
+                t_o = `left ${arrow_position}px`
+                break
+            case 'right-end':
+                t = top.value+height.value-place.height
+                l = left.value + width.value + gap
+                arrow_position = place.height - min_height*ARROW_OFFSET_PERCENT - ARROW_OFFSET
+                t_o = `left ${arrow_position}px`
+                break
+            default:
+                break
+        }
+        place.left = l
+        place.top = t
+        place.arrowPosition = arrow_position
+        place.transformOrigin = t_o
+        const _el:any = elem.value
+        // console.log(l,t,_el)
+        if(_el && _el.style) {
+            _el.style.left = `${l}px`
+            _el.style.top = `${t}px`
         }
     }
 
-    onMounted(set)
+    onMounted(setPlace)
     return {
         //需要定位的那个元素的位置信息
         place,getPlace,
         //相关元素的信息relateElement
-        left,right,width,height,top,bottom,get,set
+        left,right,width,height,top,bottom,setPlace
     }
 }

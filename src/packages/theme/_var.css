@@ -39,4 +39,6 @@
   );
   --popup-footer-padding: 0 15px;
   --popup-footer-height: 50px;
+
+  --layer-arrow-size: 5px;
 }

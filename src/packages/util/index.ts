@@ -5,8 +5,12 @@ export function hasUnit(value:string|number) {
     return unit === 'px' || unit === 'em' || unit === 'pt'
 }
 
-export const getStyle = (elem:HTMLElement, prop:any) => {
+export function getStyle(elem:HTMLElement, prop:any) {
     return window.getComputedStyle(elem, null)[prop]
+}
+
+export function isDisplayNone(elem:HTMLElement) {
+    return getStyle(elem,'display') === 'none'
 }
 
 export function getPageScroll() {

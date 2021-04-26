@@ -4,7 +4,7 @@ export default function useListener(
     elem:Ref, //elem.value可能是HTMLElement，也可能个组件！
     type:string, 
     listener:EventListener) {
-    const el = useElement(elem)
+    const {el} = useElement(elem)
     function add() {
         el.value?.addEventListener(type,listener)
     }
