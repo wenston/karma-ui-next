@@ -1,4 +1,4 @@
-import {Ref,ref,reactive,onMounted} from 'vue'
+import {Ref,ref,reactive,onMounted,nextTick} from 'vue'
 import useElement from './useElement'
 import {
     getElementPositionInPage, 
@@ -23,15 +23,16 @@ export interface PlacementOptions {
     isRelative?: boolean,//是否是相对于有定位的父级计算位置
     gap?: number,
     offset?: number,//偏移，暂没实现
-    placement?: Placement|string
+    placement?: Placement|string,
+    transitionName?:string
 }
 export default function usePlacement(placementOptions: PlacementOptions = {
     relateElement: ref(document.body),
     el: ref(document.body)
 }) {
-    const {get:getElement} = useElement(placementOptions.el)
-    const elem = ref(null)
-    const rElem = ref(null)
+    const {get:getElement, getInvisibleElementSize} = useElement(placementOptions.el)
+    const elem = ref(placementOptions.el)
+    const rElem = ref(placementOptions.relateElement)
     const left = ref(0)
     const right = ref(0)
     const width = ref(0)
@@ -45,7 +46,7 @@ export default function usePlacement(placementOptions: PlacementOptions = {
     function getRelatePos(relateElem?:HTMLElement|null) {
         // let _el = relateElem??placementOptions.relateElement.value
         // _el = _el instanceof HTMLElement?_el:(_el as {[key:string]:any}).$el
-        const {el:_el} = getElement(relateElem??placementOptions.relateElement)
+        const _el = getElement(relateElem??placementOptions.relateElement)
         if(placementOptions.isRelative) {
             ({left:left.value,top:top.value} = getOffset(_el));
             ({width:width.value,height:height.value}=getBoundingClientRect(_el))
@@ -62,9 +63,14 @@ export default function usePlacement(placementOptions: PlacementOptions = {
         }
         rElem.value = _el
     }
-    //当el状态是display:none或者在dom还不存在时，获取位置信息没有意义！
+    //当el状态是display:none或者在dom还不存在时，
+    //通过简单的节点复制和Transtion的动画钩子beforeEnter都是获取不到宽高信息的！
+    //所以此时要知道该动画使用了那个class，以便在节点复制的时候，去掉对应的class
+    //然后再计算宽和高，就可以得到了！
     function getElPostion(el?:HTMLElement) {
-        const {el:_el,width,height} = getElement(el??placementOptions.el)
+        const _el = getElement(el??placementOptions.el)
+        const {width,height} = getInvisibleElementSize(_el, placementOptions.transitionName)
+
         if(_el) {
             const p = getBoundingClientRect(_el)
             place.left = p.left
@@ -191,7 +197,9 @@ export default function usePlacement(placementOptions: PlacementOptions = {
         }
     }
 
-    onMounted(setPlace)
+    onMounted(()=>{
+        setPlace()
+    })
     return {
         //需要定位的那个元素的位置信息
         place,getPlace,

@@ -2,16 +2,15 @@
  * TODO: 1：layer框体在隐藏时自动调整位置；2：框体位置跟随鼠标进行自动调整
  * 
  */
-import { defineComponent,ref,watch,computed,SetupContext, toRef, Transition, 
-     vShow, nextTick } from 'vue'
+import { defineComponent,ref,watch,computed,SetupContext, toRef} from 'vue'
 import usePlacement from '../../../use/usePlacement'
-import useBoundingCientRect from '../../../use/useBoundingClientRect'
 import useParentNode from '../../../use/useParentNode'
 import useGlobalZIndex from '../../../use/useGlobalZIndex'
 export default defineComponent({
     props: {
+        show: Boolean,
         bind: {
-            type: String, default: 'v-show'
+            type: String, default: 'v-if'
         },
         //传过来的有可能是个vue组件！
         relateElement: {
@@ -21,7 +20,6 @@ export default defineComponent({
         trigger: {
             type: String, default: 'click'
         },
-        show: Boolean,
         placement: {
             type: String,
             default: 'bottom'
@@ -30,8 +28,6 @@ export default defineComponent({
             type: Number,
             default: 8
         },
-        // showDelay: {type: Number,default: 200},
-        // hideDelay: {type: Number,default: 200},
         zIndex: {type:[Number,String]},//用于层级管理
         toBody: {
             type: Boolean,default: false
@@ -39,6 +35,9 @@ export default defineComponent({
         hasArrow: {
             type: Boolean,default: true
         },//是否有箭头
+        transitionName: {//使用的过渡名称
+            type: String,default: ''
+        }
     },
     emits: ['update:show'],
     setup(props,{slots,emit,attrs}:SetupContext) {
@@ -50,12 +49,15 @@ export default defineComponent({
         if(!props.toBody) {
             useParentNode(re)
         }
+        //注意：如果是v-if，是计算不出el元素的真实宽高的。
+        //故，在动画钩子里计算，即在beforeEnter里计算
         const {place,setPlace} = usePlacement({
             relateElement: re,
             el: root,
             isRelative: !props.toBody,
             gap: props.gap,
-            placement: props.placement
+            placement: props.placement,
+            transitionName: props.transitionName
         })
 
         const layerProps = computed(()=>{
@@ -89,21 +91,8 @@ export default defineComponent({
         })
 
         function wrapper(con:any) {
-            if(props.bind==='v-show') {
-                return (
-                    <Transition name="k-layer-scale">
-                        <div {...layerProps.value} 
-                            v-show={props.show}
-                            onClick={e=>{e.stopPropagation()}}>{con}</div>
-                    </Transition>
-                )
-            }
-            return (
-                <Transition name="k-layer-scale">
-                    {props.show && <div {...layerProps.value}
-                            onClick={e=>{e.stopPropagation()}}>{con}</div>}
-                </Transition>
-            )
+            return (<div {...layerProps.value}
+            onClick={e=>{e.stopPropagation()}}>{con}</div>)
         }
 
         return ()=> wrapper(slots.default?.())

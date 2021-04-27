@@ -119,10 +119,10 @@
 
 .k-layer-scale-enter-active,
 .k-layer-scale-leave-active {
-  transition: transform 0.4s cubic-bezier(0.4, 1, 0, 1);
+  transition: var(--layer-enter-transition);
 }
 .k-layer-scale-leave-active {
-  transition: transform 0.2s cubic-bezier(0.39, 0.95, 0, 1);
+  transition: var(--layer-leave-transition);
 }
 
 .k-layer-scale-enter-from,

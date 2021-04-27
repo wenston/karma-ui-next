@@ -1,4 +1,4 @@
-import {SetupContext, DirectiveArguments, getCurrentInstance, onMounted, Teleport} from 'vue'
+import {SetupContext, DirectiveArguments, onMounted, Teleport, Transition} from 'vue'
 import { defineComponent, ref, cloneVNode, watch, computed } from 'vue'
 import {withDirectives, resolveDirective} from 'vue'
 import clickOutside from '../../../directives/clickOutside'
@@ -6,12 +6,15 @@ import Layer from '../../layer'
 import useSlot from '../../../use/useSlot'
 import useDelay from '../../../use/useDelay'
 import useEvent from '../../../use/useEvent'
+const TransitionName = 'k-layer-scale'
 export default defineComponent({
     inheritAttrs: false,
     components: {Layer},
     directives: {clickOutside},
     props: {
         ...Layer.props,
+        showDelay: {type: Number,default: 200},
+        hideDelay: {type: Number,default: 200},
         trigger: {
             type: String,
             default:'click'
@@ -57,11 +60,11 @@ export default defineComponent({
             const _:{[key:string]:any} = {
                 ...rest,
                 show:visible.value,
+                transitionName: TransitionName,
                 style: {
                     '--__layer-background-color': 'rgba(255,255,255,.95)',
                     '--__layer-text-color': '#666'
-                },
-                // "onUpdate:show":toggle
+                }
             }
             if(props.trigger==='hover') {
                 _.onMouseenter=clear
@@ -71,9 +74,7 @@ export default defineComponent({
                     },props.hideDelay)
                 }
             }else if(props.trigger==='click'){
-                _.onClick=()=>{
-                    // 无事可做
-                }
+                //无操作
             }
             return _
         })
@@ -96,8 +97,27 @@ export default defineComponent({
             if(props.trigger==='click') {
                 trigger = withDirectives(trigger, direc)
             }
-            const _layer = <Layer {...layerProps.value} relate-element={relateElement}>{defaultSlot}</Layer>
-            const layer = props.toBody?<Teleport to={document.body}>{_layer}</Teleport>:_layer
+            // const _layer = <Layer {...layerProps.value} 
+            //     relate-element={relateElement}>{defaultSlot}</Layer>
+            let _layer = null
+            if(props.bind==='v-show') {
+                _layer = (
+                    <Transition name={TransitionName}>
+                        <Layer {...layerProps.value} v-show={visible.value}
+                            relate-element={relateElement}>{defaultSlot}</Layer>
+                    </Transition>
+                )
+            } else {
+                _layer = (
+                    <Transition name={TransitionName}>
+                       {visible.value && <Layer {...layerProps.value} 
+                            relate-element={relateElement}>{defaultSlot}</Layer>}
+                    </Transition>
+                )
+            }
+            const layer = props.toBody
+                ?<Teleport to={document.body}>{_layer}</Teleport>
+                :_layer
             return (
                 <>
                     {trigger}
