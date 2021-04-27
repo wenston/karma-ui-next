@@ -1,6 +1,6 @@
 <template>
   <h1>Popup</h1>
-  <Button @click="show=!show">点击弹框展示某些东西</Button>
+  <Bouton @click="show=!show">点击弹框展示某些东西</Bouton>
   <Popup v-model="show"
     :has-header="true"
     :has-footer="true"
@@ -20,10 +20,10 @@
 <script>
 import { ref } from "vue"
 import Popup from "../packages/components/popup"
-import Button from "../packages/components/button"
+import Bouton from "../packages/components/bouton"
 import Tooltip from "../packages/components/tooltip"
 export default {
-  components: { Popup, Button, Tooltip },
+  components: { Popup, Bouton, Tooltip },
   setup() {
     const show = ref(false)
     return {

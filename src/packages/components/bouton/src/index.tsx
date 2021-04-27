@@ -1,15 +1,15 @@
 import { computed, defineComponent, onUpdated,onRenderTracked,onRenderTriggered } from "vue"
-const Button = defineComponent({
+const Bouton = defineComponent({
   setup(props, ctx) {
     const tag = props.tag
     const klass = computed(() => {
       return [
-        "k-button",
+        "k-bouton",
         {
-          [`k-button-${props.type}`]: true,
-          'k-button--disabled': props.disabled
+          [`k-bouton-${props.type}`]: true,
+          'k-bouton--disabled': props.disabled
         },
-        `k-button-${props.size}`,
+        `k-bouton-${props.size}`,
         ctx.attrs.class
       ]
     })
@@ -40,7 +40,7 @@ const Button = defineComponent({
   props: {
     tag: {
       type: String,
-      default: "button"
+      default: "bouton"
     },
     type: {
       type: String,
@@ -55,4 +55,4 @@ const Button = defineComponent({
   emits: {}
 })
 
-export default Button
+export default Bouton

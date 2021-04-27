@@ -22,9 +22,9 @@
   --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
   --drop-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
 
-  --button-height: 32px;
-  --button-padding: 0 15px;
-  --button-font-size: 12px;
+  --bouton-height: 32px;
+  --bouton-padding: 0 15px;
+  --bouton-font-size: 12px;
 
   --mask-bg-color: rgba(0, 0, 0, 0.45);
 

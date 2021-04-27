@@ -2,7 +2,7 @@ import { computed, defineComponent, ref, onMounted } from "vue"
 import {hasUnit} from '../../../util'
 import Mask from '../../mask'
 import Icon from '../../icon'
-import Button from '../../button'
+import Bouton from '../../bouton'
 import Close from '../../close'
 export default defineComponent({
     setup(props, {slots,emit}) {
@@ -45,9 +45,9 @@ export default defineComponent({
                     footerSlots = slots.footer()
                 } else {
                     footerSlots = [
-                        <Button onClick={onClose}>{props.cancelText}</Button>,
-                        <Button type="primary"
-                            onClick={onOk}>{props.okText}</Button>
+                        <Bouton onClick={onClose}>{props.cancelText}</Bouton>,
+                        <Bouton type="primary"
+                            onClick={onOk}>{props.okText}</Bouton>
                     ]
                 }
                 
@@ -101,7 +101,7 @@ export default defineComponent({
         'after-ok'
     ],
     components: {
-        Mask, Icon, Button, Close
+        Mask, Icon, Bouton, Close
     },
     props: {
         modelValue: {

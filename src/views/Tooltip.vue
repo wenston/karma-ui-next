@@ -6,7 +6,7 @@
       placement="bottom-start"
       v-model:show="show"
       trigger="click">
-      <Button>点击</Button>
+      <Bouton>点击</Bouton>
     </Tooltip>
 
     <Tooltip placement="top-start"
@@ -67,9 +67,9 @@
 <script>
 import { defineComponent, ref } from "vue"
 import Tooltip from "../packages/components/tooltip"
-import Button from "../packages/components/button"
+import Bouton from "../packages/components/bouton"
 export default defineComponent({
-  components: { Tooltip, Button },
+  components: { Tooltip, Bouton },
   setup(props) {
     const show = ref(true)
     return {

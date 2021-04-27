@@ -1,14 +1,14 @@
 
 <script lang="jsx">
 import { ref, defineComponent, getCurrentInstance, watch, onMounted } from "vue"
-import Button from "../packages/components/button"
+import Bouton from "../packages/components/bouton"
 import Toggle from "../packages/components/toggle"
 import Checkbox from "../packages/components/checkbox"
 
 export default defineComponent({
   components: {
     Toggle,
-    Button,
+    Bouton,
     Checkbox,
   },
   setup(props, ctx) {

@@ -1,10 +1,10 @@
 <script lang="jsx">
 import { ref, defineComponent, computed, useCssModule } from "vue"
-import Button from "../packages/components/button"
+import Bouton from "../packages/components/bouton"
 
 export default defineComponent({
   components: {
-    Button,
+    Bouton,
   },
   data() {
     return {
@@ -33,15 +33,15 @@ export default defineComponent({
     return () => (
       <>
         <div>
-          <h1>button</h1>
+          <h1>bouton 法语：'按钮'</h1>
           <div>
-            <Button type="danger" class={[css.danger,css.d]} disabled  onClick={e=>{
-              console.log('danger button')
-            }}>danger button</Button>
-            <Button type={buttonType.value}
+            <Bouton type="danger" class={[css.danger,css.d]} disabled  onClick={e=>{
+              console.log('danger bouton')
+            }}>danger bouton</Bouton>
+            <Bouton type={buttonType.value}
               onClick={e=>{
                 buttonType.value="success"
-              }}>primary button</Button>
+              }}>primary bouton</Bouton>
           </div>
         </div>
       </>

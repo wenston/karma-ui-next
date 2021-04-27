@@ -11,11 +11,11 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: "/button",
-    name: "button",
-    component: () => import("../views/Button.vue"),
+    path: "/bouton",
+    name: "bouton",
+    component: () => import("../views/Bouton.vue"),
     meta: {
-      title: "按钮 Button"
+      title: "按钮 Bouton"
     }
   },
   {
@@ -56,14 +56,6 @@ const routes: Array<RouteRecordRaw> = [
     component: ()=> import('../views/Overlay.vue'),
     meta: {
       title: '覆盖层 Overlay'
-    }
-  },
-  {
-    path: '/layer',
-    name: 'layer',
-    component: ()=> import('../views/Layer.vue'),
-    meta: {
-      title: '图层 Layer'
     }
   },
   {

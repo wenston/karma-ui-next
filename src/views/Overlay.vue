@@ -1,11 +1,11 @@
 <template>
-  <h1>气泡卡</h1>
+  <h1>覆盖层</h1>
   <section style="margin: 200px;">
-    <!-- <Overlay :placement="placement"
+    <Overlay :placement="placement"
       trigger="click"
       v-model:show="showDel">
       <template #title>
-        <Button>点击展示覆盖层</Button>
+        <Bouton>点击展示覆盖层</Bouton>
         <template v-for="item in actions"
           :key="item">
           <a href="javascript:;">{{item}}</a>
@@ -15,11 +15,11 @@
       <div>确定要删除吗？？？</div>
       <div>删除之后将无法恢复！！！</div>
       <div>
-        <Button @click="onCancel">取消</Button>
-        <Button type="primary"
-          @click="onOk">确定</Button>
+        <Bouton @click="onCancel">取消</Bouton>
+        <Bouton type="primary"
+          @click="onOk">确定</Bouton>
       </div>
-    </Overlay> -->
+    </Overlay>
 
   </section>
   <section style="height:300px;margin-left: 150px">
@@ -29,7 +29,7 @@
         <td>
           <Overlay placement="top-start">
             <template #title>
-              <Button>顶部-左侧</Button>
+              <Bouton>顶部-左侧</Bouton>
             </template>
             <!-- 需要注意的是，如果没有指定宽度，则下边的绝对定位的元素会和单元格宽度差不多宽 -->
             <div style="min-width:150px">
@@ -40,7 +40,7 @@
         <td>
           <Overlay placement="top">
             <template #title>
-              <Button>顶部-中间</Button>
+              <Bouton>顶部-中间</Bouton>
             </template>
             <p style="min-width:130px">
               top是位于<br />正上方的覆盖层提示
@@ -50,7 +50,7 @@
         <td>
           <Overlay placement="top-end">
             <template #title>
-              <Button>顶部-右侧</Button>
+              <Bouton>顶部-右侧</Bouton>
             </template>
             <div style="min-width:130px">
               top-end是位于<br />右上方的提示
@@ -63,7 +63,7 @@
         <td>
           <!-- <Overlay placement="left-start">
             <template #title>
-              <Button>左侧-上部</Button>
+              <Bouton>左侧-上部</Bouton>
             </template>
             <div style="width:120px">
               提示的内容,如果没有给宽度，就会出现误差，此时需要给div一个宽
@@ -76,7 +76,7 @@
         <td>
           <!-- <Overlay placement="right-start">
             <template #title>
-              <Button>右侧-上部</Button>
+              <Bouton>右侧-上部</Bouton>
             </template>
             <div>
               提示的内容
@@ -89,7 +89,7 @@
           <!-- <Overlay placement="left"
             to-body>
             <template #title>
-              <Button>左侧-中间</Button>
+              <Bouton>左侧-中间</Bouton>
             </template>
             <div>
               提示的内容
@@ -102,7 +102,7 @@
         <td>
           <!-- <Overlay placement="right">
             <template #title>
-              <Button>右侧-中间</Button>
+              <Bouton>右侧-中间</Bouton>
             </template>
             <div style="width: 129px;line-height:1.9">
               提示的内容，给多一点内容，看看情况
@@ -117,7 +117,7 @@
         <td>
           <!-- <Overlay placement="left-end">
             <template #title>
-              <Button>左侧-下部</Button>
+              <Bouton>左侧-下部</Bouton>
             </template>
             <div style="width:90px">
               提示的内容呵呵提示的内容呵呵提示的内容呵呵提示的内容呵呵提示的内容呵呵
@@ -130,7 +130,7 @@
         <td>
           <!-- <Overlay placement="right-end">
             <template #title>
-              <Button>右侧-下部</Button>
+              <Bouton>右侧-下部</Bouton>
             </template>
             <div style="width:90px">
               提示的内容和什么东西啊
@@ -143,7 +143,7 @@
         <td>
           <!-- <Overlay placement="bottom-start">
             <template #title>
-              <Button>底部-左侧</Button>
+              <Bouton>底部-左侧</Bouton>
             </template>
             <div>
               提示的内容
@@ -153,7 +153,7 @@
         <td>
           <!-- <Overlay placement="bottom">
             <template #title>
-              <Button>底部-中间</Button>
+              <Bouton>底部-中间</Bouton>
             </template>
             <div style="width:100px">
               提示的内容，给多一点人看看
@@ -163,7 +163,7 @@
         <td>
           <!-- <Overlay placement="bottom-end">
             <template #title>
-              <Button>底部-右侧</Button>
+              <Bouton>底部-右侧</Bouton>
             </template>
             <div>
               提示的内容
@@ -182,10 +182,10 @@
  */
 import { defineComponent, nextTick, ref, watch } from "vue"
 import Overlay from "../packages/components/overlay"
-import Button from "../packages/components/button"
+import Bouton from "../packages/components/bouton"
 import useToggle from "../packages/use/useToggle"
 export default defineComponent({
-  components: { Overlay, Button },
+  components: { Overlay, Bouton },
   setup() {
     const { value: placement, toggle } = useToggle(
       [
