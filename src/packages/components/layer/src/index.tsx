@@ -12,6 +12,9 @@ export default defineComponent({
         bind: {
             type: String, default: 'v-if'
         },
+        // className: {
+        //     type: [String,Array]
+        // },
         //传过来的有可能是个vue组件！
         relateElement: {
             type: [HTMLElement,Object],

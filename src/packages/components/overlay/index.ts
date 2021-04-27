@@ -1,2 +1,3 @@
-import './src/style/overlay.css'
+
 export {default} from './src'
+import './src/style/overlay.css'

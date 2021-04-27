@@ -1,11 +1,12 @@
 .k-layer {
+  /* 其中的background-color/color/padding，可以传入css属性来控制 */
   --layer-arrow-offset: calc(-2 * var(--layer-arrow-size));
+  padding: var(--__layer-padding, 7px 15px);
+  background-color: var(--__layer-background-color);
+  color: var(--__layer-color);
 
   position: absolute;
   border-radius: var(--radius);
-  padding: 8px 15px;
-  background-color: var(--__layer-background-color);
-  color: var(--__layer-text-color);
   z-index: var(--__layer-z-index, 100);
   filter: drop-shadow(var(--drop-shadow));
   transform-origin: var(--__layer-transform-origin, 0 0);

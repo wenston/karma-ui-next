@@ -1,20 +1,28 @@
-import {SetupContext, DirectiveArguments, onMounted, Teleport, Transition} from 'vue'
+import {SetupContext, DirectiveArguments, Teleport, onMounted} from 'vue'
 import { defineComponent, ref, cloneVNode, watch, computed } from 'vue'
 import {withDirectives, resolveDirective} from 'vue'
 import clickOutside from '../../../directives/clickOutside'
 import Layer from '../../layer'
 import useSlot from '../../../use/useSlot'
-import useDelay from '../../../use/useDelay'
 import useEvent from '../../../use/useEvent'
-const TransitionName = 'k-layer-scale'
+import useDelay from '../../../use/useDelay'
 export default defineComponent({
     inheritAttrs: false,
     components: {Layer},
     directives: {clickOutside},
     props: {
         ...Layer.props,
-        showDelay: {type: Number,default: 200},
-        hideDelay: {type: Number,default: 200},
+        trigger: {
+            type: String,
+            default:'click'
+        },
+        toBody: {
+            type: Boolean,default: false
+        },
+        title: {
+            type: [String,Object],
+            default:''
+        },
         tag: {
             type: String,
             default: 'span'
@@ -25,11 +33,12 @@ export default defineComponent({
         const clickOutside = resolveDirective('clickOutside')
         const visible = ref(props.show)
         const relateElement = ref(null)
-        const {start,stop,clear} = useDelay()
-        const titleSlot = computed(()=>{
-            return slots.title?.() || []
+        const defaultSlot = computed(()=>{
+            return slots.default?.() || []
         })
-
+        const _defaultSlot = useSlot({slot:defaultSlot,tag:props.tag})
+        const {start,stop,clear} = useDelay()
+        
         if(props.trigger==='hover') {
             useEvent(relateElement,'mouseenter',()=>{
                 start(()=>{visible.value=true},props.showDelay)
@@ -44,6 +53,7 @@ export default defineComponent({
             })
 
         }
+
         watch(()=>props.show,v=>{
             visible.value=v
         })
@@ -51,26 +61,15 @@ export default defineComponent({
             emit('update:show',v)
         })
         const layerProps = computed(()=>{
-            const {tag,showDelay,hideDelay,...rest} = props
-            const _style:any = attrs.style??{}
-            const _sty:any = {}
-            for(const k in _style) {
-                if(k==='background-color' || k==='color') {
-                    _sty[`--__layer-${k}`] = _style[k]
-                } else {
-                    _sty[k] = _style[k]
-                }
-            }
+            const {tag,title,..._props} = props
             const _:{[key:string]:any} = {
-                ...rest,
+                ..._props,
                 show:visible.value,
-                transitionName: TransitionName,
-                class: attrs.class??'',
                 style: {
-                    '--__layer-background-color': 'rgba(255,255,255,.95)',
-                    '--__layer-color': '#666',
-                    ..._sty
-                }
+                    '--__layer-background-color': 'rgba(0,0,0,.8)',
+                    '--__layer-text-color': 'rgba(255,255,255,.8)'
+                },
+                "onUpdate:show":toggle,
             }
             if(props.trigger==='hover') {
                 _.onMouseenter=clear
@@ -80,18 +79,27 @@ export default defineComponent({
                     },props.hideDelay)
                 }
             }else if(props.trigger==='click'){
-                //无操作
+                _.onClick=()=>{
+                    // visible.value=!visible.value
+                    // console.log('你想干什么')
+                }
             }
             return _
         })
+        function toggle() {
+            visible.value=!visible.value
+        }
 
-        const _titleSlot = useSlot({slot:titleSlot,tag:props.tag})
+        function teleport(con:any){
+            return <Teleport to={document.body}>{con}</Teleport>
+        }
         return ()=> {
-            const defaultSlot = slots.default?.()
             let t = <span />
-            if(_titleSlot.value.length) {
-                //注意：由于是clone出的节点，所以ref指向的有可能是个组件，而不是原生html标签！！
-                t = cloneVNode(_titleSlot.value[0],{ref:relateElement})
+            if(_defaultSlot.value.length) {
+                /* 
+                //注意：由于是clone出的节点，所以ref指向的有可能是个组件，而不是原生html标签！！ 
+                */
+                t = cloneVNode(_defaultSlot.value[0],{ref:relateElement})
             }
             const direc:DirectiveArguments = [[
                 clickOutside!, 
@@ -104,30 +112,14 @@ export default defineComponent({
             if(props.trigger==='click') {
                 trigger = withDirectives(trigger, direc)
             }
-            let _layer = null
-            if(props.bind==='v-show') {
-                _layer = (
-                    <Transition name={TransitionName}>
-                        <Layer {...layerProps.value} v-show={visible.value}
-                            relate-element={relateElement}>{defaultSlot}</Layer>
-                    </Transition>
-                )
-            } else {
-                _layer = (
-                    <Transition name={TransitionName}>
-                       {visible.value && <Layer {...layerProps.value} 
-                            relate-element={relateElement}>{defaultSlot}</Layer>}
-                    </Transition>
-                )
-            }
-            const layer = props.toBody
-                ?<Teleport to={document.body}>{_layer}</Teleport>
-                :_layer
+            const layer = <Layer {...layerProps.value} relate-element={relateElement}>{props.title}</Layer>
+            const tit = props.toBody?teleport(layer):layer
+            // console.log(trigger)
             return (
                 <>
                     {trigger}
-                    {_titleSlot.value.slice(1)}
-                    {layer}
+                    {_defaultSlot.value.slice(1)}
+                    {visible.value&&tit}
                 </>
             )
         }

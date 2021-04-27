@@ -9,16 +9,13 @@
       <Button>点击</Button>
     </Tooltip>
 
-    <Tooltip :class="css.item"
-      placement="top-start"
+    <Tooltip placement="top-start"
       trigger="click"
       title="一个比较长比较长的提示">
       top-start </Tooltip>
-    <Tooltip :class="css.item"
-      placement="top-end"
+    <Tooltip placement="top-end"
       title="位置在top-end">top-end</Tooltip>
-    <Tooltip :title="tip"
-      :class="css.item">
+    <Tooltip :title="tip">
       <span :class="css.item">tip</span>
     </Tooltip>
     <Tooltip title="one tip"
@@ -74,7 +71,7 @@ import Button from "../packages/components/button"
 export default defineComponent({
   components: { Tooltip, Button },
   setup(props) {
-    const show = ref(false)
+    const show = ref(true)
     return {
       // Tooltip: shallowRef(Tooltip),
       onClick: (e) => {
