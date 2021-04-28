@@ -19,6 +19,10 @@ function isDocumentBody(str:any) {
     return str === 'body' || str === document.body
 }
 
+export function isInvalidValue(v:any) {
+    return v==='' || v===undefined || v===null || isNaN(v)
+}
+
 export function hasUnit(value:string|number) {
     const unit = String(value).slice(-2).toLowerCase()
     return unit === 'px' || unit === 'em' || unit === 'pt'
@@ -39,8 +43,9 @@ export function getPageScroll() {
     }
 }
 
-export function getBoundingClientRect(elem:HTMLElement) {
-    return elem.getBoundingClientRect()
+export function getBoundingClientRect(elem:any) {
+    const _el = getElement(elem)
+    return _el.getBoundingClientRect()
 }
 
 export function getOffset(elem:HTMLElement) {
@@ -102,11 +107,12 @@ export function getInvisibleElementSize(el:HTMLElement, transitionName?:string) 
         if(transitionName) {
             removeClass(node,transitionState.map(s=>transitionName+'-'+s))
         }
+        // console.log(node)
         node.style.display = 'block'
         node.style.opacity = 0
         _el.parentNode?.appendChild(node)
         const {width:_w,height:_h} = getBoundingClientRect(node)
-        // console.log(width,height)
+        // console.log(_w,_h)
         width = _w
         height = _h
         _el.parentNode?.removeChild(node)

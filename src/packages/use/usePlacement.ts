@@ -1,4 +1,4 @@
-import {Ref,ref,reactive,onMounted,nextTick} from 'vue'
+import {Ref,ref,reactive,onMounted} from 'vue'
 import useElement from './useElement'
 import {
     getElementPositionInPage, 
@@ -24,13 +24,15 @@ export interface PlacementOptions {
     gap?: number,
     offset?: number,//偏移，暂没实现
     placement?: Placement|string,
-    transitionName?:string
+    transitionName?:string,
+    arrowOffsetPercent?:number
 }
 export default function usePlacement(placementOptions: PlacementOptions = {
     relateElement: ref(document.body),
     el: ref(document.body)
 }) {
     const {get:getElement, getInvisibleElementSize} = useElement(placementOptions.el)
+    const percent = ref(placementOptions.arrowOffsetPercent??ARROW_OFFSET_PERCENT)
     const elem = ref(placementOptions.el)
     const rElem = ref(placementOptions.relateElement)
     const left = ref(0)
@@ -69,7 +71,8 @@ export default function usePlacement(placementOptions: PlacementOptions = {
     //然后再计算宽和高，就可以得到了！
     function getElPostion(el?:HTMLElement) {
         const _el = getElement(el??placementOptions.el)
-        const {width,height} = getInvisibleElementSize(_el, placementOptions.transitionName)
+        const {width,height} = getInvisibleElementSize(
+            _el, placementOptions.transitionName)
 
         if(_el) {
             const p = getBoundingClientRect(_el)
@@ -119,13 +122,13 @@ export default function usePlacement(placementOptions: PlacementOptions = {
             case 'top-start':
                 t = top.value-place.height+gap*-1
                 l = left.value
-                arrow_position = min_width*ARROW_OFFSET_PERCENT
+                arrow_position = min_width*percent.value - ARROW_OFFSET
                 t_o = `${arrow_position}px bottom`
                 break
             case 'top-end':
                 t = top.value-place.height+gap*-1
                 l = left.value+width.value-place.width
-                arrow_position = place.width - min_width*ARROW_OFFSET_PERCENT
+                arrow_position = place.width - min_width*percent.value - ARROW_OFFSET
                 t_o = `${arrow_position}px bottom`
                 break
             case 'bottom':
@@ -137,31 +140,31 @@ export default function usePlacement(placementOptions: PlacementOptions = {
             case 'bottom-start':
                 t = top.value + height.value + gap
                 l = left.value
-                arrow_position = min_width*ARROW_OFFSET_PERCENT -ARROW_OFFSET
+                arrow_position = min_width*percent.value -ARROW_OFFSET
                 t_o = `${arrow_position}px top`
                 break
             case 'bottom-end':
                 t = top.value + height.value + gap
                 l = left.value+offset_left
-                arrow_position = place.width - min_width*ARROW_OFFSET_PERCENT -ARROW_OFFSET
+                arrow_position = place.width - min_width*percent.value -ARROW_OFFSET
                 t_o = `${arrow_position}px top`
                 break
             case 'left':
                 t = top.value+offset_height
                 l=left.value-place.width+gap*-1
-                arrow_position = min_height*ARROW_OFFSET_PERCENT -ARROW_OFFSET
+                arrow_position = min_height*percent.value -ARROW_OFFSET
                 t_o = `right ${arrow_position}px`
                 break
             case 'left-start': 
                 t = top.value
                 l = left.value - place.width  + gap*-1
-                arrow_position = min_height*ARROW_OFFSET_PERCENT -ARROW_OFFSET
+                arrow_position = min_height*percent.value -ARROW_OFFSET
                 t_o = `right ${arrow_position}px`
                 break
             case 'left-end': 
                 t = top.value+height.value-place.height
                 l = left.value-place.width+gap*-1
-                arrow_position = place.height - min_height*ARROW_OFFSET_PERCENT - ARROW_OFFSET
+                arrow_position = place.height - min_height*percent.value - ARROW_OFFSET
                 t_o = `right ${arrow_position}px`
                 break
             case 'right':
@@ -173,13 +176,13 @@ export default function usePlacement(placementOptions: PlacementOptions = {
             case 'right-start':
                 t = top.value
                 l = left.value+place.width+gap
-                arrow_position = min_height*ARROW_OFFSET_PERCENT
+                arrow_position = min_height*percent.value - ARROW_OFFSET
                 t_o = `left ${arrow_position}px`
                 break
             case 'right-end':
                 t = top.value+height.value-place.height
                 l = left.value + width.value + gap
-                arrow_position = place.height - min_height*ARROW_OFFSET_PERCENT - ARROW_OFFSET
+                arrow_position = place.height - min_height*percent.value - ARROW_OFFSET
                 t_o = `left ${arrow_position}px`
                 break
             default:
@@ -200,6 +203,7 @@ export default function usePlacement(placementOptions: PlacementOptions = {
     onMounted(()=>{
         setPlace()
     })
+    
     return {
         //需要定位的那个元素的位置信息
         place,getPlace,

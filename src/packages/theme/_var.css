@@ -1,8 +1,8 @@
 :root {
-  --radius: 4px;
+  --radius: 5px;
   --gap: 15px;
   --cubic-bezier: cubic-bezier(0.4, 1, 0, 1);
-  --color-primary: #4693ff;
+  --color-primary: rgb(70, 147, 255);
   --color-danger: #ff7070;
   --color-success: #3ecc56;
   --color-warning: #e1b205;
@@ -14,17 +14,27 @@
   --color-4: #9ca3aa;
   --color-5: #c4cacf;
   --color-6: #dfe5e9;
+  --color-placeholder: var(--color-5);
 
+  --color-line: var(--color-5);
   --color-dividing-line: var(--color-6);
+
+  --font-size: 14px;
+
+  /* 文本框、选择器等的默认宽度 */
+  --form-item-width: 200px;
+  /* 按钮、文本框、选择器等的默认高度 */
+  --height: 34px;
+  --padding-x: 15px;
 
   --transition: 0.25s;
 
   --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
   --drop-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
 
-  --bouton-height: 32px;
-  --bouton-padding: 0 15px;
-  --bouton-font-size: 12px;
+  --bouton-height: var(--height);
+  --bouton-padding: 0 var(--padding-x);
+  --bouton-font-size: var(--font-size);
 
   --mask-bg-color: rgba(0, 0, 0, 0.45);
 
@@ -42,6 +52,11 @@
   --popup-footer-height: 50px;
 
   --layer-arrow-size: 5px;
-  --layer-enter-transition: transform 0.418s var(--cubic-bezier);
-  --layer-leave-transition: transform 0.2s var(--cubic-bezier);
+  --layer-enter-transition: transform 0.5s var(--cubic-bezier),
+    opacity 0.7s var(--cubic-bezier);
+  --layer-leave-transition: transform 0.2s var(--cubic-bezier),
+    opacity 0.2s var(--cubic-bezier);
+
+  --choose-focus-box-shadow: 0 0 5px var(--color-primary),
+    inset 1px 2px 3px rgba(0, 0, 0, 0.1);
 }

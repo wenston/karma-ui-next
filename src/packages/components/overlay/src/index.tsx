@@ -1,6 +1,7 @@
 import {SetupContext, DirectiveArguments, onMounted, Teleport, Transition} from 'vue'
 import { defineComponent, ref, cloneVNode, watch, computed } from 'vue'
 import {withDirectives, resolveDirective} from 'vue'
+import {getBoundingClientRect} from '../../../util'
 import clickOutside from '../../../directives/clickOutside'
 import Layer from '../../layer'
 import useSlot from '../../../use/useSlot'
@@ -15,6 +16,9 @@ export default defineComponent({
         ...Layer.props,
         showDelay: {type: Number,default: 200},
         hideDelay: {type: Number,default: 200},
+        isEqualWidth: {
+            type: Boolean,default: false
+        },
         tag: {
             type: String,
             default: 'span'
@@ -25,6 +29,7 @@ export default defineComponent({
         const clickOutside = resolveDirective('clickOutside')
         const visible = ref(props.show)
         const relateElement = ref(null)
+        const titleWidth = ref(0)
         const {start,stop,clear} = useDelay()
         const titleSlot = computed(()=>{
             return slots.title?.() || []
@@ -42,7 +47,11 @@ export default defineComponent({
             useEvent(relateElement,'click',()=>{
                 visible.value=!visible.value
             })
-
+            useEvent(relateElement,'keyup',(e:KeyboardEvent)=>{
+                if(e.code.toLowerCase()==='enter') {
+                    visible.value=!visible.value
+                }
+            })
         }
         watch(()=>props.show,v=>{
             visible.value=v
@@ -51,7 +60,7 @@ export default defineComponent({
             emit('update:show',v)
         })
         const layerProps = computed(()=>{
-            const {tag,showDelay,hideDelay,...rest} = props
+            const {tag,showDelay,hideDelay,isEqualWidth,...rest} = props
             const _style:any = attrs.style??{}
             const _sty:any = {}
             for(const k in _style) {
@@ -72,6 +81,9 @@ export default defineComponent({
                     ..._sty
                 }
             }
+            if(props.isEqualWidth) {
+                _.style['--__layer-min-width'] = `${titleWidth.value}px`
+            }
             if(props.trigger==='hover') {
                 _.onMouseenter=clear
                 _.onMouseleave=()=>{
@@ -85,6 +97,13 @@ export default defineComponent({
             return _
         })
 
+        onMounted(()=>{
+            if(props.isEqualWidth) {
+                const {width} = getBoundingClientRect(relateElement)
+                titleWidth.value = width
+            }
+        })
+        
         const _titleSlot = useSlot({slot:titleSlot,tag:props.tag})
         return ()=> {
             const defaultSlot = slots.default?.()

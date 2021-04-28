@@ -1,0 +1,26 @@
+.k-choose {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  color: var(--color-3);
+  font-size: var(--font-size);
+  border: var(--color-line) 1px solid;
+  border-radius: var(--radius);
+  height: var(--height);
+  width: var(--form-item-width);
+  padding: 0 var(--padding-x);
+  cursor: pointer;
+  transition: var(--transition);
+  user-select: none;
+  outline: 0;
+  &.k-choose-placeholder {
+    color: var(--color-placeholder);
+  }
+  &:hover {
+    border-color: var(--color-primary);
+  }
+  &:focus {
+    border-color: var(--color-primary);
+    box-shadow: var(--choose-focus-box-shadow);
+  }
+}

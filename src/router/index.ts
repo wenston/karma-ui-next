@@ -59,6 +59,14 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: '/choose',
+    name: 'choose',
+    component: ()=> import('../views/Choose.vue'),
+    meta: {
+      title: '选择 Choose'
+    }
+  },
+  {
     path: "/popup",
     name: "popup",
     component: () => import("../views/Popup.vue"),

@@ -61,32 +61,32 @@
       </tr>
       <tr>
         <td>
-          <!-- <Overlay placement="left-start">
+          <Overlay placement="left-start">
             <template #title>
               <Bouton>左侧-上部</Bouton>
             </template>
             <div style="width:120px">
               提示的内容,如果没有给宽度，就会出现误差，此时需要给div一个宽
             </div>
-          </Overlay> -->
+          </Overlay>
         </td>
         <td></td>
         <td></td>
         <td></td>
         <td>
-          <!-- <Overlay placement="right-start">
+          <Overlay placement="right-start">
             <template #title>
               <Bouton>右侧-上部</Bouton>
             </template>
             <div>
               提示的内容
             </div>
-          </Overlay> -->
+          </Overlay>
         </td>
       </tr>
       <tr>
         <td>
-          <!-- <Overlay placement="left"
+          <Overlay placement="left"
             to-body>
             <template #title>
               <Bouton>左侧-中间</Bouton>
@@ -94,13 +94,13 @@
             <div>
               提示的内容
             </div>
-          </Overlay> -->
+          </Overlay>
         </td>
         <td></td>
         <td></td>
         <td></td>
         <td>
-          <!-- <Overlay placement="right">
+          <Overlay placement="right">
             <template #title>
               <Bouton>右侧-中间</Bouton>
             </template>
@@ -110,65 +110,65 @@
               如果没有给出宽度，则会出现定位误差！
               <p style="color: red;">该误差是由于复制节点并计算宽高时的误差导致！</p>
             </div>
-          </Overlay> -->
+          </Overlay>
         </td>
       </tr>
       <tr>
         <td>
-          <!-- <Overlay placement="left-end">
+          <Overlay placement="left-end">
             <template #title>
               <Bouton>左侧-下部</Bouton>
             </template>
             <div style="width:90px">
               提示的内容呵呵提示的内容呵呵提示的内容呵呵提示的内容呵呵提示的内容呵呵
             </div>
-          </Overlay> -->
+          </Overlay>
         </td>
         <td></td>
         <td></td>
         <td></td>
         <td>
-          <!-- <Overlay placement="right-end">
+          <Overlay placement="right-end">
             <template #title>
               <Bouton>右侧-下部</Bouton>
             </template>
             <div style="width:90px">
               提示的内容和什么东西啊
             </div>
-          </Overlay> -->
+          </Overlay>
         </td>
       </tr>
       <tr>
         <td></td>
         <td>
-          <!-- <Overlay placement="bottom-start">
+          <Overlay placement="bottom-start">
             <template #title>
               <Bouton>底部-左侧</Bouton>
             </template>
             <div>
               提示的内容
             </div>
-          </Overlay> -->
+          </Overlay>
         </td>
         <td>
-          <!-- <Overlay placement="bottom">
+          <Overlay placement="bottom">
             <template #title>
               <Bouton>底部-中间</Bouton>
             </template>
             <div style="width:100px">
               提示的内容，给多一点人看看
             </div>
-          </Overlay> -->
+          </Overlay>
         </td>
         <td>
-          <!-- <Overlay placement="bottom-end">
+          <Overlay placement="bottom-end">
             <template #title>
               <Bouton>底部-右侧</Bouton>
             </template>
             <div>
               提示的内容
             </div>
-          </Overlay> -->
+          </Overlay>
         </td>
         <td></td>
       </tr>

@@ -37,11 +37,11 @@ export default defineComponent({
           <div>
             <Bouton type="danger" class={[css.danger,css.d]} disabled  onClick={e=>{
               console.log('danger bouton')
-            }}>danger bouton</Bouton>
+            }}>danger 按钮</Bouton>
             <Bouton type={buttonType.value}
               onClick={e=>{
                 buttonType.value="success"
-              }}>primary bouton</Bouton>
+              }}>primary 按钮</Bouton>
           </div>
         </div>
       </>

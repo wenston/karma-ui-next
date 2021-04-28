@@ -25,7 +25,7 @@
       bind="v-if"
       placement="left"
       :class="css.item">
-      <div style="background-color:green;">左侧</div>
+      <span style="background-color:green;">左侧</span>
     </Tooltip>
     <Tooltip title="bs"
       bind="v-if"
