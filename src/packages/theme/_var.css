@@ -36,7 +36,9 @@
   --bouton-padding: 0 var(--padding-x);
   --bouton-font-size: var(--font-size);
 
-  --mask-bg-color: rgba(0, 0, 0, 0.45);
+  --mask-background-color: rgba(0, 0, 0, 0.45);
+  --mask-enter-transition: background-color 0.5s var(--cubic-bezier);
+  --mask-leave-transiton: background-color 0.2s var(--cubic-bezier);
 
   --popup-radius: var(--radius);
   --popup-bg-color: white;
@@ -53,7 +55,7 @@
 
   --layer-arrow-size: 5px;
   --layer-enter-transition: transform 0.5s var(--cubic-bezier),
-    opacity 0.7s var(--cubic-bezier);
+    opacity 0.5s var(--cubic-bezier);
   --layer-leave-transition: transform 0.2s var(--cubic-bezier),
     opacity 0.2s var(--cubic-bezier);
 

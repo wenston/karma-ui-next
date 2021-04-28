@@ -1,14 +1,10 @@
-import {defineComponent, computed, Teleport, Transition} from 'vue'
+import {defineComponent, computed, Teleport, Transition, withDirectives, vShow, watch} from 'vue'
 import useGlobalZIndex from '../../../use/useGlobalZIndex'
 export default defineComponent({
     props: {
         bind: {
             type: String,
             default: 'v-if'
-        },
-        to: {//遮罩插入的位置
-            type: Element,
-            default: document.body
         },
         modelValue: {//控制遮罩的显隐
             type: Boolean,
@@ -23,43 +19,48 @@ export default defineComponent({
     emits: ['update:modelValue'],
     setup(props, {slots, emit}) {
 
-        const {zIndex} = useGlobalZIndex()
-        
+        const {zIndex, add} = useGlobalZIndex()
+        watch(()=>props.modelValue,v=>{
+            if(v) {add()}
+        })
         function onClickMask() {
             emit('update:modelValue', false)
         }
 
         const maskProps = computed(()=>{
-            const o = {
+            const o:any = {
                 class: 'k-mask',
                 style: {
-                    "--__mask-z-index": props.zIndex??zIndex.value
+                    "--__mask-z-index": zIndex.value??props.zIndex
                 }
             }
             if(props.canCloseByClickSelf) {
                 o.onClick = onClickMask
             }
-            if(props.bind==='v-show') {
-                o['v-show'] = props.modelValue
-            }
             return o
         })
-
+        function wrapper(con:any) {
+            return (
+                <Teleport to={document.body}>
+                    <Transition name="k-mask-fade">
+                        {con}
+                    </Transition>
+                </Teleport>
+            )
+        }
         return () => {
-            const body = (
+            let con:any = (
                 <div {...maskProps.value}>
                     {slots.default?.()}
                 </div>
             )
-            return (
-                <Teleport to={props.to}>
-                    <Transition>
-                        {
-                            props.bind==='v-if'?(props.modelValue&&body):body
-                        }
-                    </Transition>
-                </Teleport>
-            )
+            if(props.bind==='v-show') {
+                con = withDirectives(con,[[vShow, props.modelValue]])
+            } else if(props.bind==='v-if') {
+                con = props.modelValue && con
+            }
+            
+            return wrapper(con)
         }
     }
 })

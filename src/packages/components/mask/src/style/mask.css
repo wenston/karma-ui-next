@@ -4,11 +4,24 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--mask-bg-color);
+  background-color: var(--mask-background-color);
 
   display: flex;
   align-items: center;
   justify-content: center;
 
   z-index: var(--__mask-z-index, 1000);
+}
+
+.k-mask-fade-enter-active,
+.k-mask-fade-leave-active {
+  transition: var(--mask-enter-transition);
+}
+.k-mask-fade-leave-active {
+  transition: var(--mask-leave-transition);
+}
+
+.k-mask-fade-enter-from,
+.k-mask-fade-leave-to {
+  background-color: rgba(0, 0, 0, 0);
 }

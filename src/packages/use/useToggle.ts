@@ -1,6 +1,6 @@
 import { Ref, ref, watch } from "vue"
 
-type ToggleData = Ref<unknown[]>
+type ToggleData = Ref<any[]> | any[]
 type ToggleValue = Ref<any>
 export default function useToggle(refData:ToggleData,refValue:ToggleValue) {
   const base = ref(refData)

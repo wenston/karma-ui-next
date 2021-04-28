@@ -1,15 +1,15 @@
-import { defineComponent,watch, computed, watchEffect,reactive,toRefs } from 'vue'
+import { defineComponent,watch, computed, watchEffect,reactive,toRefs, SetupContext } from 'vue'
 import {isArray} from '@vue/shared'
 import useToggle from '../../../use/useToggle'
 import Icon from '../../icon'
 
-function one(props, {emit, slots}) {
+function one(props:any, {emit, slots}:SetupContext) {
     const {value:v, set, toggle} = useToggle(props.value, props.modelValue)
     watch(()=>props.modelValue,newValue=>{
         set({item:newValue})
     }, {immediate: true})
     
-    function onToggle(e) {
+    function onToggle() {
         toggle()
         emit('update:modelValue',v.value)
         emit('change',v.value)
@@ -20,7 +20,7 @@ function one(props, {emit, slots}) {
             o = {
                 tabindex: 0,
                 onClick: onToggle,
-                onKeyup: e=> {
+                onKeyup: (e:any)=> {
                     if(e.key.toLowerCase()==='enter') {
                         onToggle()
                     }
@@ -44,10 +44,10 @@ function one(props, {emit, slots}) {
         )
     
 }
-function more(props, {emit, slots}) {
+function more(props:any, {emit, slots}:SetupContext) {
 
     const symbol = computed(()=>Symbol(props.value))
-    const has = computed(()=>props.modelValue.some(v=>v===props.value))
+    const has = computed(()=>props.modelValue.some((v:any)=>v===props.value))
     let {value: v,set,toggle} = useToggle(
         [props.value,symbol.value],
         has.value?props.value:symbol.value
@@ -71,7 +71,7 @@ function more(props, {emit, slots}) {
             }
         } else {
             if(has.value) {
-                emit('update:modelValue', props.modelValue.filter(v=>v!==props.value))
+                emit('update:modelValue', props.modelValue.filter((v:any)=>v!==props.value))
                 emit('change',false)
             }
         }
@@ -82,7 +82,7 @@ function more(props, {emit, slots}) {
             o = {
                 tabindex: 0,
                 onClick: onToggle,
-                onKeyup: e=> {
+                onKeyup: (e:any)=> {
                     if(e.key.toLowerCase()==='enter') {
                         onToggle()
                     }
@@ -122,7 +122,7 @@ export default defineComponent({
         disabled: Boolean
     },
     emits: ['change','update:modelValue'],
-    setup(props, ctx) {
+    setup(props, ctx:SetupContext) {
         return isArray(props.modelValue)?more(props,ctx):one(props,ctx)
     }
 })
