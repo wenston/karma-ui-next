@@ -1,10 +1,10 @@
 .k-layer {
   /* 其中的background-color/color/padding，可以传入css属性来控制 */
-  --layer-arrow-offset: calc(-2 * var(--layer-arrow-size));
+  --layer-arrow-offset: calc(-2 * var(--layer-arrow-size) + 1px);
   padding: var(--__layer-padding, 7px 15px);
   background-color: var(--__layer-background-color);
   color: var(--__layer-color);
-  min-width: var(--__layer-min-width, none);
+  min-width: var(--__layer-min-width, auto);
 
   position: absolute;
   border-radius: var(--radius);
@@ -120,15 +120,24 @@
 }
 
 .k-layer-scale-enter-active,
-.k-layer-scale-leave-active {
+.k-layer-scale-x-enter-active,
+.k-layer-scale-x-leave-active {
   transition: var(--layer-enter-transition);
 }
-.k-layer-scale-leave-active {
+.k-layer-scale-leave-active
+  .k-layer-scale-x-leave-active
+  .k-layer-scale-x-leave-active {
   transition: var(--layer-leave-transition);
 }
 
 .k-layer-scale-enter-from,
 .k-layer-scale-leave-to {
   transform: scale(0, 0);
+  opacity: 0;
+}
+
+.k-layer-scale-x-enter-from,
+.k-layer-scale-x-leave-to {
+  transform: scale(0, 1);
   opacity: 0;
 }

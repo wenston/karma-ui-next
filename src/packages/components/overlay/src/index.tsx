@@ -7,22 +7,30 @@ import Layer from '../../layer'
 import useSlot from '../../../use/useSlot'
 import useDelay from '../../../use/useDelay'
 import useEvent from '../../../use/useEvent'
-const TransitionName = 'k-layer-scale'
+const OverlayProps = {
+    showDelay: {type: Number,default: 200},
+    hideDelay: {type: Number,default: 200},
+    isEqualWidth: {
+        type: Boolean,default: false
+    },
+    tag: {
+        type: String,
+        default: 'span'
+    }
+}
+const LayerProps = {
+    ...Layer.props,
+    transitionName: {
+        type: String,default: 'k-layer-scale'
+    },
+}
 export default defineComponent({
     inheritAttrs: false,
     components: {Layer},
     directives: {clickOutside},
     props: {
-        ...Layer.props,
-        showDelay: {type: Number,default: 200},
-        hideDelay: {type: Number,default: 200},
-        isEqualWidth: {
-            type: Boolean,default: false
-        },
-        tag: {
-            type: String,
-            default: 'span'
-        }
+        ...LayerProps,
+        ...OverlayProps
     },
     emits: ['update:show'],
     setup(props,{slots,emit,attrs}:SetupContext) {
@@ -73,7 +81,7 @@ export default defineComponent({
             const _:{[key:string]:any} = {
                 ...rest,
                 show:visible.value,
-                transitionName: TransitionName,
+                transitionName: props.transitionName,
                 class: attrs.class??'',
                 style: {
                     '--__layer-background-color': 'rgba(255,255,255,.95)',
@@ -107,7 +115,7 @@ export default defineComponent({
         const _titleSlot = useSlot({slot:titleSlot,tag:props.tag})
         return ()=> {
             const defaultSlot = slots.default?.()
-            let t = <span />
+            let t = <></>
             if(_titleSlot.value.length) {
                 //注意：由于是clone出的节点，所以ref指向的有可能是个组件，而不是原生html标签！！
                 t = cloneVNode(_titleSlot.value[0],{ref:relateElement})
@@ -126,14 +134,14 @@ export default defineComponent({
             let _layer = null
             if(props.bind==='v-show') {
                 _layer = (
-                    <Transition name={TransitionName}>
+                    <Transition name={props.transitionName}>
                         <Layer {...layerProps.value} v-show={visible.value}
                             relate-element={relateElement}>{defaultSlot}</Layer>
                     </Transition>
                 )
             } else {
                 _layer = (
-                    <Transition name={TransitionName}>
+                    <Transition name={props.transitionName}>
                        {visible.value && <Layer {...layerProps.value} 
                             relate-element={relateElement}>{defaultSlot}</Layer>}
                     </Transition>

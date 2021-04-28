@@ -1,14 +1,15 @@
 <template>
   <h1>Popup</h1>
-  <Bouton @click="show=!show">点击弹框展示某些东西</Bouton>
-  <Popup v-model="show"
-    :has-header="true"
+  <Popup :has-header="true"
     :has-footer="true"
     :body-class="css.bd"
     title="这是自定义title"
     :before-cancel="beforeCancel"
     @after-cancel="afterCancel"
     @after-ok="afterOk">
+    <template #title>
+      <Bouton @click="show=!show">点击弹框展示某些东西</Bouton>
+    </template>
     <div :class="css.body">
       <Tooltip title="给一个提示看看层级">提示</Tooltip>
     </div>

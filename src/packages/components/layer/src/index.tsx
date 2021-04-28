@@ -8,25 +8,32 @@ import useParentNode from '../../../use/useParentNode'
 import useGlobalZIndex from '../../../use/useGlobalZIndex'
 export default defineComponent({
     props: {
+        //控制显隐
         show: Boolean,
         bind: {
             type: String, default: 'v-if'
         },
+        //弹框出现的触发方式
         trigger: {
             type: String, default: 'click'
         },
+        //弹框出现在relateElement的相对位置
         placement: {
             type: String,
             default: 'bottom'
         },
+        //弹框与relateElement的间距
         gap: {
             type: Number,
             default: 8
         },
+        //弹框的zIndex
         zIndex: {type:[Number,String]},//用于层级管理
+        //弹框是否插入document.body
         toBody: {
             type: Boolean,default: false
         },//是否插入body中
+        //弹框是否有箭头
         hasArrow: {
             type: Boolean,default: true
         },//是否有箭头
