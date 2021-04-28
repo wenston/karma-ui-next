@@ -1,6 +1,7 @@
 import {Ref,ref,reactive,onMounted} from 'vue'
 import useElement from './useElement'
 import useEvent from './useEvent'
+import useWindowSize from './useWindowSize'
 import {
     getElementPositionInPage, 
     getOffset,
@@ -44,6 +45,7 @@ export default function usePlacement(placementOptions: PlacementOptions = {
     const height = ref(0)
     const top =  ref(0)
     const bottom = ref(0)
+    const {width:ww,height:wh} = useWindowSize()
     const place = reactive({
         left: 0,top:0,width:0,height:0,right:0,arrowPosition: 12,transformOrigin:''
     })
@@ -115,10 +117,8 @@ export default function usePlacement(placementOptions: PlacementOptions = {
             //在页面中fixed定位，并在中间，故要定位的元素的top和left是要相对于视窗大小计算的
             const pw = place.width
             const ph = place.height
-            const ww = window.innerWidth
-            const wh = window.innerHeight
-            place.left = (ww - pw )/2
-            place.top = (wh - ph)/2
+            place.left = (ww.value - pw )/2
+            place.top = (wh.value - ph)/2
 
             const _el:any = elem.value
             // console.log(l,t,_el)
@@ -230,11 +230,26 @@ export default function usePlacement(placementOptions: PlacementOptions = {
         
     }
 
+    function handleWindowResize() {
+        //当窗口大小调整的时候，只需要重新调整左右宽度，不需要重新计算宽和高
+        // 特别是layer有max-width和max-height时，重新复制节点计算宽高，
+        // 将会造成宽和高一直变小的情况
+        const _el:any = elem.value
+        if(_el && _el.style) {
+            let l = (ww.value-place.width)/2
+            let t = (wh.value-place.height)/2
+            l = l<15?15:l
+            t  = t<15?15:t
+            _el.style.left = `${l}px`
+            _el.style.top = `${t}px`
+        }
+    }
+
     onMounted(()=>{
         setPlace()
     })
     if(placementOptions.isFixed) {
-        useEvent(W,'resize',setPlace)
+        useEvent(W,'resize',handleWindowResize)
     }
     return {
         //需要定位的那个元素的位置信息

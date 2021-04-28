@@ -13,6 +13,9 @@
   transform-origin: var(--__layer-transform-origin, 0 0);
   &.k-layer--fixed {
     position: fixed;
+    max-height: calc(100vh - 2 * var(--gap));
+    max-width: calc(100vw - 2 * var(--gap));
+    overflow: auto;
   }
   &.k-layer-has-arrow {
     &:after {
