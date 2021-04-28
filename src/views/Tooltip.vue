@@ -59,7 +59,9 @@
     </div>
   </div>
   <div>
-    <Tooltip title="提示的内容">
+    <Tooltip title="提示的内容"
+      toBody
+      placement="top-start">
       <span>再次提示</span>
     </Tooltip>
   </div>

@@ -1,5 +1,6 @@
 <template>
   <h1>Popup</h1>
+  <div style="height:300px;"></div>
   <Popup :has-header="true"
     :has-footer="true"
     :body-class="css.bd"
@@ -8,10 +9,16 @@
     @after-cancel="afterCancel"
     @after-ok="afterOk">
     <template #title>
-      <Bouton @click="show=!show">点击弹框展示某些东西</Bouton>
+      <Bouton type="danger">点击弹框展示某些东西</Bouton>
     </template>
     <div :class="css.body">
-      <Tooltip title="给一个提示看看层级">提示</Tooltip>
+      <Tooltip title="给一个提示看看层级"
+        toBody>提示</Tooltip>
+      <div>这是比较长的内容这是比较长的内容这是比较长的内容<br />这是比较长的内容
+        这是比较长的内容这是比较长的内容这是比较长的内容这是比较长<br />的内容
+        这是比较长的内容这是比较长的内容这是比较长的内容这是比较长<br />的内容
+        这是比较长的内容这是比较长的内容这是比较长的内容这是比较长的内容
+      </div>
     </div>
     <template #footer-prepend>
       底部左侧的插槽

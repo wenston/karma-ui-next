@@ -7,9 +7,11 @@ export default function useListener(
     const {el} = useElement(elem)
     function add() {
         el.value?.addEventListener(type,listener)
+        // console.log('add',el.value)
     }
     function remove() {
         el.value?.removeEventListener(type,listener)
+        // console.log('remove')
     }
     onMounted(()=>{
         add()

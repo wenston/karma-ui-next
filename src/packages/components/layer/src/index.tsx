@@ -2,7 +2,7 @@
  * TODO: 1：layer框体在隐藏时自动调整位置；2：框体位置跟随鼠标进行自动调整
  * 
  */
-import { defineComponent,ref,watch,computed,SetupContext, toRef, onUpdated, onRenderTracked, onRenderTriggered} from 'vue'
+import { defineComponent,ref,watch,computed,SetupContext, toRef, onUpdated, onRenderTracked, onRenderTriggered, onMounted} from 'vue'
 import usePlacement from '../../../use/usePlacement'
 import useParentNode from '../../../use/useParentNode'
 import useGlobalZIndex from '../../../use/useGlobalZIndex'
@@ -51,9 +51,12 @@ export default defineComponent({
         },
         transitionName: {//使用的过渡名称
             type: String,default: ''
-        }
+        },
+        //是否是fixed定位，这种情况下，插入到body，并定位到页面中间
+        //此时，placement失效
+        isFixed: Boolean
     },
-    emits: ['update:show'],
+    emits: ['update:show','rect'],
     setup(props,{slots,emit,attrs}:SetupContext) {
         const re = toRef(props, 'relateElement')
         const visible=ref(props.show)
@@ -63,8 +66,7 @@ export default defineComponent({
         if(!props.toBody) {
             useParentNode(re)
         }
-        //注意：如果是v-if，是计算不出el元素的真实宽高的。
-        //故，在动画钩子里计算，即在beforeEnter里计算
+
         const {place,width,setPlace} = usePlacement({
             relateElement: re,
             el: root,
@@ -72,7 +74,8 @@ export default defineComponent({
             gap: props.gap,
             placement: props.placement,
             transitionName: props.transitionName,
-            arrowOffsetPercent: props.arrowOffsetPercent
+            arrowOffsetPercent: props.arrowOffsetPercent,
+            isFixed: props.isFixed
         })
 
         const layerProps = computed(()=>{
@@ -81,14 +84,21 @@ export default defineComponent({
                 ref: root,
                 class:[
                     attrs.class,
-                    'k-layer',`k-layer--${props.placement}`,
+                    'k-layer',
+                    props.isFixed?'k-layer--fixed':`k-layer--${props.placement}`,
                     {'k-layer-has-arrow': props.hasArrow}
                 ],
                 style: {
                     ...(sty as object),
-                    left: place.left,
-                    top: place.top,
-                    // transform: place.transform,//此属性要留给动画，故取消掉！
+                    // left: `${place.left}px`,
+                    // top: `${place.top}px`,
+                    //以下的宽和高的计算，在isFixed 为true的情况下，由于
+                    //动画需要用到width和height，故这两个放在这里，将导致
+                    //复制出来的节点宽和高失准，故放入usePlacement里边，
+                    //采用dom操作的方式来设置，
+                    //为了统一，将left和top也放入usePlacement里一起设置
+                    // width: props.isFixed?`${place.width}px`:'',
+                    // height: props.isFixed?`${place.height}px`:'',
                     "--__layer-arrow-position": `${place.arrowPosition}px`,
                     "--__layer-z-index": props.zIndex??zIndex.value,
                     "--__layer-transform-origin": `${place.transformOrigin}`
@@ -111,9 +121,12 @@ export default defineComponent({
                 add()
             }
         })
-        // watch(width,w=>{
-        //     console.log(w)
-        //     setPlace()
+        // watch([place,()=>place.left,()=>place.top,()=>place.width,()=>place.height],([
+        //     p,l,t,w,h
+        // ])=>{
+        //     console.log(p)
+        // })
+        // onMounted(()=>{
         // })
 
         function wrapper(con:any) {

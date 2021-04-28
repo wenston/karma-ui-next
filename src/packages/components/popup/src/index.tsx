@@ -11,7 +11,7 @@ const OverlayProps = {
     },
     toBody: {
         type: Boolean,default: true
-    },
+    }
 }
 const PopupProps = {
     title: {
@@ -62,7 +62,8 @@ export default defineComponent({
                 bind: props.bind,
                 toBody: props.toBody,
                 hasArrow: false,
-                gap: 0
+                gap: 0,
+                isFixed: true
             }
             return o
         })

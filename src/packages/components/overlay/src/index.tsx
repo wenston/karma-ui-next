@@ -1,5 +1,5 @@
 import {SetupContext, DirectiveArguments, onMounted, Teleport, Transition} from 'vue'
-import { defineComponent, ref, cloneVNode, watch, computed } from 'vue'
+import { defineComponent, ref,reactive, cloneVNode, watch, computed } from 'vue'
 import {withDirectives, resolveDirective} from 'vue'
 import {getBoundingClientRect} from '../../../util'
 import clickOutside from '../../../directives/clickOutside'
@@ -37,7 +37,9 @@ export default defineComponent({
         const clickOutside = resolveDirective('clickOutside')
         const visible = ref(props.show)
         const relateElement = ref(null)
-        const titleWidth = ref(0)
+        const titleRect = reactive({
+            left:0,top:0,width:0,height:0
+        })
         const {start,stop,clear} = useDelay()
         const titleSlot = computed(()=>{
             return slots.title?.() || []
@@ -67,6 +69,12 @@ export default defineComponent({
         watch(visible,v=>{
             emit('update:show',v)
         })
+        const trans_name = computed(()=>{
+            if(props.isFixed) {
+                return 'k-layer-size-transition'
+            }
+            return props.transitionName
+        })
         const layerProps = computed(()=>{
             const {tag,showDelay,hideDelay,isEqualWidth,...rest} = props
             const _style:any = attrs.style??{}
@@ -81,7 +89,7 @@ export default defineComponent({
             const _:{[key:string]:any} = {
                 ...rest,
                 show:visible.value,
-                transitionName: props.transitionName,
+                transitionName: trans_name.value,
                 class: attrs.class??'',
                 style: {
                     '--__layer-background-color': 'rgba(255,255,255,.95)',
@@ -90,7 +98,13 @@ export default defineComponent({
                 }
             }
             if(props.isEqualWidth) {
-                _.style['--__layer-min-width'] = `${titleWidth.value}px`
+                _.style['--__layer-min-width'] = `${titleRect.width}px`
+            }
+            if(props.isFixed) {
+                _.style['--__layer-width-from-to'] = `${titleRect.width}px`
+                _.style['--__layer-height-from-to'] = `${titleRect.height}px`
+                _.style['--__layer-top-from-to'] = `${titleRect.top}px`
+                _.style['--__layer-left-from-to'] = `${titleRect.left}px`
             }
             if(props.trigger==='hover') {
                 _.onMouseenter=clear
@@ -106,10 +120,13 @@ export default defineComponent({
         })
 
         onMounted(()=>{
-            if(props.isEqualWidth) {
-                const {width} = getBoundingClientRect(relateElement)
-                titleWidth.value = width
-            }
+            if(props.isEqualWidth || props.isFixed) {
+                const {width,height,left,top} = getBoundingClientRect(relateElement)
+                titleRect.width = width
+                titleRect.height=height
+                titleRect.top = top
+                titleRect.left = left
+            } 
         })
         
         const _titleSlot = useSlot({slot:titleSlot,tag:props.tag})
@@ -134,14 +151,14 @@ export default defineComponent({
             let _layer = null
             if(props.bind==='v-show') {
                 _layer = (
-                    <Transition name={props.transitionName}>
+                    <Transition name={trans_name.value}>
                         <Layer {...layerProps.value} v-show={visible.value}
                             relate-element={relateElement}>{defaultSlot}</Layer>
                     </Transition>
                 )
             } else {
                 _layer = (
-                    <Transition name={props.transitionName}>
+                    <Transition name={trans_name.value}>
                        {visible.value && <Layer {...layerProps.value} 
                             relate-element={relateElement}>{defaultSlot}</Layer>}
                     </Transition>

@@ -64,7 +64,9 @@ export function getElement(el:any) {
     } else if(isElement(v)) {
         _v = v
     }
-    if(isElement(_v)) {
+    if(_v===window) {
+        _el = _v
+    } else if(isElement(_v)) {
         _el = _v
     } else if(isDocumentBody(_v)) {
         _el = document.body

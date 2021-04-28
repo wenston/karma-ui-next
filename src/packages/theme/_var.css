@@ -27,7 +27,9 @@
   --height: 34px;
   --padding-x: 15px;
 
-  --transition: 0.25s;
+  --transition: 0.35s;
+  --transition-enter: 0.68s;
+  --transition-leave: var(--transition);
 
   --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
   --drop-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
@@ -37,8 +39,10 @@
   --bouton-font-size: var(--font-size);
 
   --mask-background-color: rgba(0, 0, 0, 0.45);
-  --mask-enter-transition: background-color 0.5s var(--cubic-bezier);
-  --mask-leave-transiton: background-color 0.2s var(--cubic-bezier);
+  --mask-enter-transition: background-color var(--transition-enter)
+    var(--cubic-bezier);
+  --mask-leave-transiton: background-color var(--transition-leave)
+    var(--cubic-bezier);
 
   --popup-radius: var(--radius);
   --popup-bg-color: white;
@@ -54,10 +58,12 @@
   --popup-footer-height: 50px;
 
   --layer-arrow-size: 5px;
-  --layer-enter-transition: transform 0.5s var(--cubic-bezier),
-    opacity 0.5s var(--cubic-bezier);
-  --layer-leave-transition: transform 0.2s var(--cubic-bezier),
-    opacity 0.2s var(--cubic-bezier);
+  --layer-enter-transition: transform var(--transition-enter)
+      var(--cubic-bezier),
+    opacity var(--transition-enter) var(--cubic-bezier);
+  --layer-leave-transition: transform var(--transition-leave)
+      var(--cubic-bezier),
+    opacity var(--transition-leave) var(--cubic-bezier);
 
   --choose-focus-box-shadow: 0 0 5px var(--color-primary),
     inset 1px 2px 3px rgba(0, 0, 0, 0.1);
