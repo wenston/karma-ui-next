@@ -1,7 +1,7 @@
 <template>
   <h1>覆盖层</h1>
   <section style="margin: 200px;">
-    <Overlay :placement="placement"
+    <!-- <Overlay :placement="placement"
       trigger="click"
       v-model:show="showDel">
       <template #title>
@@ -19,7 +19,7 @@
         <Bouton type="primary"
           @click="onOk">确定</Bouton>
       </div>
-    </Overlay>
+    </Overlay> -->
 
   </section>
   <section style="height:300px;margin-left: 150px">
@@ -31,7 +31,6 @@
             <template #title>
               <Bouton>顶部-左侧</Bouton>
             </template>
-            <!-- 需要注意的是，如果没有指定宽度，则下边的绝对定位的元素会和单元格宽度差不多宽 -->
             <div style="min-width:150px">
               这是top-start的提示内容，可以很长，也可以很短
             </div>

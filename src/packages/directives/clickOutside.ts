@@ -1,5 +1,6 @@
 //参考：idux-ui https://github.com/IduxFE/idux
 import {Ref, DirectiveBinding, ObjectDirective} from 'vue'
+import {getElement} from '../util'
 import {NOOP, isFunction,isObject} from '@vue/shared'
 // import useEvent from '../use/useEvent'
 
@@ -22,7 +23,8 @@ function createHandler(
     if(isFunction(bindingValue)) {
         handler = bindingValue
     }else if(isObject(bindingValue)) {
-        exclude.push(...bindingValue.exclude.map(el=>el.value))
+        exclude.push(...bindingValue.exclude.map(el=>getElement(el)))
+        // console.log(exclude)
         handler = bindingValue.handler
     }
     docHandlers.set(el, {exclude,handler})
@@ -33,6 +35,7 @@ const clickout = function() {
             createHandler(el,binding.value)
         },
         updated(el:HTMLElement,binding:DirectiveBinding) {
+            // console.log(binding.value)
             createHandler(el,binding.value)
         },
         unmounted(el) {
@@ -48,6 +51,7 @@ const clickout = function() {
 const docListener:EventListener = e=> {
     const tar = e.target as Node
     docHandlers.forEach(({exclude, handler}, el)=> {
+        // console.log(el)
         const isSelf = tar === el
         const isContain = el.contains(tar)
         const isExclude = exclude.length && 

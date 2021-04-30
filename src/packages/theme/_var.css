@@ -24,11 +24,11 @@
   /* 文本框、选择器等的默认宽度 */
   --form-item-width: 200px;
   /* 按钮、文本框、选择器等的默认高度 */
-  --height: 34px;
+  --height: 32px;
   --padding-x: 15px;
 
   --transition: 0.35s;
-  --transition-enter: 0.68s;
+  --transition-enter: 0.618s;
   --transition-leave: var(--transition);
 
   --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);

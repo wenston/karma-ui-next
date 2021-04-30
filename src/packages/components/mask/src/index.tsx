@@ -1,66 +1,42 @@
-import {defineComponent, computed, Teleport, Transition, withDirectives, vShow, watch} from 'vue'
+import {defineComponent, computed,ref, Teleport, Transition, withDirectives, vShow, watch, h, onMounted} from 'vue'
 import useGlobalZIndex from '../../../use/useGlobalZIndex'
 export default defineComponent({
     props: {
-        bind: {
-            type: String,
-            default: 'v-if'
-        },
-        modelValue: {//控制遮罩的显隐
-            type: Boolean,
-            default: false
-        },
-        canCloseByClickSelf: {
-            type: Boolean,
-            default: false
-        },
-        zIndex: [Number,String]
+        bind: {type: String,default:'v-if'},
+        zIndex: [Number,String],
+        show: {type: Boolean,default:false}
     },
-    emits: ['update:modelValue'],
+    emits: ['update:show','get-ref'],
     setup(props, {slots, emit}) {
-
-        const {zIndex, add} = useGlobalZIndex()
-        watch(()=>props.modelValue,v=>{
-            if(v) {add()}
-        })
-        function onClickMask() {
-            emit('update:modelValue', false)
-        }
-
-        const maskProps = computed(()=>{
-            const o:any = {
+        const root = ref(null)
+        const {zIndex} = useGlobalZIndex()
+        const visible = ref(props.show)
+        watch(()=>props.show,v=>{visible.value=v})
+        watch(visible,v=>{emit('update:show',v)})
+        onMounted(()=>{emit('get-ref',root)})
+        return ()=> {
+            const mask = h('div',{
+                ref: root,
                 class: 'k-mask',
                 style: {
-                    "--__mask-z-index": zIndex.value??props.zIndex
+                    'z-index': props.zIndex??zIndex.value
                 }
+            }, slots.default?.())
+            let _main = null
+            if(props.bind==='v-if') {
+                _main = (
+                    h(Teleport,{to:document.body},[
+                        h(Transition,{name:'k-mask-fade'},{
+                            default:()=>visible.value&&mask
+                        })
+                    ])
+                )
+            } else if(props.bind==='v-show') {
+                _main = (
+                    h(Teleport,{to:document.body},withDirectives(mask,[[vShow,visible.value]]))
+                )
             }
-            if(props.canCloseByClickSelf) {
-                o.onClick = onClickMask
-            }
-            return o
-        })
-        function wrapper(con:any) {
-            return (
-                <Teleport to={document.body}>
-                    <Transition name="k-mask-fade">
-                        {con}
-                    </Transition>
-                </Teleport>
-            )
-        }
-        return () => {
-            let con:any = (
-                <div {...maskProps.value}>
-                    {slots.default?.()}
-                </div>
-            )
-            if(props.bind==='v-show') {
-                con = withDirectives(con,[[vShow, props.modelValue]])
-            } else if(props.bind==='v-if') {
-                con = props.modelValue && con
-            }
-            
-            return wrapper(con)
+            return _main
         }
     }
 })

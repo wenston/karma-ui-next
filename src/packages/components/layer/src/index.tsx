@@ -57,7 +57,7 @@ export default defineComponent({
         //此时，placement失效
         isFixed: Boolean
     },
-    emits: ['update:show','rect'],
+    emits: ['update:show','get-ref'],
     setup(props,{slots,emit,attrs}:SetupContext) {
         const re = toRef(props, 'relateElement')
         const visible=ref(props.show)
@@ -127,12 +127,12 @@ export default defineComponent({
         // ])=>{
         //     console.log(p)
         // })
-        // onMounted(()=>{
-        // })
+        onMounted(()=>{
+            emit('get-ref',root)
+        })
 
         function wrapper(con:any) {
-            return (<div {...layerProps.value}
-            onClick={e=>{e.stopPropagation()}}>{con}</div>)
+            return (<div {...layerProps.value}>{con}</div>)
         }
 
         return ()=> wrapper(slots.default?.())

@@ -25,11 +25,14 @@ export default function useSlot({slot ,tag}:SlotType):Ref<VNode[]> {
         if(first) {
             if(!isValidElement(first)) {
                 const child = getChildren(first)
+                // console.log(child)
+                // if(child)
                 first = cloneVNode(wrapper(tag,child),null,false)
             }
             return [first,...slot.value.slice(1)]
         }
         return slot.value
     })
+    // console.log(vnodes)
     return vnodes
 }

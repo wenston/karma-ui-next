@@ -1,9 +1,11 @@
-import { computed, defineComponent, ref, onMounted, SetupContext, watch, h } from "vue"
+import { computed, defineComponent, ref, onMounted, SetupContext, watch, h, Ref, Transition } from "vue"
 import {hasUnit} from '../../../util'
 import Overlay from '../../overlay'
 import Icon from '../../icon'
 import Bouton from '../../bouton'
 import Close from '../../close'
+import Mask from '../../mask'
+import useEvent from '../../../use/useEvent'
 const OverlayProps = {
     ...Overlay.props,
     bind: {
@@ -11,7 +13,9 @@ const OverlayProps = {
     },
     toBody: {
         type: Boolean,default: true
-    }
+    },
+    canCloseByClickOutside: {type: Boolean,default:false},
+    excludeRefs:Array
 }
 const PopupProps = {
     title: {
@@ -39,7 +43,9 @@ const PopupProps = {
         type: Boolean,
         default: true
     },
-    beforeCancel: Function
+    beforeCancel: Function,
+    beforeOk: Function,
+    hasMask: {type: Boolean,default:true}
 }
 
 export default defineComponent({
@@ -49,19 +55,24 @@ export default defineComponent({
         'after-ok'
     ],
     components: {
-        Overlay,Icon, Bouton, Close
+        Overlay,Icon, Bouton, Close, Mask
     },
     props: {
         ...OverlayProps,...PopupProps,
     },
     setup(props,{emit,slots,attrs}:SetupContext) {
         const visible = ref(props.show)
+        const exclude = ref<Ref[]>([])
+
 
         const overlayProps = computed(()=> {
             const o:any = {
+                excludeRefs: [...exclude.value,...props.excludeRefs??[]],
                 show: visible.value,
                 bind: props.bind,
                 toBody: props.toBody,
+                hasMask: props.hasMask,
+                canCloseByClickOutside: props.canCloseByClickOutside,
                 hasArrow: false,
                 gap: 0,
                 isFixed: true,
@@ -86,8 +97,20 @@ export default defineComponent({
                 console.warn(err)
             }
         }
-        function onOk(e:any) {
-            emit('after-ok')
+        async function onOk(e:any) {
+            try {
+                if(props.beforeOk) {
+                    await props.beforeOk()
+                    visible.value=false
+                    emit('after-ok')
+                }else{
+                    visible.value=false
+                    emit('after-ok')
+                }
+            } catch(err) {
+                console.warn(err)
+
+            }
         }
         function Header() {
             if(props.hasHeader) {
@@ -127,25 +150,20 @@ export default defineComponent({
             ]}
         </div>)}
 
-        function btn() {
-            return <Bouton v-slots={{
-                default() {
-                    return props.okText
-                }
-            }}></Bouton>
-        }
-
         watch(()=>props.show,v=>{visible.value=v})
         watch(visible,v=>{emit("update:show",v)})
+
+
         return ()=> {
             const defaultSlots = slots.default?.()
             const prependSlots = <div>{slots['footer-prepend']?.()}</div>
             const overlay_slots = {
-                title:()=> slots.title?.(),
+                title:()=> slots.trigger?.(),
                 default:()=>(
                     <>
                         {Header()}
-                        <div class={['k-popup__body',props.bodyClass]}>
+                        <div class={['k-popup__body',props.bodyClass]}
+                            style={{width:props.width}}>
                             {defaultSlots}
                         </div>
                         <div class="k-popup__footer">
@@ -155,7 +173,26 @@ export default defineComponent({
                     </>
                 )
             }
-            return (<Overlay {...overlayProps.value} v-slots={overlay_slots}  />)
+            const main = <Overlay {...overlayProps.value} v-slots={overlay_slots}  />
+            const mask = (p:any)=>(
+                <Mask {...p} />
+            )
+            if(props.hasMask) {
+                const maskProps = {
+                    bind:props.bind,
+                    show:visible.value,
+                    'onGet-ref':(_ref:Ref)=> {
+                        exclude.value = [_ref]
+                    }
+                }
+                return (
+                    <>
+                        {mask(maskProps)}
+                        {main}
+                    </>
+                )
+            }
+            return main
         }
     }
 })

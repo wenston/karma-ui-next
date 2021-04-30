@@ -124,6 +124,8 @@ export default function usePlacement(placementOptions: PlacementOptions = {
             // console.log(l,t,_el)
             if(_el && _el.style) {
                 _el.style.width = `${place.width}px`
+                //onMounted后赋值height，是为了方便动画
+                //页面调整resize后，高度去掉，是为了方便高度自适应
                 _el.style.height = `${place.height}px`
                 _el.style.top = `${place.top}px`
                 _el.style.left = `${place.left}px`
@@ -236,12 +238,19 @@ export default function usePlacement(placementOptions: PlacementOptions = {
         // 将会造成宽和高一直变小的情况
         const _el:any = elem.value
         if(_el && _el.style) {
+            _el.style.removeProperty('height')
+            // const p = getBoundingClientRect(_el)
+            getElPostion()
+            // place.width = p.width
+            // place.height = p.height
             let l = (ww.value-place.width)/2
             let t = (wh.value-place.height)/2
+
             l = l<15?15:l
             t  = t<15?15:t
             _el.style.left = `${l}px`
             _el.style.top = `${t}px`
+            _el.style.height = `${place.height}px`
         }
     }
 

@@ -1,4 +1,4 @@
-import {SetupContext, DirectiveArguments, onMounted, Teleport, Transition} from 'vue'
+import {SetupContext, DirectiveArguments, onMounted, Teleport, Transition, Ref, getCurrentInstance, onUpdated} from 'vue'
 import { defineComponent, ref,reactive, cloneVNode, watch, computed } from 'vue'
 import {withDirectives, resolveDirective} from 'vue'
 import {getBoundingClientRect} from '../../../util'
@@ -17,6 +17,8 @@ const OverlayProps = {
         type: String,
         default: 'span'
     },
+    canCloseByClickOutside: {type:Boolean,default:true},
+    excludeRefs: Array//和setup里的exclude作用一样，最后会合并传给clickOutside，
     // layerClass: [String,Object,Array]
 }
 const LayerProps = {
@@ -39,6 +41,7 @@ export default defineComponent({
         const clickOutside = resolveDirective('clickOutside')
         const visible = ref(props.show)
         const relateElement = ref(null)
+        const exclude = ref<Ref[]>([])
         const titleRect = reactive({
             left:0,top:0,width:0,height:0
         })
@@ -78,7 +81,9 @@ export default defineComponent({
             return props.transitionName
         })
         const layerProps = computed(()=>{
-            const {tag,showDelay,hideDelay,isEqualWidth,...rest} = props
+            const {
+                tag,showDelay,hideDelay,isEqualWidth,canCloseByClickOutside,excludeRefs,
+                ...rest} = props
             const _style:any = attrs.style??{}
             const _sty:any = {}
             for(const k in _style) {
@@ -97,6 +102,9 @@ export default defineComponent({
                     '--__layer-background-color': 'rgba(255,255,255,.95)',
                     '--__layer-color': '#666',
                     ..._sty
+                },
+                "onGet-ref":(_ref:Ref)=> {
+                    exclude.value = [_ref]
                 }
             }
             if(props.isEqualWidth) {
@@ -122,6 +130,7 @@ export default defineComponent({
         })
 
         onMounted(()=>{
+            
             if(props.isEqualWidth || props.isFixed) {
                 const {width,height,left,top} = getBoundingClientRect(relateElement)
                 titleRect.width = width
@@ -130,6 +139,10 @@ export default defineComponent({
                 titleRect.left = left
             } 
         })
+
+        // onUpdated(()=>{
+        //     console.log(exclude.value)
+        // })
         
         const _titleSlot = useSlot({slot:titleSlot,tag:props.tag})
         return ()=> {
@@ -143,11 +156,11 @@ export default defineComponent({
                 clickOutside!, 
                 {
                     handler:()=>{visible.value=false},
-                    exclude: []
+                    exclude: [...exclude.value,...props.excludeRefs??[]]
                 }
             ]]
             let trigger = t
-            if(props.trigger==='click') {
+            if(props.canCloseByClickOutside && props.trigger==='click' && visible.value) {
                 trigger = withDirectives(trigger, direc)
             }
             let _layer = null
