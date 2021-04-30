@@ -16,7 +16,8 @@ const OverlayProps = {
     tag: {
         type: String,
         default: 'span'
-    }
+    },
+    // layerClass: [String,Object,Array]
 }
 const LayerProps = {
     ...Layer.props,
@@ -25,6 +26,7 @@ const LayerProps = {
     },
 }
 export default defineComponent({
+    name:'Overlay',
     inheritAttrs: false,
     components: {Layer},
     directives: {clickOutside},

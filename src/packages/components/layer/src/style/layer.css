@@ -15,7 +15,7 @@
     position: fixed;
     max-height: calc(100vh - 2 * var(--gap));
     max-width: calc(100vw - 2 * var(--gap));
-    overflow: auto;
+    /* overflow: auto; */
   }
   &.k-layer-has-arrow {
     &:after {

@@ -7,6 +7,7 @@ import usePlacement from '../../../use/usePlacement'
 import useParentNode from '../../../use/useParentNode'
 import useGlobalZIndex from '../../../use/useGlobalZIndex'
 export default defineComponent({
+    name: 'Layer',
     props: {
         //控制显隐
         show: Boolean,
