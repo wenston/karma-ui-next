@@ -1,10 +1,13 @@
 .k-radio {
   outline: none;
   cursor: default;
+  font-size: var(--font-size);
   & .k-radio-icon {
     font-size: 15px;
     color: var(--color-3);
     margin-right: 4px;
+    transform: scale(1.2, 1.2);
+    display: inline-flex;
   }
   &.k-radio--checked {
     & .k-radio-icon {

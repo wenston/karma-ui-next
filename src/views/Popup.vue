@@ -90,7 +90,14 @@
     <template #footer-prepend>
       <Bouton>其他操作</Bouton>
     </template>
+    <template #use="{hide,show}">
+      <div>
+        <div>一种新的使用组件内部方法和数据的方式，比较奇葩</div>
+        <Bouton @click="hide">hide</Bouton>
+        <Bouton @click="show">show</Bouton>
 
+      </div>
+    </template>
   </Popup>
 </template>
 <script>

@@ -172,7 +172,19 @@ export default defineComponent({
                     </>
                 )
             }
-            const main = <Overlay {...overlayProps.value} v-slots={overlay_slots}  />
+            const main = (
+                <>
+                    <Overlay {...overlayProps.value} v-slots={overlay_slots}  />
+                    {slots.use?.({
+                        hide:()=> {
+                            visible.value=false
+                        },
+                        show:()=>{
+                            visible.value=true
+                        }
+                    })}
+                </>
+            )
             const mask = (p:any)=>(
                 <Mask {...p} />
             )
