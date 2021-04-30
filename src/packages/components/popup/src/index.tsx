@@ -5,7 +5,6 @@ import Icon from '../../icon'
 import Bouton from '../../bouton'
 import Close from '../../close'
 import Mask from '../../mask'
-import useEvent from '../../../use/useEvent'
 const OverlayProps = {
     ...Overlay.props,
     bind: {
@@ -166,10 +165,10 @@ export default defineComponent({
                             style={{width:props.width}}>
                             {defaultSlots}
                         </div>
-                        <div class="k-popup__footer">
+                        {props.hasFooter && <div class="k-popup__footer">
                             {prependSlots}
                             {getFooterSlots()}
-                        </div>
+                        </div>}
                     </>
                 )
             }

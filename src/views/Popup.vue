@@ -4,6 +4,7 @@
     <Bouton @click="showModal">点我也可以展示弹框</Bouton>
   </div>
   <Popup :has-header="true"
+    :has-mask="true"
     v-model:show="show"
     :has-footer="true"
     :body-class="css.bd"
@@ -12,11 +13,11 @@
     :before-ok="beforeOk"
     @after-cancel="afterCancel"
     @after-ok="afterOk">
-    呵呵呵
-    <!-- <template #trigger>
+    <!-- 推荐这种方式 -->
+    <template #trigger>
       <Bouton type="danger"
         style="width:fit-content;margin:auto;display:block;">点击弹框展示某些东西</Bouton>
-    </template> -->
+    </template>
     <div :class="css.body">
 
       <Tooltip title="给一个提示看看层级"
