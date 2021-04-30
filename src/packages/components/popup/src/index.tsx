@@ -48,6 +48,7 @@ const PopupProps = {
 }
 
 export default defineComponent({
+    name: 'Popup',
     emits: [
         'update:show',
         'after-cancel',

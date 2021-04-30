@@ -87,7 +87,7 @@ export default defineComponent({
             const _style:any = attrs.style??{}
             const _sty:any = {}
             for(const k in _style) {
-                if(k==='background-color' || k==='color') {
+                if(k==='background-color' || k==='color' || k==='padding') {
                     _sty[`--__layer-${k}`] = _style[k]
                 } else {
                     _sty[k] = _style[k]

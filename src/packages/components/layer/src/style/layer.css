@@ -1,7 +1,7 @@
 .k-layer {
   /* 其中的background-color/color/padding，可以传入css属性来控制 */
   --layer-arrow-offset: calc(-2 * var(--layer-arrow-size) + 1px);
-  padding: var(--__layer-padding, 7px 15px);
+  padding: var(--__layer-padding, 7px var(--padding-x));
   background-color: var(--__layer-background-color);
   color: var(--__layer-color);
   min-width: var(--__layer-min-width, auto);

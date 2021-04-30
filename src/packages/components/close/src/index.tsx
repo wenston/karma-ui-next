@@ -5,9 +5,16 @@ export default defineComponent({
         const iconName = computed(()=>{
             return props.name??'k-icon-close-fill'
         })
+        const p = computed(()=>{
+            return {
+                name:iconName.value,
+                size: props.size,
+                class: 'k-close'
+            }
+        })
         return ()=>{
             return (
-                <Icon name={iconName.value} class="k-close" />
+                <Icon {...p.value} />
             )
         }
     },

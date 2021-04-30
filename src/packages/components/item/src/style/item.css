@@ -1,0 +1,11 @@
+.k-item {
+  height: var(--height);
+  line-height: var(--height);
+  font-size: var(--font-size);
+  transition: var(--transition);
+  padding: 0 var(--padding-x);
+  cursor: pointer;
+  &:hover {
+    background-color: var(--color-6);
+  }
+}
