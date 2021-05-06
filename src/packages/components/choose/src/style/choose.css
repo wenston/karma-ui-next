@@ -4,17 +4,25 @@
   align-items: center;
   justify-content: space-between;
   color: var(--color-3);
-  font-size: var(--font-size);
   border: var(--color-line) 1px solid;
   border-radius: var(--radius);
   height: var(--height);
   width: var(--form-item-width);
   padding: 0 var(--padding-x);
   padding-right: 20px;
-  cursor: pointer;
+  cursor: default;
   transition: var(--transition);
   user-select: none;
   outline: 0;
+  & .k-choose-text {
+    color: var(--color-2);
+    flex: 1;
+    width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: var(--font-size);
+  }
   & .k-choose-placeholder {
     color: var(--color-placeholder);
     flex: 1;
@@ -22,6 +30,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-size: var(--font-size);
   }
   & .k-choose-right-icon {
     position: absolute;

@@ -33,7 +33,7 @@ body {
 }
 #nav {
   background-color: var(--color-6);
-  float: right;
+  float: left;
   width: 200px;
   height: 100%;
   padding: 10px 0;
@@ -52,7 +52,7 @@ body {
   }
 }
 #article {
-  margin-right: 200px;
+  margin-left: 200px;
   padding: 20px;
   height: 100%;
 }

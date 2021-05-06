@@ -77,7 +77,7 @@
             <template #title>
               <Bouton>右侧-上部</Bouton>
             </template>
-            <div>
+            <div style="white-space:nowrap;">
               提示的内容
             </div>
           </Overlay>

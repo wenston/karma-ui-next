@@ -5,34 +5,34 @@
 如果有效，原样返回
  */
 
-import {Ref, cloneVNode,h, computed, VNode} from 'vue'
-function isValidElement(vnode:VNode) {
-    return vnode.children && vnode.type && typeof vnode.type!=='symbol'
+import { Ref, cloneVNode, h, computed, VNode } from "vue"
+function isValidElement(vnode: VNode) {
+  return vnode.children && vnode.type && typeof vnode.type !== "symbol"
 }
-function getChildren(vnode:VNode) {
-    return vnode.children
+function getChildren(vnode: VNode) {
+  return vnode.children
 }
 interface SlotType {
-    slot: Ref<VNode[]>,
-    tag: string
+  slot: Ref<VNode[]>
+  tag: string
 }
-function wrapper(tag:string,c:any) {
-    return h(tag,{},c)
+function wrapper(tag: string, c: any) {
+  return h(tag, {}, c)
 }
-export default function useSlot({slot ,tag}:SlotType):Ref<VNode[]> {
-    const vnodes = computed(()=>{
-        let first = slot.value[0]
-        if(first) {
-            if(!isValidElement(first)) {
-                const child = getChildren(first)
-                // console.log(child)
-                // if(child)
-                first = cloneVNode(wrapper(tag,child),null,false)
-            }
-            return [first,...slot.value.slice(1)]
-        }
-        return slot.value
-    })
-    // console.log(vnodes)
-    return vnodes
+export default function useSlot({ slot, tag }: SlotType): Ref<VNode[]> {
+  const vnodes = computed(() => {
+    let first = slot.value[0]
+    if (first) {
+      if (!isValidElement(first)) {
+        const child = getChildren(first)
+        // console.log(child)
+        // if(child)
+        first = cloneVNode(wrapper(tag, child), null, false)
+      }
+      return [first, ...slot.value.slice(1)]
+    }
+    return slot.value
+  })
+  // console.log(vnodes)
+  return vnodes
 }

@@ -1,11 +1,24 @@
 .k-item {
-  height: var(--height);
-  line-height: var(--height);
   font-size: var(--font-size);
   transition: var(--transition);
-  padding: 0 var(--padding-x);
+  padding: 6px var(--padding-x);
+  display: flex;
+  align-items: center;
   cursor: pointer;
+  outline: 0;
   &:hover {
-    background-color: var(--color-6);
+    &:not(.k-item--disabled) {
+      background-color: var(--color-6);
+    }
+  }
+  &.k-item--active {
+    &:not(.k-item--disabled) {
+      background-color: var(--color-6);
+      color: var(--color-primary);
+    }
+  }
+  &.k-item--disabled {
+    cursor: not-allowed;
+    color: var(--color-5);
   }
 }

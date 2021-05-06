@@ -36,14 +36,14 @@ export default defineComponent({
         ...LayerProps,
         ...OverlayProps
     },
-    emits: ['update:show'],
+    emits: ['update:show',"get-relate-element-rect",'before-enter','after-enter','enter'],
     setup(props,{slots,emit,attrs}:SetupContext) {
         const clickOutside = resolveDirective('clickOutside')
         const visible = ref(props.show)
         const relateElement = ref(null)
         const exclude = ref<Ref[]>([])
         const titleRect = reactive({
-            left:0,top:0,width:0,height:0
+            left:0,top:0,width:0,height:0,bottom:0,right:0
         })
         const {start,stop,clear} = useDelay()
         const titleSlot = computed(()=>{
@@ -130,13 +130,15 @@ export default defineComponent({
         })
 
         onMounted(()=>{
-            
+            const r = getBoundingClientRect(relateElement)
+            emit('get-relate-element-rect',r)
             if(props.isEqualWidth || props.isFixed) {
-                const {width,height,left,top} = getBoundingClientRect(relateElement)
-                titleRect.width = width
-                titleRect.height=height
-                titleRect.top = top
-                titleRect.left = left
+                titleRect.width = r.width
+                titleRect.height=r.height
+                titleRect.top = r.top
+                titleRect.left = r.left
+                titleRect.right = r.right
+                titleRect.bottom = r.bottom
             } 
         })
 
@@ -164,16 +166,28 @@ export default defineComponent({
                 trigger = withDirectives(trigger, direc)
             }
             let _layer = null
+            const transProps = {
+                name: trans_name.value,
+                'onBefore-enter':()=>{
+                    emit('before-enter')
+                },
+                'onAfter-enter':()=> {
+                    emit('after-enter')
+                },
+                'onEnter':()=>{
+                    emit('enter')
+                }
+            }
             if(props.bind==='v-show') {
                 _layer = (
-                    <Transition name={trans_name.value}>
+                    <Transition {...transProps}>
                         <Layer {...layerProps.value} v-show={visible.value}
                             relate-element={relateElement}>{defaultSlot}</Layer>
                     </Transition>
                 )
             } else {
                 _layer = (
-                    <Transition name={trans_name.value}>
+                    <Transition {...transProps}>
                        {visible.value && <Layer {...layerProps.value} 
                             relate-element={relateElement}>{defaultSlot}</Layer>}
                     </Transition>

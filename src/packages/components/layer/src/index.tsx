@@ -130,6 +130,9 @@ export default defineComponent({
         onMounted(()=>{
             emit('get-ref',root)
         })
+        onUpdated(()=>{
+            // setPlace()
+        })
 
         function wrapper(con:any) {
             return (<div {...layerProps.value}>{con}</div>)
