@@ -110,7 +110,7 @@ export default defineComponent({
         function titleFn() {
             const arrowIconStyle={
                 transform: visible.value?'rotateX(-180deg)':'',
-                transition: `var(--transition-enter)`
+                transition: `var(--k-transition-enter)`
             }
             return (
                 <div {...chooseProps.value}>

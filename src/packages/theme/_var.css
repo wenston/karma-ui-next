@@ -1,83 +1,83 @@
 :root {
-  --radius: 5px;
-  --gap: 15px;
-  --cubic-bezier: cubic-bezier(0.4, 1, 0, 1);
-  --color-primary: rgb(70, 147, 255);
-  --color-danger: #ff7070;
-  --color-success: #3ecc56;
-  --color-warning: #e1b205;
-  --color-default: #acafb5;
+  --k-radius: 5px;
+  --k-gap: 15px;
+  --k-cubic-bezier: cubic-bezier(0.4, 1, 0, 1);
+  --k-color-primary: rgb(70, 147, 255);
+  --k-color-danger: #ff7070;
+  --k-color-success: #3ecc56;
+  --k-color-warning: #e1b205;
+  --k-color-default: #acafb5;
 
-  --color-1: #1f2e43;
-  --color-2: #414b5a;
-  --color-3: #666c72;
-  --color-4: #9ca3aa;
-  --color-5: #c4cacf;
-  --color-6: #dfe5e9;
-  --color-7: #edf1f5;
-  --color-input: var(--color-2);
-  --color-placeholder: var(--color-5);
+  --k-color-1: #1f2e43;
+  --k-color-2: #414b5a;
+  --k-color-3: #666c72;
+  --k-color-4: #9ca3aa;
+  --k-color-5: #c4cacf;
+  --k-color-6: #dfe5e9;
+  --k-color-7: #edf1f5;
+  --k-color-input: var(--k-color-2);
+  --k-color-placeholder: var(--k-color-5);
 
-  --color-line: var(--color-5);
-  --color-dividing-line: var(--color-6);
+  --k-color-line: var(--k-color-5);
+  --k-color-dividing-line: var(--k-color-6);
 
-  --font-size: 12px;
+  --k-font-size: 12px;
 
   /* 文本框、选择器等的默认宽度 */
-  --form-item-width: 200px;
+  --k-form-item-width: 200px;
   /* 按钮、文本框、选择器等的默认高度 */
-  --height: 32px;
-  --padding-x: 12px;
+  --k-height: 32px;
+  --k-padding-x: 12px;
 
-  --transition: 0.35s;
-  --transition-enter: 0.618s;
-  --transition-leave: var(--transition);
+  --k-transition: 0.35s;
+  --k-transition-enter: 0.618s;
+  --k-transition-leave: var(--k-transition);
 
-  --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-  --drop-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
-  --input-box-shadow: 0 0 5px var(--color-primary),
+  --k-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  --k-drop-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+  --k-input-box-shadow: 0 0 5px var(--k-color-primary),
     inset 1px 2px 3px rgba(0, 0, 0, 0.1);
 
-  --bouton-height: var(--height);
-  --bouton-padding: 0 var(--padding-x);
-  --bouton-font-size: var(--font-size);
+  --k-bouton-height: var(--k-height);
+  --k-bouton-padding: 0 var(--k-padding-x);
+  --k-bouton-font-size: var(--k-font-size);
 
-  --mask-background-color: rgba(0, 0, 0, 0.45);
-  --mask-enter-transition: background-color var(--transition-enter)
-    var(--cubic-bezier);
-  --mask-leave-transiton: background-color var(--transition-leave)
-    var(--cubic-bezier);
+  --k-mask-background-color: rgba(0, 0, 0, 0.45);
+  --k-mask-enter-transition: background-color var(--k-transition-enter)
+    var(--k-cubic-bezier);
+  --k-mask-leave-transiton: background-color var(--k-transition-leave)
+    var(--k-cubic-bezier);
 
-  --popup-radius: var(--radius);
-  --popup-bg-color: white;
-  --popup-box-shadow: var(--box-shadow);
-  --popup-header-height: 40px;
-  --popup-header-padding: 0 15px;
-  --popup-body-padding: 15px;
-  --popup-body-max-height: calc(
-    100vh - var(--popup-header-height) - var(--popup-footer-height) - var(--gap) *
-      4
+  --k-popup-radius: var(--k-radius);
+  --k-popup-bg-color: white;
+  --k-popup-box-shadow: var(--k-box-shadow);
+  --k-popup-header-height: 40px;
+  --k-popup-header-padding: 0 15px;
+  --k-popup-body-padding: 15px;
+  --k-popup-body-max-height: calc(
+    100vh - var(--k-popup-header-height) - var(--k-popup-footer-height) -
+      var(--k-gap) * 4
   );
-  --popup-footer-padding: 0 var(--padding-x);
-  --popup-footer-height: 50px;
+  --k-popup-footer-padding: 0 var(--k-padding-x);
+  --k-popup-footer-height: 50px;
 
-  --layer-arrow-size: 5px;
-  --layer-enter-transition: transform var(--transition-enter)
-      var(--cubic-bezier),
-    opacity var(--transition-enter) var(--cubic-bezier);
-  --layer-leave-transition: transform var(--transition-leave)
-      var(--cubic-bezier),
-    opacity var(--transition-leave) var(--cubic-bezier);
+  --k-layer-arrow-size: 5px;
+  --k-layer-enter-transition: transform var(--k-transition-enter)
+      var(--k-cubic-bezier),
+    opacity var(--k-transition-enter) var(--k-cubic-bezier);
+  --k-layer-leave-transition: transform var(--k-transition-leave)
+      var(--k-cubic-bezier),
+    opacity var(--k-transition-leave) var(--k-cubic-bezier);
 
-  --choose-focus-box-shadow: var(--input-box-shadow);
+  --k-choose-focus-box-shadow: var(--k-input-box-shadow);
 
-  --switch-width: 32px;
-  --switch-height: 14px;
-  --switch-valve-size: 18px;
-  --switch-valve-color: white;
-  --switch-valve-border: 1px solid var(--color-5);
-  --switch-bg-color: var(--color-default);
+  --k-switch-width: 32px;
+  --k-switch-height: 14px;
+  --k-switch-valve-size: 18px;
+  --k-switch-valve-color: white;
+  --k-switch-valve-border: 1px solid var(--k-color-5);
+  --k-switch-bg-color: var(--k-color-default);
 
-  --write-color: var(--color-input);
-  --write-box-shadow: var(--input-box-shadow);
+  --k-write-color: var(--k-color-input);
+  --k-write-box-shadow: var(--k-input-box-shadow);
 }

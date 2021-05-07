@@ -1,9 +1,9 @@
 .k-close {
   font-size: 18px;
-  color: var(--color-4);
-  transition: var(--transition);
+  color: var(--k-color-4);
+  transition: var(--k-transition);
   cursor: pointer;
   &:hover {
-    color: var(--color-2);
+    color: var(--k-color-2);
   }
 }

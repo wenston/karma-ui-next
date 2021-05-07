@@ -25,7 +25,7 @@ export default defineComponent({
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-size: var(--font-size);
+  font-size: var(--k-font-size);
 }
 html,
 body {
@@ -33,7 +33,7 @@ body {
   line-height: 1.5;
 }
 #nav {
-  background-color: var(--color-6);
+  background-color: var(--k-color-6);
   float: left;
   width: 200px;
   height: 100%;
@@ -42,15 +42,15 @@ body {
   & a {
     font-weight: bold;
     display: block;
-    color: var(--color-4);
+    color: var(--k-color-4);
     padding: 10px 20px;
     text-decoration: none;
     font-size: 14px;
     &:hover {
-      color: var(--color-2);
+      color: var(--k-color-2);
     }
     &:global(.router-link-exact-active) {
-      color: var(--color-2);
+      color: var(--k-color-2);
     }
   }
 }

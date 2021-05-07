@@ -1,51 +1,51 @@
 .k-write {
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius);
-  height: var(--height);
-  width: var(--form-item-width);
+  border: 1px solid var(--k-color-line);
+  border-radius: var(--k-radius);
+  height: var(--k-height);
+  width: var(--k-form-item-width);
   display: inline-flex;
-  transition: var(--transition);
+  transition: var(--k-transition);
   &.k-write--block {
     display: flex;
   }
   &.k-write--simple {
     border: none;
-    border-bottom: 1px solid var(--color-line);
+    border-bottom: 1px solid var(--k-color-line);
     border-radius: 0;
   }
   &.k-write--disabled {
     cursor: not-allowed;
   }
   &:focus-within {
-    border-color: var(--color-primary);
-    box-shadow: var(--write-box-shadow);
+    border-color: var(--k-color-primary);
+    box-shadow: var(--k-write-box-shadow);
   }
   & .k-write-prepend,
   & .k-write-append {
-    min-width: var(--height);
+    min-width: var(--k-height);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: var(--color-4);
+    color: var(--k-color-4);
     background-color: transparent;
     padding: 0 8px;
   }
   & .k-write-prepend {
-    border-radius: var(--radius) 0 0 var(--radius);
-    border-right: 1px solid var(--color-line);
+    border-radius: var(--k-radius) 0 0 var(--k-radius);
+    border-right: 1px solid var(--k-color-line);
   }
   & .k-write-append {
-    border-radius: 0 var(--radius) var(--radius) 0;
-    border-left: 1px solid var(--color-line);
+    border-radius: 0 var(--k-radius) var(--k-radius) 0;
+    border-left: 1px solid var(--k-color-line);
   }
   & .k-write-input {
     height: 100%;
     flex: 1;
     border: 0;
     outline: 0;
-    border-radius: var(--radius);
-    padding: 0 var(--padding-x);
-    color: var(--write-color);
+    border-radius: var(--k-radius);
+    padding: 0 var(--k-padding-x);
+    color: var(--k-write-color);
     width: 100%;
     background-color: transparent;
 

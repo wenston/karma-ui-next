@@ -2,12 +2,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius);
+  border-radius: var(--k-radius);
   cursor: pointer;
-  height: var(--bouton-height);
-  padding: var(--bouton-padding);
-  font-size: var(--bouton-font-size);
-  transition: var(--transition);
+  height: var(--k-bouton-height);
+  padding: var(--k-bouton-padding);
+  font-size: var(--k-bouton-font-size);
+  transition: var(--k-transition);
   outline: none;
   user-select: none;
 
@@ -19,29 +19,29 @@
   &:hover,
   &:focus {
     &:not(.k-bouton--disabled) {
-      box-shadow: var(--box-shadow);
+      box-shadow: var(--k-box-shadow);
     }
   }
   &:active {
     &:not(.k-bouton--disabled) {
-      box-shadow: inset var(--box-shadow);
+      box-shadow: inset var(--k-box-shadow);
     }
   }
 
   & + .k-bouton {
-    margin-left: var(--gap);
+    margin-left: var(--k-gap);
   }
 }
 
 @each $var in default, primary, danger, success, warning {
   .k-bouton-$var {
-    border: 1px solid var(--color-$var);
+    border: 1px solid var(--k-color-$var);
     color: white;
     @if $var == default {
       background-color: white;
-      color: var(--color-3);
+      color: var(--k-color-3);
     } @else {
-      background-color: var(--color-$var);
+      background-color: var(--k-color-$var);
     }
   }
 }

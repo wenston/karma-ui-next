@@ -1,24 +1,24 @@
 .k-item {
-  font-size: var(--font-size);
-  transition: var(--transition);
-  padding: 6px var(--padding-x);
+  font-size: var(--k-font-size);
+  transition: var(--k-transition);
+  padding: 6px var(--k-padding-x);
   display: flex;
   align-items: center;
   cursor: pointer;
   outline: 0;
   &:hover {
     &:not(.k-item--disabled) {
-      background-color: var(--color-6);
+      background-color: var(--k-color-6);
     }
   }
   &.k-item--active {
     &:not(.k-item--disabled) {
-      background-color: var(--color-6);
-      color: var(--color-primary);
+      background-color: var(--k-color-6);
+      color: var(--k-color-primary);
     }
   }
   &.k-item--disabled {
     cursor: not-allowed;
-    color: var(--color-5);
+    color: var(--k-color-5);
   }
 }
