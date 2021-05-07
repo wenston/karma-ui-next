@@ -60,6 +60,7 @@ function more(props:any, {emit, slots}:SetupContext) {
             has.value?props.value:symbol.value
         ))
     })
+
     function onToggle() {
         toggle()
         const _v = v.value

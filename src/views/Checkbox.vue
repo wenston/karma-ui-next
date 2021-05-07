@@ -36,7 +36,7 @@ export default defineComponent({
         <h1>单选</h1>
         <section>
           <div>
-            <Checkbox disabled v-model={v.value}>选择</Checkbox>
+            <Checkbox  v-model={v.value}>选择</Checkbox>
 
           </div>
           <h3>多选</h3>

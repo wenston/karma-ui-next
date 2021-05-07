@@ -67,4 +67,11 @@
 
   --choose-focus-box-shadow: 0 0 5px var(--color-primary),
     inset 1px 2px 3px rgba(0, 0, 0, 0.1);
+
+  --switch-width: 32px;
+  --switch-height: 14px;
+  --switch-valve-size: 18px;
+  --switch-valve-color: white;
+  --switch-valve-border: 1px solid var(--color-5);
+  --switch-bg-color: var(--color-default);
 }

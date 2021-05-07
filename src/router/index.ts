@@ -43,27 +43,35 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/tooltip',
-    name: 'tooltip',
-    component: ()=> import('../views/Tooltip.vue'),
+    path: "/switch",
+    name: "switch",
+    component: () => import("../views/Switch.vue"),
     meta: {
-      title: '小提示 Tooltip'
+      title: "开关 Switch"
     }
   },
   {
-    path: '/overlay',
-    name: 'overlay',
-    component: ()=> import('../views/Overlay.vue'),
+    path: "/tooltip",
+    name: "tooltip",
+    component: () => import("../views/Tooltip.vue"),
     meta: {
-      title: '覆盖层 Overlay'
+      title: "小提示 Tooltip"
     }
   },
   {
-    path: '/choose',
-    name: 'choose',
-    component: ()=> import('../views/Choose.vue'),
+    path: "/overlay",
+    name: "overlay",
+    component: () => import("../views/Overlay.vue"),
     meta: {
-      title: '选择 Choose'
+      title: "覆盖层 Overlay"
+    }
+  },
+  {
+    path: "/choose",
+    name: "choose",
+    component: () => import("../views/Choose.vue"),
+    meta: {
+      title: "选择 Choose"
     }
   },
   {

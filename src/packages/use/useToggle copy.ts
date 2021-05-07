@@ -1,12 +1,12 @@
-import { Ref, ref, watch, isRef } from "vue"
+import { Ref, ref, watch } from "vue"
 
 type ToggleData = Ref<any[]> | any[]
 type ToggleValue = Ref<any>
-export default function useToggle(refData: ToggleData, refValue: ToggleValue) {
+export default function useToggle(refData:ToggleData,refValue:ToggleValue) {
   const base = ref(refData)
   const val = ref(refValue)
 
-  function set(para: any) {
+  function set(para:any) {
     if ("item" in para) {
       if (base.value.some((_v) => _v === para.item)) {
         val.value = para.item
@@ -14,7 +14,7 @@ export default function useToggle(refData: ToggleData, refValue: ToggleValue) {
         console.warn(`数据里没有${para.item}`)
       }
     } else if ("index" in para) {
-      if (para.index !== undefined) {
+      if(para.index!==undefined) {
         val.value = base.value[para.index]
       }
     }
