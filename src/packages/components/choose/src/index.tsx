@@ -41,7 +41,6 @@ export default defineComponent({
         'update:show','update:modelValue','change'
     ],
     setup(props,{emit,attrs,slots}) {
-        const ins = getCurrentInstance()
         const scroll = ref(null)
         const titleSize = reactive({bottom:0})
         const visible = ref(props.show)
@@ -159,7 +158,8 @@ export default defineComponent({
                     <Overlay {...overlayProps.value} v-slots={_slots.value} />
                     {slots.use?.({
                         value: props.modelValue,
-                        text: curText.value
+                        text: curText.value,
+                        clear
                     })}
                 </>
             )

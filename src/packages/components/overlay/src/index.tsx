@@ -129,7 +129,7 @@ export default defineComponent({
             return _
         })
 
-        onMounted(()=>{
+        function getRect() {
             const r = getBoundingClientRect(relateElement)
             emit('get-relate-element-rect',r)
             if(props.isEqualWidth || props.isFixed) {
@@ -140,11 +140,14 @@ export default defineComponent({
                 titleRect.right = r.right
                 titleRect.bottom = r.bottom
             } 
-        })
+        }
 
-        // onUpdated(()=>{
-        //     console.log(exclude.value)
-        // })
+        onMounted(()=>{
+            getRect()
+        })
+        onUpdated(()=>{
+            getRect()
+        })
         
         const _titleSlot = useSlot({slot:titleSlot,tag:props.tag})
         return ()=> {

@@ -54,7 +54,7 @@
     100vh - var(--popup-header-height) - var(--popup-footer-height) - var(--gap) *
       4
   );
-  --popup-footer-padding: 0 15px;
+  --popup-footer-padding: 0 var(--padding-x);
   --popup-footer-height: 50px;
 
   --layer-arrow-size: 5px;
