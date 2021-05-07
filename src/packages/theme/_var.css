@@ -14,18 +14,20 @@
   --color-4: #9ca3aa;
   --color-5: #c4cacf;
   --color-6: #dfe5e9;
+  --color-7: #edf1f5;
+  --color-input: var(--color-2);
   --color-placeholder: var(--color-5);
 
   --color-line: var(--color-5);
   --color-dividing-line: var(--color-6);
 
-  --font-size: 14px;
+  --font-size: 12px;
 
   /* 文本框、选择器等的默认宽度 */
   --form-item-width: 200px;
   /* 按钮、文本框、选择器等的默认高度 */
   --height: 32px;
-  --padding-x: 15px;
+  --padding-x: 12px;
 
   --transition: 0.35s;
   --transition-enter: 0.618s;
@@ -33,6 +35,8 @@
 
   --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
   --drop-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+  --input-box-shadow: 0 0 5px var(--color-primary),
+    inset 1px 2px 3px rgba(0, 0, 0, 0.1);
 
   --bouton-height: var(--height);
   --bouton-padding: 0 var(--padding-x);
@@ -65,8 +69,7 @@
       var(--cubic-bezier),
     opacity var(--transition-leave) var(--cubic-bezier);
 
-  --choose-focus-box-shadow: 0 0 5px var(--color-primary),
-    inset 1px 2px 3px rgba(0, 0, 0, 0.1);
+  --choose-focus-box-shadow: var(--input-box-shadow);
 
   --switch-width: 32px;
   --switch-height: 14px;
@@ -74,4 +77,7 @@
   --switch-valve-color: white;
   --switch-valve-border: 1px solid var(--color-5);
   --switch-bg-color: var(--color-default);
+
+  --write-color: var(--color-input);
+  --write-box-shadow: var(--input-box-shadow);
 }

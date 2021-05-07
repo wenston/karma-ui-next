@@ -19,14 +19,6 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: "/toggle",
-    name: "toggle",
-    component: () => import("../views/Toggle.vue"),
-    meta: {
-      title: "切换 Toggle"
-    }
-  },
-  {
     path: "/checkbox",
     name: "checkbox",
     component: () => import("../views/Checkbox.vue"),
@@ -80,6 +72,14 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("../views/Popup.vue"),
     meta: {
       title: "弹框 Popup"
+    }
+  },
+  {
+    path: "/write",
+    name: "write",
+    component: () => import("../views/Write.vue"),
+    meta: {
+      title: "输入框 Write"
     }
   }
 ]

@@ -1,0 +1,56 @@
+.k-write {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  height: var(--height);
+  width: var(--form-item-width);
+  display: inline-flex;
+  transition: var(--transition);
+  &.k-write--block {
+    display: flex;
+  }
+  &.k-write--simple {
+    border: none;
+    border-bottom: 1px solid var(--color-line);
+    border-radius: 0;
+  }
+  &.k-write--disabled {
+    cursor: not-allowed;
+  }
+  &:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: var(--write-box-shadow);
+  }
+  & .k-write-prepend,
+  & .k-write-append {
+    min-width: var(--height);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-4);
+    background-color: transparent;
+    padding: 0 8px;
+  }
+  & .k-write-prepend {
+    border-radius: var(--radius) 0 0 var(--radius);
+    border-right: 1px solid var(--color-line);
+  }
+  & .k-write-append {
+    border-radius: 0 var(--radius) var(--radius) 0;
+    border-left: 1px solid var(--color-line);
+  }
+  & .k-write-input {
+    height: 100%;
+    flex: 1;
+    border: 0;
+    outline: 0;
+    border-radius: var(--radius);
+    padding: 0 var(--padding-x);
+    color: var(--write-color);
+    width: 100%;
+    background-color: transparent;
+
+    &:focus {
+      border: 0;
+    }
+  }
+}

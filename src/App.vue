@@ -25,11 +25,12 @@ export default defineComponent({
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-size: 14px;
+  font-size: var(--font-size);
 }
 html,
 body {
   height: 100%;
+  line-height: 1.5;
 }
 #nav {
   background-color: var(--color-6);
@@ -37,12 +38,14 @@ body {
   width: 200px;
   height: 100%;
   padding: 10px 0;
+  overflow: hidden auto;
   & a {
     font-weight: bold;
     display: block;
     color: var(--color-4);
     padding: 10px 20px;
     text-decoration: none;
+    font-size: 14px;
     &:hover {
       color: var(--color-2);
     }
