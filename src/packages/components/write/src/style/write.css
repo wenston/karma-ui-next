@@ -1,4 +1,5 @@
 .k-write {
+  position: relative;
   border: 1px solid var(--k-color-line);
   border-radius: var(--k-radius);
   height: var(--k-height);
@@ -13,12 +14,15 @@
     border-bottom: 1px solid var(--k-color-line);
     border-radius: 0;
   }
-  &.k-write--disabled {
-    cursor: not-allowed;
-  }
+
   &:focus-within {
     border-color: var(--k-color-primary);
-    box-shadow: var(--k-write-box-shadow);
+    &:not(.k-write--simple) {
+      box-shadow: var(--k-write-box-shadow);
+    }
+  }
+  &.k-write--invalid {
+    border-color: var(--k-color-danger);
   }
   & .k-write-prepend,
   & .k-write-append {
@@ -48,7 +52,10 @@
     color: var(--k-write-color);
     width: 100%;
     background-color: transparent;
-
+    &[disabled] {
+      cursor: not-allowed;
+      background-color: var(--k-color-disabled);
+    }
     &:focus {
       border: 0;
     }

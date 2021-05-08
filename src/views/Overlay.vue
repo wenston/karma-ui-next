@@ -4,7 +4,7 @@
     <!-- <Overlay :placement="placement"
       trigger="click"
       v-model:show="showDel">
-      <template #title>
+      <template #trigger>
         <Bouton>点击展示覆盖层</Bouton>
         <template v-for="item in actions"
           :key="item">
@@ -28,7 +28,7 @@
         <td></td>
         <td>
           <Overlay placement="top-start">
-            <template #title>
+            <template #trigger>
               <Bouton>顶部-左侧</Bouton>
             </template>
             <div style="min-width:150px">
@@ -38,7 +38,7 @@
         </td>
         <td>
           <Overlay placement="top">
-            <template #title>
+            <template #trigger>
               <Bouton>顶部-中间</Bouton>
             </template>
             <p style="min-width:130px">
@@ -48,7 +48,7 @@
         </td>
         <td>
           <Overlay placement="top-end">
-            <template #title>
+            <template #trigger>
               <Bouton>顶部-右侧</Bouton>
             </template>
             <div style="min-width:130px">
@@ -61,7 +61,7 @@
       <tr>
         <td>
           <Overlay placement="left-start">
-            <template #title>
+            <template #trigger>
               <Bouton>左侧-上部</Bouton>
             </template>
             <div style="width:120px">
@@ -74,7 +74,7 @@
         <td></td>
         <td>
           <Overlay placement="right-start">
-            <template #title>
+            <template #trigger>
               <Bouton>右侧-上部</Bouton>
             </template>
             <div style="white-space:nowrap;">
@@ -87,7 +87,7 @@
         <td>
           <Overlay placement="left"
             to-body>
-            <template #title>
+            <template #trigger>
               <Bouton>左侧-中间</Bouton>
             </template>
             <div>
@@ -100,7 +100,7 @@
         <td></td>
         <td>
           <Overlay placement="right">
-            <template #title>
+            <template #trigger>
               <Bouton>右侧-中间</Bouton>
             </template>
             <div style="width: 129px;line-height:1.9">
@@ -115,7 +115,7 @@
       <tr>
         <td>
           <Overlay placement="left-end">
-            <template #title>
+            <template #trigger>
               <Bouton>左侧-下部</Bouton>
             </template>
             <div style="width:90px">
@@ -128,7 +128,7 @@
         <td></td>
         <td>
           <Overlay placement="right-end">
-            <template #title>
+            <template #trigger>
               <Bouton>右侧-下部</Bouton>
             </template>
             <div style="width:90px">
@@ -141,7 +141,7 @@
         <td></td>
         <td>
           <Overlay placement="bottom-start">
-            <template #title>
+            <template #trigger>
               <Bouton>底部-左侧</Bouton>
             </template>
             <div>
@@ -151,7 +151,7 @@
         </td>
         <td>
           <Overlay placement="bottom">
-            <template #title>
+            <template #trigger>
               <Bouton>底部-中间</Bouton>
             </template>
             <div style="width:100px">
@@ -161,7 +161,7 @@
         </td>
         <td>
           <Overlay placement="bottom-end">
-            <template #title>
+            <template #trigger>
               <Bouton>底部-右侧</Bouton>
             </template>
             <div>

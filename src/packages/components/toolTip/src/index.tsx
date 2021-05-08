@@ -30,7 +30,7 @@ export default defineComponent({
         })
         const _slots = computed(()=>({
             default: ()=>props.title,
-            title: ()=>slots.default?.()
+            trigger: ()=>slots.default?.()
         }))
         return ()=>{
             return (

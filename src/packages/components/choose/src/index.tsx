@@ -91,7 +91,7 @@ export default defineComponent({
             }
             return {
                 default: ()=><div {...ps}>{slots.default?.()}</div>,
-                title: titleFn
+                trigger: titleFn
             }
         })
 

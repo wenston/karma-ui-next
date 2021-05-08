@@ -4,23 +4,25 @@
     <div>
 
       <Write v-model="t"
+        :validate="{when:'change',minlength:3}"
+        :maxlength="5"
         @input="onInput"
         @change="onChange" />
     </div>
-    <!-- <div style="margin-top:10px;">
-      <Write type="number"></Write>
+    <!-- <div style="margin-top:20px;">
+      <Write />
     </div>
-    <div style="margin-top:10px;">
-      <input type="number" />
-    </div> -->
-    <div style="margin-top:10px;">
+    <div style="margin-top:20px;">
+      <Write simple />
+    </div>
+    <div style="margin-top:20px;">
       <Write>
         <template #prepend>
           <span>用户</span>
         </template>
         <span>搜索一下</span>
       </Write>
-    </div>
+    </div> -->
   </section>
 </template>
 <script lang="ts">
@@ -33,10 +35,10 @@ export default defineComponent({
     return {
       t,
       onInput(e: any) {
-        console.log(e.target.value)
+        console.log("外部使用write组件时的input事件", e.target.value)
       },
       onChange(e: any) {
-        console.log(e.target.value)
+        console.log("外部使用write组件时的change事件", e.target.value)
       },
     }
   },

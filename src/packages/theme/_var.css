@@ -2,11 +2,13 @@
   --k-radius: 5px;
   --k-gap: 15px;
   --k-cubic-bezier: cubic-bezier(0.4, 1, 0, 1);
-  --k-color-primary: rgb(70, 147, 255);
+  --k-color-primary: rgb(69, 145, 252);
+  --k-color-primary-05: rgba(69, 145, 252, 0.5);
   --k-color-danger: #ff7070;
   --k-color-success: #3ecc56;
   --k-color-warning: #e1b205;
   --k-color-default: #acafb5;
+  --k-color-disabled: #edf1f5;
 
   --k-color-1: #1f2e43;
   --k-color-2: #414b5a;
@@ -35,8 +37,7 @@
 
   --k-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
   --k-drop-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
-  --k-input-box-shadow: 0 0 5px var(--k-color-primary),
-    inset 1px 2px 3px rgba(0, 0, 0, 0.1);
+  --k-input-box-shadow: inset 1px 2px 3px rgba(0, 0, 0, 0.1);
 
   --k-bouton-height: var(--k-height);
   --k-bouton-padding: 0 var(--k-padding-x);

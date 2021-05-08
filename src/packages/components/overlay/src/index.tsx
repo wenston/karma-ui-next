@@ -47,7 +47,7 @@ export default defineComponent({
         })
         const {start,stop,clear} = useDelay()
         const titleSlot = computed(()=>{
-            return slots.title?.() || []
+            return slots.trigger?.() || []
         })
 
         if(props.trigger==='hover') {
@@ -203,7 +203,7 @@ export default defineComponent({
                 <>
                     {trigger}
                     {_titleSlot.value.slice(1)}
-                    {layer}
+                    {defaultSlot&&layer}
                 </>
             )
         }

@@ -158,7 +158,7 @@ export default defineComponent({
             const defaultSlots = slots.default?.()
             const prependSlots = <div>{slots['footer-prepend']?.()}</div>
             const overlay_slots = {
-                title:()=> slots.trigger?.(),
+                trigger:()=> slots.trigger?.(),
                 default:()=>(
                     <>
                         {Header()}
