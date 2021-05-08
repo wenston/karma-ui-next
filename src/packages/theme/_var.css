@@ -4,9 +4,11 @@
   --k-cubic-bezier: cubic-bezier(0.4, 1, 0, 1);
   --k-color-primary: rgb(69, 145, 252);
   --k-color-primary-05: rgba(69, 145, 252, 0.5);
-  --k-color-danger: #ff7070;
+  --k-color-danger: rgb(255, 112, 112);
+  --k-color-danger-05: rgba(255, 112, 112, 0.5);
+  --k-color-danger-01: rgba(255, 112, 112, 0.1);
   --k-color-success: #3ecc56;
-  --k-color-warning: #e1b205;
+  --k-color-warning: #f1cd00;
   --k-color-default: #acafb5;
   --k-color-disabled: #edf1f5;
 

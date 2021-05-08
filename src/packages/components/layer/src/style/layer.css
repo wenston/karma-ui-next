@@ -9,8 +9,8 @@
   position: absolute;
   border-radius: var(--k-radius);
   z-index: var(--__layer-z-index, 100);
-  filter: drop-shadow(var(--k-drop-shadow))
-    drop-shadow(0 0 1px var(--k-color-line));
+  filter: drop-shadow(0 0 1px var(--__layer-border-color, var(--k-color-line)))
+    drop-shadow(var(--k-drop-shadow));
   transform-origin: var(--__layer-transform-origin, 0 0);
   &.k-layer--fixed {
     position: fixed;

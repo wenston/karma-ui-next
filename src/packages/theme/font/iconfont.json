@@ -6,6 +6,27 @@
   "description": "for vue3",
   "glyphs": [
     {
+      "icon_id": "3726871",
+      "name": "warning",
+      "font_class": "warning",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "8602716",
+      "name": "square",
+      "font_class": "square",
+      "unicode": "e6e5",
+      "unicode_decimal": 59109
+    },
+    {
+      "icon_id": "19165769",
+      "name": "early warning ",
+      "font_class": "ball",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
       "icon_id": "16013917",
       "name": "close",
       "font_class": "close-fill",
@@ -46,6 +67,13 @@
       "font_class": "sort-down",
       "unicode": "e8ec",
       "unicode_decimal": 59628
+    },
+    {
+      "icon_id": "1727545",
+      "name": "310向下、展开",
+      "font_class": "arrow-down",
+      "unicode": "e8f2",
+      "unicode_decimal": 59634
     }
   ]
 }

@@ -8,6 +8,7 @@ import useSlot from '../../../use/useSlot'
 import useDelay from '../../../use/useDelay'
 import useEvent from '../../../use/useEvent'
 const OverlayProps = {
+    manual: Boolean,//是否手动控制layer的显隐
     showDelay: {type: Number,default: 200},
     hideDelay: {type: Number,default: 200},
     isEqualWidth: {
@@ -50,24 +51,27 @@ export default defineComponent({
             return slots.trigger?.() || []
         })
 
-        if(props.trigger==='hover') {
-            useEvent(relateElement,'mouseenter',()=>{
-                start(()=>{visible.value=true},props.showDelay)
-            })
-            useEvent(relateElement,'mouseleave',()=>{
-                stop(()=>{visible.value=false},props.hideDelay)
-            })
+        if(!props.manual) {
+            if(props.trigger==='hover') {
+                useEvent(relateElement,'mouseenter',()=>{
+                    start(()=>{visible.value=true},props.showDelay)
+                })
+                useEvent(relateElement,'mouseleave',()=>{
+                    stop(()=>{visible.value=false},props.hideDelay)
+                })
 
-        }else if(props.trigger==='click' ) {
-            useEvent(relateElement,'click',()=>{
-                visible.value=!visible.value
-            })
-            useEvent(relateElement,'keyup',(e:KeyboardEvent)=>{
-                if(e.code.toLowerCase()==='enter') {
+            }else if(props.trigger==='click' ) {
+                useEvent(relateElement,'click',()=>{
                     visible.value=!visible.value
-                }
-            })
+                })
+                useEvent(relateElement,'keyup',(e:KeyboardEvent)=>{
+                    if(e.code.toLowerCase()==='enter') {
+                        visible.value=!visible.value
+                    }
+                })
+            }
         }
+        
         watch(()=>props.show,v=>{
             visible.value=v
         })
@@ -87,7 +91,7 @@ export default defineComponent({
             const _style:any = attrs.style??{}
             const _sty:any = {}
             for(const k in _style) {
-                if(k==='background-color' || k==='color' || k==='padding') {
+                if(k==='background-color' || k==='color' || k==='border-color' || k==='padding') {
                     _sty[`--__layer-${k}`] = _style[k]
                 } else {
                     _sty[k] = _style[k]
@@ -165,7 +169,7 @@ export default defineComponent({
                 }
             ]]
             let trigger = t
-            if(props.canCloseByClickOutside && props.trigger==='click' && visible.value) {
+            if(!props.manual && (props.canCloseByClickOutside && props.trigger==='click' && visible.value)) {
                 trigger = withDirectives(trigger, direc)
             }
             let _layer = null

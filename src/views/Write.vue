@@ -4,7 +4,7 @@
     <div>
 
       <Write v-model="t"
-        :validate="{when:'change',minlength:3}"
+        :validate="{when:'change',minlength:3,invalidTip:'字符串长度至少3位！'}"
         :maxlength="5"
         @input="onInput"
         @change="onChange" />
@@ -35,10 +35,10 @@ export default defineComponent({
     return {
       t,
       onInput(e: any) {
-        console.log("外部使用write组件时的input事件", e.target.value)
+        // console.log("外部使用write组件时的input事件", e.target.value)
       },
       onChange(e: any) {
-        console.log("外部使用write组件时的change事件", e.target.value)
+        // console.log("外部使用write组件时的change事件", e.target.value)
       },
     }
   },

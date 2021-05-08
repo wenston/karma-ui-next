@@ -10,12 +10,17 @@ interface ValidateOptions {
     minlength?:number//字符串最小长度
 }
 const Emits = ['change','update:modelValue']
+const OverlayProps = {
+    placement: {type: String,default: 'right'},
+    toBody: {type: Boolean,default: false}
+}
 export default defineComponent({
     name:'Write',
     inheritAttrs:false,
     components: {Overlay,Icon},
     emits: Emits,
     props: {
+        ...OverlayProps,
         modelValue: [String,Number],
         block: Boolean,
         disabled: Boolean,
@@ -33,11 +38,9 @@ export default defineComponent({
     },
     setup(props,{emit,slots,attrs}) {
         const isInvalid = ref(false)
+        const ipt_elem = ref(null)
         const tip = ref('该值不合规则，请检查')
-        onMounted(()=>{
-            const ins = getCurrentInstance()
-            console.log(ins)
-        })
+
         const wrapperProps = computed(()=>{
             const o:any = {
                 class: [
@@ -53,10 +56,11 @@ export default defineComponent({
             return o
         })
         const inputProps = computed(()=>{
-            // console.log(Object.keys(props), attrs)
+            
             const listeners = filterListeners(attrs)
             let t = props.type
             const o:any = {
+                ref:ipt_elem,
                 class: [
                     'k-write-input'
                 ],
@@ -119,13 +123,26 @@ export default defineComponent({
                 )
             }
             if(isInvalid.value) {
-                console.log(1)
-                overlaySlots.default = ()=><div>{props.validate.invalidTip??tip.value}</div>
+                overlaySlots.default = ()=>(
+                    <>
+                    <Icon name="k-icon-warning" size="14" />&#8194;
+                    {props.validate.invalidTip??tip.value}
+                    </>
+                )
             }
-            // return input
             
             return (
-                <Overlay placement="right" v-slots={overlaySlots} />
+                <Overlay manual
+                    placement={props.placement}
+                    toBody={props.toBody}
+                    show={isInvalid.value}
+                    style={{
+                        'background-color':'var(--k-color-danger-01)',
+                        'color': 'var(--k-color-danger)',
+                        'border-color': 'var(--k-color-danger-05)',
+                        'padding':'2px 8px'
+                    }}
+                    v-slots={overlaySlots} />
             )
         }
     }
