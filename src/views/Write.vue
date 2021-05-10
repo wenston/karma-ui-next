@@ -4,8 +4,7 @@
     <div>
 
       <Write v-model="t"
-        :validate="{when:'change',minlength:3,invalidTip:'字符串长度至少3位！'}"
-        :maxlength="5"
+        :validate="{when:'change',invalidTip:'至少3位',minlength:3}"
         @input="onInput"
         @change="onChange" />
     </div>
@@ -26,12 +25,13 @@
   </section>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from "vue"
+import { defineComponent, ref, watch } from "vue"
 import Write from "../packages/components/write"
 export default defineComponent({
   components: { Write },
   setup() {
     const t = ref("sdf")
+
     return {
       t,
       onInput(e: any) {

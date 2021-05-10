@@ -9,10 +9,13 @@ interface ValidateOptions {
     invalidTip?:string,//无效时给出的提示
     minlength?:number//字符串最小长度
 }
-const Emits = ['change','update:modelValue']
+const Emits = ['input','change','update:modelValue']
 const OverlayProps = {
     placement: {type: String,default: 'right'},
     toBody: {type: Boolean,default: false}
+}
+function TipIcon(name?:string) {
+    return <Icon name={name||'k-icon-warning'} size="15" />
 }
 export default defineComponent({
     name:'Write',
@@ -30,6 +33,7 @@ export default defineComponent({
             type: String,
             default: 'text'
         },
+        placeholder:String,
         maxlength: [String,Number],
         validate: {
             type: Object,
@@ -56,30 +60,49 @@ export default defineComponent({
             return o
         })
         const inputProps = computed(()=>{
-            
+            let when = props.validate.when || ''
+            if(when) {
+                when = when.toLowerCase()
+            }
             const listeners = filterListeners(attrs)
-            let t = props.type
             const o:any = {
                 ref:ipt_elem,
                 class: [
-                    'k-write-input'
+                    'k-write-input', attrs.class
                 ],
-                type: t,
+                type: props.type,
+                value: props.modelValue,
                 readonly: props.readonly,
                 disabled: props.disabled,
+                placeholder:props.placeholder,
                 maxlength: props.maxlength,
                 ...listeners,
-                
-            }
-            if(props.validate.when) {
-                const name = props.validate.when.toLowerCase()
-                const ev = name.charAt(0).toUpperCase() + name.slice(1)
-                Emits.push(name)
-                o[`on${ev}`] = (e:any) => {
-                    toValidate(e)
-                    emit(name,e)
+                onInput:(e:any)=>{
+                    const v = e.target.value
+                    emit('update:modelValue',v)
+                    if(when==='input') {
+                        toValidate(e)
+                    }
+                    emit('input',e)
+                },
+                onChange:(e:any)=>{
+                    if(when==='change') {
+                        toValidate(e)
+                    }
+                    emit('change',e)
                 }
             }
+            // if(when) {
+            //     if(when!=='input' && when!=='change') {
+            //         const ev = when.charAt(0).toUpperCase() + when.slice(1)
+            //         Emits.push(when)
+            //         o[`on${ev}`] = (e:any) => {
+            //             toValidate(e)
+            //             emit(when,e)
+            //         }
+
+            //     }
+            // }
             return o
         })
 
@@ -94,7 +117,7 @@ export default defineComponent({
                 isError = true
             }
             if(reg) {
-                if(!v.test(reg)) {
+                if(!(v.test(reg))) {
                     isError = true
                 }
             }
@@ -125,8 +148,8 @@ export default defineComponent({
             if(isInvalid.value) {
                 overlaySlots.default = ()=>(
                     <>
-                    <Icon name="k-icon-warning" size="14" />&#8194;
-                    {props.validate.invalidTip??tip.value}
+                        {TipIcon()}&#8194;
+                        {props.validate.invalidTip??tip.value}
                     </>
                 )
             }

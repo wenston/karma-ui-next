@@ -8,6 +8,7 @@
   transition: var(--k-transition);
   &.k-write--block {
     display: flex;
+    width: 100%;
   }
   &.k-write--simple {
     border: none;
@@ -33,6 +34,7 @@
     color: var(--k-color-4);
     background-color: transparent;
     padding: 0 8px;
+    position: relative;
   }
   & .k-write-prepend {
     border-radius: var(--k-radius) 0 0 var(--k-radius);
@@ -56,8 +58,12 @@
       cursor: not-allowed;
       background-color: var(--k-color-disabled);
     }
+
     &:focus {
       border: 0;
     }
+  }
+  & .k-write-input::placeholder {
+    color: var(--k-color-5);
   }
 }

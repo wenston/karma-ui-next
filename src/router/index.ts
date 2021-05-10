@@ -81,6 +81,14 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       title: "输入框 Write"
     }
+  },
+  {
+    path: "/number",
+    name: "number",
+    component: () => import("../views/Number.vue"),
+    meta: {
+      title: "数值输入框 Number"
+    }
   }
 ]
 
