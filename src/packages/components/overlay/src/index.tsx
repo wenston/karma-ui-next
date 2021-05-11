@@ -185,7 +185,7 @@ export default defineComponent({
                     emit('enter')
                 }
             }
-            if(props.bind==='v-show') {
+            if(props.bind ==='v-show') {
                 _layer = (
                     <Transition {...transProps}>
                         <Layer {...layerProps.value} v-show={visible.value}

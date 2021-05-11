@@ -127,12 +127,10 @@
 }
 
 .k-layer-scale-enter-active,
-.k-layer-scale-x-enter-active,
-.k-layer-scale-x-leave-active {
+.k-layer-scale-x-enter-active {
   transition: var(--k-layer-enter-transition);
 }
 .k-layer-scale-leave-active,
-.k-layer-scale-x-leave-active,
 .k-layer-scale-x-leave-active {
   transition: var(--k-layer-leave-transition);
 }

@@ -2,6 +2,8 @@
   <h1>Number 数字输入框</h1>
   <div>
     <Number v-model="n"
+      :max="100"
+      :min="5"
       placeholder="数值"
       @change="onChange" />
   </div>
