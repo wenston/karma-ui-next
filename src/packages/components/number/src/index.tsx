@@ -18,7 +18,12 @@ export default defineComponent({
     ...Write.props,
     min: { type: Number, default: undefined },
     max: { type: Number, default: undefined },
-    lazy: Boolean //true：change时进行数据双向同步。false时，input时同步
+    lazy: Boolean, //true：change时进行数据双向同步。false时，input时同步
+    //当给定了min和max时，autoCorrect有效
+    autoCorrect: {
+      type: Boolean,default:true
+    },
+    showButton:Boolean,//是否显示上下箭头
   },
   setup(props, { emit, attrs, slots }) {
     const showTip = ref(false)
@@ -35,18 +40,15 @@ export default defineComponent({
         disabled: props.disabled,
         placeholder: props.placeholder,
         maxlength: props.maxlength,
+        showTip: showTip.value,
+        validate: {
+          when: 'input',
+          invalidTip: tip.value,
+          ...props.validate
+        },
         type: "text",
         //由于是只能输入数字的输入框，所以在keydown的时候，做初步的筛选，只允许数值相关的字符录入
-        onKeydown: (e: any) => {
-          const key = e.key.toLowerCase()
-          if (
-            !/\d+/.test(key) &&
-            OtherKeys.indexOf(key) === -1 &&
-            OnlyOnce.indexOf(key) === -1
-          ) {
-            e.preventDefault()
-          }
-        },
+        onKeydown,
         //在input时，做进一步的筛选
         onInput,
         //change时，做第三次的数值规范
@@ -56,23 +58,52 @@ export default defineComponent({
       return o
     })
 
-    function toValidateAndEmit(when: string, e: any, v: number) {
+    function toValidateAndEmit(when: string, e: any, v: string) {
       const min = props.min,
         max = props.max
       if (min !== undefined) {
         if (v < min) {
-          v = min
+          tip.value = '最小不能小于'+min
+          showTip.value=true
+          if(props.autoCorrect) {
+            v = min
+            setTimeout(()=>{showTip.value=false},3000)
+          }
+          e.target.value = v
+          emit("update:modelValue", v)
+          return false
+        }else{
+          showTip.value=false
         }
       }
       if (max !== undefined) {
         if (v > max) {
-          v = max
+          // v = max
           tip.value = "最大不能超过" + max
+          showTip.value = true
+          if(props.autoCorrect) {
+            v = max
+            setTimeout(()=>{showTip.value=false},3000)
+          }
+          e.target.value = v
+          emit("update:modelValue", v)
+          return false
+        } else {
           showTip.value = false
         }
       }
       e.target.value = v
       emit("update:modelValue", v)
+    }
+    function onKeydown(e:any) {
+      const key = e.key.toLowerCase()
+      if (
+        !/\d+/.test(key) &&
+        OtherKeys.indexOf(key) === -1 &&
+        OnlyOnce.indexOf(key) === -1
+      ) {
+        e.preventDefault()
+      }
     }
     function onChange(e: any) {
       let v = e.target.value
@@ -96,14 +127,9 @@ export default defineComponent({
         v = _v
         e.target.value = _v
       }
-      v = Number(v)
-      if (isNaN(v)) {
-        console.warn(`${v}不是一个数？`)
-      } else {
-        if (props.lazy) {
-          toValidateAndEmit("change", e, v)
-          emit("change", e)
-        }
+      if (props.lazy) {
+        toValidateAndEmit("change", e, v)
+        emit("change", e)
       }
     }
 
@@ -131,19 +157,15 @@ export default defineComponent({
         v = _v
         e.target.value = _v
       }
-      v = Number(v)
-      if (isNaN(v)) {
-        console.warn(`${v}不是一个数？`)
-      } else {
-        if (!props.lazy) {
-          toValidateAndEmit("input", e, v)
-          emit("input", e)
-        }
+      if (!props.lazy) {
+        // v = Number(v)
+        toValidateAndEmit("input", e, v)
+        emit("input", e)
       }
     }
 
     return () => {
-      const _slots = {
+      const _slots = props.showButton && {
         append: () => [
           <i class="k-number-minus-icon" />,
           <i class="k-number-plus-icon" />

@@ -45,6 +45,7 @@ export default defineComponent({
       type: Object,
       default: () => ({})
     },
+    //showTip控制提示的展示与否
     showTip: Boolean
   },
   setup(props, { emit, slots, attrs }) {
@@ -60,7 +61,7 @@ export default defineComponent({
             "k-write--block": props.block,
             "k-write--simple": props.simple,
             "k-write--disabled": props.disabled,
-            "k-write--invalid": isInvalid.value
+            "k-write--invalid": visibleTip.value
           }
         ]
       }
@@ -110,6 +111,7 @@ export default defineComponent({
       // }
       return o
     })
+    const visibleTip = computed(()=>isInvalid.value||props.showTip)
 
     function toValidate(e: any) {
       let isError = false
@@ -120,7 +122,7 @@ export default defineComponent({
         isError = true
       }
       if (reg) {
-        if (!v.test(reg)) {
+        if (!reg.test(v)) {
           isError = true
         }
       }
@@ -145,7 +147,7 @@ export default defineComponent({
           </div>
         )
       }
-      if (isInvalid.value) {
+      if (visibleTip.value) {
         overlaySlots.default = () => (
           <>
             {TipIcon()}&#8194;
@@ -159,7 +161,7 @@ export default defineComponent({
           manual
           placement={props.placement}
           toBody={props.toBody}
-          show={props.showTip || isInvalid.value}
+          show={visibleTip.value}
           style={{
             "background-color": "var(--k-color-danger-01)",
             color: "var(--k-color-danger)",
