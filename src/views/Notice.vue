@@ -1,78 +1,23 @@
 <template>
   <h1>Notice 通知</h1>
-  <div>
-    <Bouton type="primary"
-      @click="show=true">弹出通知</Bouton>
-    <Bouton type="danger"
-      @click="show=false">关闭通知</Bouton>
-    <Notice v-model:show="show">
-      <div :class="css.flex">
-        <Icon name="k-icon-warning"
-          :class="css.icon" />
-        <div :class="css.right">
-          你的操作阿斯顿噶撒旦法撒地方<em style="color:lightblue;">萨芬撒放到撒旦法你的操作阿斯顿噶撒
-            旦法撒地方萨芬撒放到撒旦法你的操</em>作阿斯顿噶撒旦法撒地方萨芬撒放到撒旦法
-        </div>
-      </div>
-      <div style="display:flex;justify-content:flex-end;">
-        <a href="javascript:;"
-          style="text-decoration:none;color:#aaa;"
-          @click="show=false">我知道了！</a>
-      </div>
-    </Notice>
-  </div>
-  <div style="margin-top:20px;">
-    <Bouton type="primary"
-      @click="show1=true">弹出通知</Bouton>
-    <Bouton type="danger"
-      @click="show1=false">关闭通知</Bouton>
-    <Notice v-model:show="show1">
-      <div :class="css.flex">
-        <Icon name="k-icon-warning"
-          :class="css.icon" />
-        <div :class="css.right">
-          你的操作阿斯顿噶撒旦
-        </div>
-      </div>
-      <div style="display:flex;justify-content:flex-end;">
-        <a href="javascript:;"
-          style="text-decoration:none;color:#aaa;"
-          @click="show1=false">我知道了！</a>
-      </div>
-    </Notice>
-  </div>
-  <div style="margin-top:20px;">
-    <Bouton type="warning"
-      @click="show2=true">不会自动关闭的通知</Bouton>
-    <Bouton type="danger"
-      @click="show2=false">关闭通知</Bouton>
-    <Notice v-model:show="show2"
-      placement="top-end"
-      manual>
-      <div :class="css.flex">
-        <Icon name="k-icon-warning"
-          :class="css.icon" />
-        <div :class="css.right">
-          ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-        </div>
-      </div>
-      <div style="display:flex;justify-content:flex-end;">
-        <a href="javascript:;"
-          style="text-decoration:none;color:#aaa;"
-          @click="show2=false">我知道了！</a>
-      </div>
-    </Notice>
-  </div>
   <div style="margin-top:20px">
     <Bouton @click="tell">通知</Bouton>
     <Bouton @click="tell2">通知2</Bouton>
     <Bouton @click="tell3">通知3</Bouton>
+    <Bouton @click="ask">通知4 从setup里用</Bouton>
+  </div>
+  <div style="margin-top:20px">
+    <Bouton @click="tell4">局部引入Notice</Bouton>
+    <Bouton @click="tell5">从外部关闭的通知，而且点击多次只会有一个通知！</Bouton>
+    <Bouton @click="onClose"
+      type="warning">我是专门用来关闭一个通知的</Bouton>
   </div>
   <div>
   </div>
 </template>
 <script lang="tsx">
 import {
+  App,
   defineComponent,
   getCurrentInstance,
   ref,
@@ -81,11 +26,13 @@ import {
   watch,
 } from "vue"
 import Bouton from "../packages/components/bouton"
-import Notice from "../packages/components/notice"
 import Icon from "../packages/components/icon"
+import Notice from "../packages/components/notice"
+
 export default defineComponent({
-  components: { Bouton, Notice, Icon },
+  components: { Bouton, Icon },
   setup() {
+    let notice5: any
     const css = useCssModule("css")
     const ins = getCurrentInstance()
     const show = ref(false)
@@ -99,7 +46,77 @@ export default defineComponent({
       show2,
       ask() {
         const _ins = ins as any
-        console.log(_ins.appContext.config.globalProperties.$notice)
+        const open = _ins.appContext.config.globalProperties.$notice
+        open({
+          content: (close: any) => {
+            return (
+              <div class={css.flex}>
+                <div>
+                  <Icon name="k-icon-square" size="12" />
+                  &#12288;随便弹出一些什么东西
+                </div>
+                <div>
+                  <Icon name="k-icon-square" size="12" />
+                  &#12288;随便弹出一些什么东西
+                </div>
+                <div>
+                  <Icon name="k-icon-square" size="12" />
+                  &#12288;随便弹出一些什么东西
+                </div>
+                <div>
+                  <Icon name="k-icon-square" size="12" />
+                  &#12288;随便弹出一些什么东西
+                </div>
+                <a href="javascript:;" onClick={close}>
+                  关闭
+                </a>
+              </div>
+            )
+          },
+        })
+      },
+
+      onClose() {
+        notice5 && Notice.close(notice5)
+        if (notice5) {
+          Notice.close(notice5)
+          notice5 = undefined
+        }
+      },
+      tell4() {
+        Notice.open({
+          manual: true,
+          content: (close: any) => {
+            return (
+              <div class={css.flex}>
+                <div>这个是局部引入的组件</div>
+                <br />
+                <div>根据需要给出相应的通知信息，而且是不会自动关闭的哟</div>
+                <div>
+                  <a href="javascript:;" onClick={close}>
+                    关闭
+                  </a>
+                </div>
+              </div>
+            )
+          },
+        })
+      },
+      tell5() {
+        if (!notice5) {
+          notice5 = Notice.open({
+            manual: true,
+            content: () => {
+              return (
+                <div class={css.flex}>
+                  <div style="color:red">这也是局部引入的组件</div>
+                  <br />
+                  <div>这个通知是可以从外部关闭的！</div>
+                </div>
+              )
+            },
+          })
+        }
       },
     }
   },
@@ -121,14 +138,25 @@ export default defineComponent({
       const that = this as any
       that.$notice({
         manual: true,
-        content: (
-          <div>
-            <div class={that.css.flex}>这是另外的通知，不会自动关闭的</div>
+        content: (destroy: () => void) => {
+          const ps: any = {
+            onClick: destroy,
+          }
+          return (
             <div>
-              <Bouton>我知道了</Bouton>
+              <div class={that.css.flex}>这是另外的通知，不会自动关闭的</div>
+              <div style="padding: 10px;text-align:right;">
+                <Bouton {...ps}>I know it!</Bouton>
+              </div>
             </div>
-          </div>
-        ),
+          )
+        },
+      })
+    },
+    tell3() {
+      const that = this as any
+      that.$notice({
+        content: <div>使用者根据需求填充内容</div>,
       })
     },
   },
@@ -136,10 +164,8 @@ export default defineComponent({
 </script>
 <style module="css" lang="postcss">
 .flex {
-  display: flex;
   max-width: 250px;
   padding: 15px;
-  align-items: cen;
 
   & .icon {
     font-size: 30px;

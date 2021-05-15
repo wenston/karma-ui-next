@@ -9,9 +9,9 @@ import router from "./router"
 import "./packages/theme/index.css"
 import "./packages/theme/font/iconfont.css"
 
-import { $notice } from "./packages/components/notice"
+import Notice from "./packages/components/notice"
 
 createApp(App)
   .use(router)
-  .use($notice)
+  .use(Notice)
   .mount(document.body)

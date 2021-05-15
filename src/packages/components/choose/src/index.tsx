@@ -75,7 +75,8 @@ export default defineComponent({
         ...props,
         show: visible.value,
         style: {
-          padding: "0"
+          padding: "0",
+          "background-color": 'white'
         },
         "onUpdate:show": (v: any) => {
           visible.value = v

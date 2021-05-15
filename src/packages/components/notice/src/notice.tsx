@@ -12,7 +12,16 @@ import Icon from "../../icon"
 import { getBoundingClientRect } from "../../../util"
 import useGlobalZIndex from "../../../use/useGlobalZIndex"
 import Close from "../../close"
-let WRAPPER: any = null
+
+export type NoticePlacementType = 'top-end' | 'bottom-end'
+
+export type NoticeOptions = {
+  content: any,
+  placement?: NoticePlacementType,
+  duration?: number,
+  manual?:boolean
+}
+
 export default defineComponent({
   inheritAttrs: false,
   name: "Notice",
@@ -23,11 +32,13 @@ export default defineComponent({
     duration: { type: Number, default: 4500 }, //单位毫秒,多少秒后自动关闭
     manual: { type: Boolean, default: false } //是否手动控制关闭，也就是一直显示
   },
-  emits: ["update:show"],
+  emits: ["update:show","after-enter","after-leave",'close'],
   setup(props, { emit, slots }) {
     const { zIndex: order, add } = useGlobalZIndex()
     const noticeHeight = ref("")
     const visible = ref(props.show)
+    
+    emit('close', close)
     watch(
       () => props.show,
       (s) => {
@@ -50,13 +61,16 @@ export default defineComponent({
       visible.value = true
     })
 
-    onUnmounted(() => {
-      console.log("卸载了  呵呵？")
-    })
+    function close() {
+      visible.value = false
+    }
+
+    
 
     return () => {
       const styles = {
         order: order.value,
+        zIndex: order.value,
         "--__notice-item-height": noticeHeight.value
           ? noticeHeight.value + "px"
           : ""
@@ -67,6 +81,10 @@ export default defineComponent({
           name="k-notice-transition"
           onAfter-enter={(el: HTMLElement) => {
             noticeHeight.value = getBoundingClientRect(el).height
+            emit('after-enter',el)
+          }}
+          onAfter-leave={(el:HTMLElement)=>{
+            emit('after-leave',el)
           }}
         >
           {visible.value && (

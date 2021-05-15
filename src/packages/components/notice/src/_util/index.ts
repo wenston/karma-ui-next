@@ -7,7 +7,7 @@ function createNoticeWrapper(placement: string) {
     return WRAPPERS[placement]
   }
   const el = document.createElement("div")
-  const id = `notice_${(new Date() as any) - 0}`
+  const id = `notice_container_${(new Date() as any) - 0}`
   const klass = "k-notice k-notice--" + placement
   el.id = id
   el.className = klass
