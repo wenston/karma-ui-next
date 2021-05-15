@@ -76,6 +76,7 @@ export default defineComponent({
                 hasArrow: false,
                 gap: 0,
                 isFixed: true,
+                placement: 'center',
                 class: 'k-popup',
                 "onUpdate:show":(v:any)=> {
                     visible.value=v

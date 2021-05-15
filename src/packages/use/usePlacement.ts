@@ -22,6 +22,7 @@ export type Placement =
   | "right"
   | "right-start"
   | "right-end"
+  | "center"
 
 const ARROW_OFFSET_PERCENT = 0.35
 const ARROW_OFFSET = 3.5
@@ -96,8 +97,9 @@ export default function usePlacement(
         bottom.value = p.bottom
       }
     }
-
-    rElem.value = _el
+    if (_el !== document.body) {
+      rElem.value = _el
+    }
   }
   //当el状态是display:none或者在dom还不存在时，
   //通过简单的节点复制和Transtion的动画钩子beforeEnter都是获取不到宽高信息的！
@@ -141,22 +143,43 @@ export default function usePlacement(
   ) {
     getPlace(relateElem, el, placement)
     if (placementOptions.isFixed) {
-      //在页面中fixed定位，并在中间，故要定位的元素的top和left是要相对于视窗大小计算的
-      const pw = place.width
-      const ph = place.height
-      place.left = (ww.value - pw) / 2
-      place.top = (wh.value - ph) / 2
-
+      const { gap = 15, offset = 0 } = placementOptions
+      const _plc = (placement ?? placementOptions.placement) || "top-end"
       const _el: any = elem.value
-      // console.log(l,t,_el)
-      if (_el && _el.style) {
-        _el.style.width = `${place.width}px`
-        //onMounted后赋值height，是为了方便动画
-        //页面调整resize后，高度去掉，是为了方便高度自适应
-        _el.style.height = `${place.height}px`
-        _el.style.top = `${place.top}px`
-        _el.style.left = `${place.left}px`
+      switch (_plc) {
+        case "center":
+          //在页面中fixed定位，并在中间，故要定位的元素的top和left是要相对于视窗大小计算的
+          const pw = place.width
+          const ph = place.height
+          place.left = (ww.value - pw) / 2
+          place.top = (wh.value - ph) / 2
+
+          // console.log(l,t,_el)
+          if (_el && _el.style) {
+            _el.style.width = `${place.width}px`
+            //onMounted后赋值height，是为了方便动画
+            //页面调整resize后，高度去掉，是为了方便高度自适应
+            _el.style.height = `${place.height}px`
+            _el.style.top = `${place.top}px`
+            _el.style.left = `${place.left}px`
+          }
+          break
+        case "top-end":
+          if (_el && _el.style) {
+            _el.style.top = `${gap}px`
+            _el.style.right = `${gap}px`
+          }
+          break
+        case "bottom-end":
+          if (_el && _el.style) {
+            _el.style.bottom = `${gap}px`
+            _el.style.right = `${gap}px`
+          }
+          break
+        default:
+          break
       }
+
       // console.log(place)
     } else {
       const { gap = 9, offset = 0 } = placementOptions
@@ -292,7 +315,8 @@ export default function usePlacement(
   })
   onUpdated(setPlace)
   if (placementOptions.isFixed) {
-    useEvent(W, "resize", handleWindowResize)
+    if (placementOptions.placement === "center")
+      useEvent(W, "resize", handleWindowResize)
   }
   return {
     //需要定位的那个元素的位置信息

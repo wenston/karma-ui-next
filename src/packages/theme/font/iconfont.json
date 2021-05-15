@@ -69,6 +69,13 @@
       "unicode_decimal": 59628
     },
     {
+      "icon_id": "1727523",
+      "name": "304错误、关闭、取消",
+      "font_class": "close",
+      "unicode": "e8e7",
+      "unicode_decimal": 59623
+    },
+    {
       "icon_id": "1727545",
       "name": "310向下、展开",
       "font_class": "arrow-down",

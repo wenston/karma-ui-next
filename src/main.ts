@@ -6,9 +6,12 @@ import router from "./router"
 // const themeCss = require("./theme/index.css")
 
 //https://jkchao.github.io/typescript-book-chinese/typings/migrating.html#第三方的-npm-模块
-import './packages/theme/index.css'
-import './packages/theme/font/iconfont.css'
+import "./packages/theme/index.css"
+import "./packages/theme/font/iconfont.css"
+
+import { $notice } from "./packages/components/notice"
 
 createApp(App)
   .use(router)
+  .use($notice)
   .mount(document.body)

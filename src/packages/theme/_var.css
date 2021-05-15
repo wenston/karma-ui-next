@@ -83,4 +83,7 @@
 
   --k-write-color: var(--k-color-input);
   --k-write-box-shadow: var(--k-input-box-shadow);
+
+  --k-notice-box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+  --k-notice-cubic-bezier: cubic-bezier(0, 0.91, 0.16, 1.19);
 }

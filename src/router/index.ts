@@ -43,35 +43,11 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: "/tooltip",
-    name: "tooltip",
-    component: () => import("../views/Tooltip.vue"),
-    meta: {
-      title: "小提示 Tooltip"
-    }
-  },
-  {
-    path: "/overlay",
-    name: "overlay",
-    component: () => import("../views/Overlay.vue"),
-    meta: {
-      title: "覆盖层 Overlay"
-    }
-  },
-  {
     path: "/choose",
     name: "choose",
     component: () => import("../views/Choose.vue"),
     meta: {
       title: "选择 Choose"
-    }
-  },
-  {
-    path: "/popup",
-    name: "popup",
-    component: () => import("../views/Popup.vue"),
-    meta: {
-      title: "弹框 Popup"
     }
   },
   {
@@ -88,6 +64,38 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("../views/Number.vue"),
     meta: {
       title: "数值输入框 Number"
+    }
+  },
+  {
+    path: "/popup",
+    name: "popup",
+    component: () => import("../views/Popup.vue"),
+    meta: {
+      title: "弹框 Popup"
+    }
+  },
+  {
+    path: "/tooltip",
+    name: "tooltip",
+    component: () => import("../views/Tooltip.vue"),
+    meta: {
+      title: "小提示 Tooltip"
+    }
+  },
+  {
+    path: "/overlay",
+    name: "overlay",
+    component: () => import("../views/Overlay.vue"),
+    meta: {
+      title: "覆盖层 Overlay"
+    }
+  },
+  {
+    path: "/notice",
+    name: "notice",
+    component: () => import("../views/Notice.vue"),
+    meta: {
+      title: "通知 Notice"
     }
   }
 ]

@@ -1,0 +1,89 @@
+import {
+  defineComponent,
+  getCurrentInstance,
+  onMounted,
+  onUnmounted,
+  ref,
+  Teleport,
+  Transition,
+  watch
+} from "vue"
+import Icon from "../../icon"
+import { getBoundingClientRect } from "../../../util"
+import useGlobalZIndex from "../../../use/useGlobalZIndex"
+import Close from "../../close"
+let WRAPPER: any = null
+export default defineComponent({
+  inheritAttrs: false,
+  name: "Notice",
+  components: { Icon, Close },
+  props: {
+    show: { type: Boolean, default: false },
+    placement: { type: String, default: "bottom-end" },
+    duration: { type: Number, default: 4500 }, //单位毫秒,多少秒后自动关闭
+    manual: { type: Boolean, default: false } //是否手动控制关闭，也就是一直显示
+  },
+  emits: ["update:show"],
+  setup(props, { emit, slots }) {
+    const { zIndex: order, add } = useGlobalZIndex()
+    const noticeHeight = ref("")
+    const visible = ref(props.show)
+    watch(
+      () => props.show,
+      (s) => {
+        visible.value = s
+      }
+    )
+    watch(visible, (v) => {
+      emit("update:show", v)
+      if (v) {
+        add()
+        if (!props.manual) {
+          setTimeout(() => {
+            visible.value = false
+          }, props.duration)
+        }
+      }
+    })
+
+    onMounted(() => {
+      visible.value = true
+    })
+
+    onUnmounted(() => {
+      console.log("卸载了  呵呵？")
+    })
+
+    return () => {
+      const styles = {
+        order: order.value,
+        "--__notice-item-height": noticeHeight.value
+          ? noticeHeight.value + "px"
+          : ""
+      }
+      const klass = ["k-notice-item", `k-notice-item--${props.placement}`]
+      return (
+        <Transition
+          name="k-notice-transition"
+          onAfter-enter={(el: HTMLElement) => {
+            noticeHeight.value = getBoundingClientRect(el).height
+          }}
+        >
+          {visible.value && (
+            <div style={styles} class={klass}>
+              {slots.default?.()}
+              <Close
+                size="14"
+                name="k-icon-close"
+                class="k-notice-close"
+                onClick={(e: any) => {
+                  visible.value = false
+                }}
+              />
+            </div>
+          )}
+        </Transition>
+      )
+    }
+  }
+})
