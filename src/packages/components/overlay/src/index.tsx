@@ -90,7 +90,11 @@ export default defineComponent({
                 ...rest} = props
             const _style:any = attrs.style??{}
             const _sty:any = {}
-            for(const k in _style) {
+            for(const _k in _style) {
+                let k  = _k
+                if(k==='backgroundColor') {
+                    console.warn('不要用backgroundColor')
+                }
                 if(k==='background-color' || k==='color' || k==='border-color' || k==='padding') {
                     _sty[`--__layer-${k}`] = _style[k]
                 } else {

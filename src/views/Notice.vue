@@ -9,8 +9,17 @@
   <div style="margin-top:20px">
     <Bouton @click="tell4">局部引入Notice</Bouton>
     <Bouton @click="tell5">从外部关闭的通知，而且点击多次只会有一个通知！</Bouton>
-    <Bouton @click="onClose"
-      type="warning">我是专门用来关闭一个通知的</Bouton>
+    <Overlay style="background-color:var(--k-color-danger);color:white "
+      placement="top-start">
+      <template #trigger>
+        <Bouton @click="onClose"
+          type="warning">我是专门用来关闭一个通知的</Bouton>
+      </template>
+      <div>
+        还没有弹出<span style="color:currentColor">通知</span>,不用管了啊！
+        其实，这个按钮是可以隐藏的，可以等通知出现之后再展现
+      </div>
+    </Overlay>
   </div>
   <div>
   </div>
@@ -28,9 +37,10 @@ import {
 import Bouton from "../packages/components/bouton"
 import Icon from "../packages/components/icon"
 import Notice from "../packages/components/notice"
+import Overlay from "../packages/components/overlay"
 
 export default defineComponent({
-  components: { Bouton, Icon },
+  components: { Bouton, Icon, Overlay },
   setup() {
     let notice5: any
     const css = useCssModule("css")

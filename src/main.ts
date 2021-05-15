@@ -9,6 +9,7 @@ import router from "./router"
 import "./packages/theme/index.css"
 import "./packages/theme/font/iconfont.css"
 
+// Notice可以从这里全局引入，也可以局部引入
 import Notice from "./packages/components/notice"
 
 createApp(App)
