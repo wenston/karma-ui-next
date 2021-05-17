@@ -94,6 +94,8 @@ export default defineComponent({
       }
       e.target.value = v
       emit("update:modelValue", v)
+
+      
     }
     function onKeydown(e:any) {
       const key = e.key.toLowerCase()
@@ -122,6 +124,10 @@ export default defineComponent({
         _v = "0." + v.slice(1)
       } else if (twoChar === "-.") {
         _v = "-0." + v.slice(2)
+      }
+      //对填入的数值进行规范之后，再次检查是不是一个数，不是数，就直接清空！
+      if(isNaN(+_v)) {
+        _v = ''
       }
       if (v !== _v) {
         v = _v
