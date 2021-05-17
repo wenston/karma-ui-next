@@ -19,7 +19,8 @@ export type NoticeOptions = {
   content: any,
   placement?: NoticePlacementType,
   duration?: number,
-  manual?:boolean
+  manual?:boolean,
+  afterClose?:()=>void
 }
 
 export default defineComponent({

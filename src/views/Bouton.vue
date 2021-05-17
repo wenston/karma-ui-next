@@ -55,6 +55,6 @@ export default defineComponent({
   border: 3px dashed red;
 }
 .d {
-  color: v-bind(color) !important;
+  /* color: v-bind(color) !important; */
 }
 </style>

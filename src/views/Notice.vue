@@ -87,10 +87,9 @@ export default defineComponent({
       },
 
       onClose() {
-        notice5 && Notice.close(notice5)
         if (notice5) {
           Notice.close(notice5)
-          notice5 = undefined
+          // notice5 = undefined
         }
       },
       tell4() {
@@ -124,6 +123,9 @@ export default defineComponent({
                   <div>这个通知是可以从外部关闭的！</div>
                 </div>
               )
+            },
+            afterClose() {
+              notice5 = undefined
             },
           })
         }

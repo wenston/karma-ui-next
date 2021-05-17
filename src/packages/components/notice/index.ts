@@ -1,10 +1,10 @@
 import { App, createVNode, createApp } from "vue"
-// import Notice from "./src"
 import type {NoticeOptions} from './src/notice'
 import MainNotice from "./src/notice"
-import { createNoticeWrapper } from "./src/_util/index"
+import { createNoticeWrapper, removeNoticeWrapper } from "./src/_util/index"
 
-const NoticeAppMap = new Map<App, {close:()=>void}>()
+const NoticeAppMap = new Map<
+  App, {wrapper: HTMLElement,close:()=>void,afterClose?:()=>void}>()
 
 const defaultOptions:NoticeOptions = {
   content: "默认的通知",
@@ -18,6 +18,7 @@ function open(options:NoticeOptions):App {
   const manual = options.manual??defaultOptions.manual
   const duration = options.duration??defaultOptions.duration
   const content = options.content??defaultOptions.content
+  const afterClose = options.afterClose
   const itemWrapper = document.createElement("div")
   const noticeWrapper = createNoticeWrapper(placement!)
   let _close = () => {}
@@ -51,14 +52,26 @@ function open(options:NoticeOptions):App {
   const notice = createApp(vm)
   notice.mount(itemWrapper)
   noticeWrapper.appendChild(itemWrapper)
-  NoticeAppMap.set(notice, {close:_close})
+  NoticeAppMap.set(notice, {wrapper: noticeWrapper,close:_close, afterClose})
   return notice
 }
 
 function close(app:App) {
   if(NoticeAppMap.has(app)) {
-    NoticeAppMap.get(app)?.close()
-    NoticeAppMap.delete(app)
+    const n = NoticeAppMap.get(app)
+    if(n) {
+      n.close()
+      if(n.afterClose) {
+        n.afterClose()
+      }
+      const wrapper = n.wrapper
+      NoticeAppMap.delete(app)
+      console.log(app)
+      if(NoticeAppMap.size===0) {
+        removeNoticeWrapper(wrapper)
+      }
+
+    }
   }
 }
 
@@ -69,6 +82,7 @@ function _destroy(
 ) {
   app_notice.unmount()
   noticeWrapper.removeChild(wrapper)
+  close(app_notice)
 }
 
 function _renderContent(close: any, content: (d: () => void) => void) {

@@ -21,11 +21,17 @@ function createNoticeWrapper(placement: string) {
   return el
 }
 
-function removeNoticeWrapper() {
-  // if (WRAPPER !== null) {
-  //   document.body.removeChild(WRAPPER)
-  //   WRAPPER = null
-  // }
+function removeNoticeWrapper(el: HTMLElement) {
+  let p = ""
+  for (const pla in WRAPPERS) {
+    if (WRAPPERS[pla] === el) {
+      p = pla
+    }
+  }
+  if (p) {
+    document.body.removeChild(el)
+    delete WRAPPERS[p]
+  }
 }
 
 export { createNoticeWrapper, removeNoticeWrapper }
