@@ -34,4 +34,13 @@ function removeNoticeWrapper(el: HTMLElement) {
   }
 }
 
-export { createNoticeWrapper, removeNoticeWrapper }
+function clearNoticeWrapper() {
+  for (const p in WRAPPERS) {
+    if (WRAPPERS[p]) {
+      document.body.removeChild(WRAPPERS[p])
+      delete WRAPPERS[p]
+    }
+  }
+}
+
+export { createNoticeWrapper, removeNoticeWrapper, clearNoticeWrapper }

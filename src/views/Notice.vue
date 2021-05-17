@@ -21,7 +21,15 @@
       </div>
     </Overlay>
   </div>
-  <div>
+  <div style="margin:30px 0;padding-top:30px;border-top:1px solid var(--k-color-line)">
+    <div>
+      <Bouton @click="onShowFromTop">从中间上部弹出</Bouton>
+    </div>
+  </div>
+  <div style="margin:30px 0;padding-top:30px;border-top:1px solid var(--k-color-line);">
+    <div>
+      <Bouton @click="onShowFromBottom">从中间<b style="color: var(--k-color-danger)">底部</b>弹出</Bouton>
+    </div>
   </div>
 </template>
 <script lang="tsx">
@@ -129,6 +137,36 @@ export default defineComponent({
             },
           })
         }
+      },
+      onShowFromTop() {
+        Notice.open({
+          placement: "top",
+          manual: false,
+          content: () => {
+            return (
+              <div style="padding: 15px 25px;background-color: rgba(0,0,0,.7);color:white;">
+                <Icon
+                  name="k-icon-warning"
+                  style="color:var(--k-color-danger);"
+                />
+                <div>从中间弹出，并展示个什么什么东西</div>
+              </div>
+            )
+          },
+        })
+      },
+      onShowFromBottom() {
+        Notice.open({
+          placement: "bottom",
+          manual: false,
+          content: () => {
+            return (
+              <div style="padding: 15px 25px;background-color: var(--k-color-success);color:white;border-radius:var(--k-radius);">
+                <div>从中间底部弹出，并展示个什么什么东西</div>
+              </div>
+            )
+          },
+        })
       },
     }
   },

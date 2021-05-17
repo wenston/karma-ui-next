@@ -1,10 +1,10 @@
 import { App, createVNode, createApp } from "vue"
 import type {NoticeOptions} from './src/notice'
 import MainNotice from "./src/notice"
-import { createNoticeWrapper, removeNoticeWrapper } from "./src/_util/index"
+import { createNoticeWrapper, clearNoticeWrapper } from "./src/_util/index"
 
 const NoticeAppMap = new Map<
-  App, {wrapper: HTMLElement,close:()=>void,afterClose?:()=>void}>()
+  App, {noticeWrapper: HTMLElement,close:()=>void,afterClose?:()=>void}>()
 
 const defaultOptions:NoticeOptions = {
   content: "默认的通知",
@@ -52,7 +52,7 @@ function open(options:NoticeOptions):App {
   const notice = createApp(vm)
   notice.mount(itemWrapper)
   noticeWrapper.appendChild(itemWrapper)
-  NoticeAppMap.set(notice, {wrapper: noticeWrapper,close:_close, afterClose})
+  NoticeAppMap.set(notice, {noticeWrapper,close:_close, afterClose})
   return notice
 }
 
@@ -64,11 +64,10 @@ function close(app:App) {
       if(n.afterClose) {
         n.afterClose()
       }
-      const wrapper = n.wrapper
+      // const noticeWrapper = n.noticeWrapper
       NoticeAppMap.delete(app)
-      console.log(app)
       if(NoticeAppMap.size===0) {
-        removeNoticeWrapper(wrapper)
+        clearNoticeWrapper()
       }
 
     }

@@ -13,7 +13,7 @@ import { getBoundingClientRect } from "../../../util"
 import useGlobalZIndex from "../../../use/useGlobalZIndex"
 import Close from "../../close"
 
-export type NoticePlacementType = 'top-end' | 'bottom-end'
+export type NoticePlacementType = 'top' | 'bottom' | 'top-end' | 'bottom-end'
 
 export type NoticeOptions = {
   content: any,

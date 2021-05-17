@@ -86,7 +86,7 @@ export default defineComponent({
         })
         const layerProps = computed(()=>{
             const {
-                tag,showDelay,hideDelay,isEqualWidth,canCloseByClickOutside,excludeRefs,
+                tag,showDelay,hideDelay,isEqualWidth,canCloseByClickOutside,excludeRefs,manual,
                 ...rest} = props
             const _style:any = attrs.style??{}
             const _sty:any = {}
