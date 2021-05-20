@@ -162,7 +162,14 @@ export default defineComponent({
           content: () => {
             return (
               <div style="padding: 15px 25px;background-color: var(--k-color-success);color:white;border-radius:var(--k-radius);">
-                <div>从中间底部弹出，并展示个什么什么东西</div>
+                <div>
+                  从中间底部弹出，并展示个什么什么东西，有点长长长
+                  长长长长长长长长长长长长长长长长长
+                  长长长长长长长长长长长长长长长长长
+                  长长长长长长长长长长长长长长长长长
+                  长长长长长长长长长长长长长长长长长
+                  长长长长长长长长长长长长长长长长长
+                </div>
               </div>
             )
           },

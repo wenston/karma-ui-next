@@ -33,6 +33,7 @@
   --k-height: 32px;
   --k-padding-x: 12px;
 
+  --k-transition-quick: 0.15s;
   --k-transition: 0.35s;
   --k-transition-enter: 0.618s;
   --k-transition-leave: var(--k-transition);
@@ -44,6 +45,11 @@
   --k-bouton-height: var(--k-height);
   --k-bouton-padding: 0 var(--k-padding-x);
   --k-bouton-font-size: var(--k-font-size);
+  /* --k-bouton-box-shadow: 0 4px 0 0 rgba(0, 0, 0, 0.35),
+    0 3px 5px 0 rgba(0, 0, 0, 0.3); */
+  --k-bouton-box-shadow: 0 4px 0 -2px rgba(0, 0, 0, 0.2),
+    0 3px 5px 0 rgba(0, 0, 0, 0.3), inset 0 1px 3px 0 rgba(255, 255, 255, 0.8);
+  --k-bouton-active-box-shadow: 0 1px 0 -0.5px rgba(0, 0, 0, 0.7);
 
   --k-mask-background-color: rgba(0, 0, 0, 0.45);
   --k-mask-enter-transition: background-color var(--k-transition-enter)

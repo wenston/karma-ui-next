@@ -7,7 +7,7 @@
   height: var(--k-bouton-height);
   padding: var(--k-bouton-padding);
   font-size: var(--k-bouton-font-size);
-  transition: var(--k-transition);
+  transition: var(--k-transition-quick);
   outline: none;
   user-select: none;
 
@@ -19,12 +19,13 @@
   &:hover,
   &:focus {
     &:not(.k-bouton--disabled) {
-      box-shadow: var(--k-box-shadow);
+      box-shadow: var(--k-bouton-box-shadow);
     }
   }
   &:active {
     &:not(.k-bouton--disabled) {
-      box-shadow: inset var(--k-box-shadow);
+      box-shadow: var(--k-bouton-active-box-shadow);
+      transform: translateY(1px);
     }
   }
 
