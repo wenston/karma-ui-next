@@ -24,7 +24,7 @@
     bottom: 0;
   }
   &:hover {
-    background-color: var(--k-color-line);
+    background-color: var(--k-color-line-1);
   }
 }
 
@@ -33,7 +33,7 @@
   border-radius: 0 var(--k-radius) 0 0;
   &:after {
     top: -3px;
-    border-color: transparent transparent var(--k-color-line);
+    border-color: transparent transparent var(--k-color-line-1);
   }
   &:hover {
     &:after {
@@ -44,7 +44,7 @@
 .k-number-minus-icon {
   bottom: 0;
   border-radius: 0 0 var(--k-radius) 0;
-  border-top: 1px solid var(--k-color-line);
+  border-top: 1px solid var(--k-color-line-1);
   &:after {
     top: 3px;
     border-color: var(--k-color-line) transparent transparent;

@@ -30,7 +30,7 @@ export default defineComponent({
 html,
 body {
   height: 100%;
-  line-height: 1.5;
+  line-height: normal;
 }
 #nav {
   background-color: var(--k-color-6);

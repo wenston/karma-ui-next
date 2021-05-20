@@ -75,6 +75,14 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: "/drawer",
+    name: "drawer",
+    component: () => import("../views/Drawer.vue"),
+    meta: {
+      title: "抽屉 Drawer"
+    }
+  },
+  {
     path: "/tooltip",
     name: "tooltip",
     component: () => import("../views/Tooltip.vue"),

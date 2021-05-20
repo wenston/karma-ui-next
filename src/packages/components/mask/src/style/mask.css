@@ -15,10 +15,11 @@
 
 .k-mask-fade-enter-active,
 .k-mask-fade-leave-active {
-  transition: var(--k-mask-enter-transition);
+  transition: var(--k-transition-enter);
 }
 .k-mask-fade-leave-active {
-  transition: var(--k-mask-leave-transition);
+  transition: var(--k-transition-leave);
+  /* transition: 10s; */
 }
 
 .k-mask-fade-enter-from,

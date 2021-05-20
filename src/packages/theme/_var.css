@@ -22,7 +22,10 @@
   --k-color-input: var(--k-color-2);
   --k-color-placeholder: var(--k-color-5);
 
-  --k-color-line: var(--k-color-5);
+  --k-color-line-1: var(--k-color-5);
+  --k-color-line-2: var(--k-color-6);
+  --k-color-line-3: var(--k-color-7);
+  --k-color-line-4: var(--k-color-5);
   --k-color-dividing-line: var(--k-color-6);
 
   --k-font-size: 12px;
@@ -34,7 +37,7 @@
   --k-padding-x: 12px;
 
   --k-transition-quick: 0.15s;
-  --k-transition: 0.4s;
+  --k-transition: 0.35s;
   --k-transition-enter: 0.618s;
   --k-transition-leave: var(--k-transition);
 

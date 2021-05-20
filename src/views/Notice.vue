@@ -26,7 +26,7 @@
       <Bouton @click="onShowFromTop">从中间上部弹出</Bouton>
     </div>
   </div>
-  <div style="margin:30px 0;padding-top:30px;border-top:1px solid var(--k-color-line);">
+  <div style="margin:30px 0;padding-top:30px;border-top:1px solid var(--k-color-line-1);">
     <div>
       <Bouton @click="onShowFromBottom">从中间<b style="color: var(--k-color-danger)">底部</b>弹出</Bouton>
     </div>
