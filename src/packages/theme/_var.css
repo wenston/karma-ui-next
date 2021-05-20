@@ -34,7 +34,7 @@
   --k-padding-x: 12px;
 
   --k-transition-quick: 0.15s;
-  --k-transition: 0.35s;
+  --k-transition: 0.4s;
   --k-transition-enter: 0.618s;
   --k-transition-leave: var(--k-transition);
 
