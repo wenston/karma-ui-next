@@ -1,8 +1,8 @@
-import { onMounted, ref, Ref } from "vue"
+import { getCurrentInstance, onMounted, ref, Ref, watch } from "vue"
 import { getElement } from "../util"
 import useEvent from "./useEvent"
 export default function useTouchBottom(
-  elem: Ref<HTMLElement | unknown>,
+  elem: Ref<HTMLElement | any>,
   onTouchBottom: Function,
   offset?: number
 ) {
@@ -27,6 +27,22 @@ export default function useTouchBottom(
       onTouchBottom()
     }
   }
-  onMounted(touchBtm)
-  useEvent(elem, "scroll", touchBtm)
+  //如果有elem.value，就直接绑定
+  if (elem.value && getCurrentInstance()) {
+    onMounted(touchBtm)
+    useEvent(elem, "scroll", touchBtm)
+  } else {
+    //如果没有elem.value，就等有了再绑定
+    watch(
+      () => elem.value,
+      (el) => {
+        if (el) {
+          touchBtm()
+          if (el) {
+            el.addEventListener("scroll", touchBtm)
+          }
+        }
+      }
+    )
+  }
 }

@@ -50,3 +50,9 @@
     box-shadow: var(--k-choose-focus-box-shadow);
   }
 }
+
+.k-choose-item-wrapper {
+  min-height: 100px;
+  overflow: auto;
+  border-radius: var(--k-radius);
+}

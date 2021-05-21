@@ -21,7 +21,7 @@ import useTouchBottom from "../../../use/useTouchBottom"
 const { transitionName, relateElement, ...restOverlayProps } = Overlay.props
 const OverlayProps = {
   ...restOverlayProps,
-  bind: { type: String, default: "v-show" },
+  bind: { type: String, default: "v-if" },
   placement: {
     type: String,
     default: "bottom-start"
@@ -33,7 +33,8 @@ const OverlayProps = {
   arrowOffsetPercent: {
     type: Number,
     default: 0.15
-  }
+  },
+  toBody: {type:Boolean,default: true}
 }
 const ChooseProps = {
   modelValue: [Number, String],
@@ -58,6 +59,7 @@ export default defineComponent({
     const modelValue: Ref<string | number> = toRef(props, "modelValue")
     const curText = ref("")
     const item = ref<HTMLElement | null>(null)
+    
 
     const chooseProps = computed(() => {
       const o = {
@@ -97,10 +99,11 @@ export default defineComponent({
     })
 
     const _slots = computed(() => {
-      const ps = {
+      const ps:any = {
+        class: 'k-choose-item-wrapper',
         style: {
-          "max-height": `calc(100vh - ${titleSize.bottom}px - ${props.gap}px - 20px)`,
-          overflow: "auto"
+          "max-height": `calc(100vh - ${titleSize.bottom}px - ${props.gap}px - 50px)`
+
         },
         ref: scroll
       }
@@ -110,10 +113,8 @@ export default defineComponent({
       }
     })
 
-    useTouchBottom(scroll, onTouchBottom)
-
     function onTouchBottom() {
-      // console.log('触底了！')
+      // console.log('滚动到了底部')
     }
 
     function clear(e: MouseEvent) {
@@ -167,6 +168,9 @@ export default defineComponent({
     )
     watch(visible, (v) => {
       emit("update:show", v)
+      if(v) {
+        useTouchBottom(scroll,onTouchBottom)
+      }
     })
 
     return () => {

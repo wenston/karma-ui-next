@@ -95,6 +95,7 @@ export default function usePlacement(
         height.value = p.height
         top.value = p.top
         bottom.value = p.bottom
+        // console.log(p.right)
       }
     }
     if (_el !== document.body) {
@@ -105,7 +106,7 @@ export default function usePlacement(
   //通过简单的节点复制和Transtion的动画钩子beforeEnter都是获取不到宽高信息的！
   //所以此时要知道该动画使用了那个class，以便在节点复制的时候，去掉对应的class
   //然后再计算宽和高，就可以得到了！
-  function getElPostion(el?: HTMLElement) {
+  function getElPosition(el?: HTMLElement) {
     const _el = getElement(el ?? placementOptions.el)
     const { width, height } = getInvisibleElementSize(
       _el,
@@ -133,7 +134,7 @@ export default function usePlacement(
     placement?: Placement | string /*位置*/
   ) {
     getRelatePos(relateElem)
-    getElPostion(el)
+    getElPosition(el)
   }
   //set是一步到位的设置。每个参数都有效的情况，可以用此方法
   function setPlace(
@@ -262,7 +263,8 @@ export default function usePlacement(
           break
         case "right-start":
           t = top.value
-          l = left.value + place.width + gap
+          // l = left.value + place.width + gap
+          l = left.value + width.value + gap
           arrow_position = min_height * percent.value - ARROW_OFFSET
           t_o = `left ${arrow_position}px`
           break
@@ -296,7 +298,7 @@ export default function usePlacement(
     if (_el && _el.style) {
       _el.style.removeProperty("height")
       // const p = getBoundingClientRect(_el)
-      getElPostion()
+      getElPosition()
       // place.width = p.width
       // place.height = p.height
       let l = (ww.value - place.width) / 2
