@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: space-between;
   color: var(--k-color-3);
-  border: var(--k-color-line) 1px solid;
+  border: var(--k-color-line-1) 1px solid;
   border-radius: var(--k-radius);
   height: var(--k-height);
   width: var(--k-form-item-width);

@@ -3,7 +3,7 @@ import Icon from '../../icon'
 export default defineComponent({
     setup(props) {
         const iconName = computed(()=>{
-            return props.name??'k-icon-close-fill'
+            return props.name??'k-icon-close'
         })
         const p = computed(()=>{
             return {

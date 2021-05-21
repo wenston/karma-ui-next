@@ -136,9 +136,9 @@ export default defineComponent({
           )}
           <span class="k-choose-right-icon">
             {modelValue.value ? (
-              <Close size="14" onClick={clear} />
+              <Close size="13" onClick={clear} />
             ) : (
-              <Icon name="k-icon-sort-down" size="20" style={arrowIconStyle} />
+              <Icon name="k-icon-arrow-down" size="12" style={arrowIconStyle} />
             )}
           </span>
         </div>

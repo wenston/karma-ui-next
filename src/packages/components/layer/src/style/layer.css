@@ -1,7 +1,7 @@
 .k-layer {
   /* 其中的background-color/color/padding，可以传入css属性来控制 */
   --k-layer-arrow-offset: calc(-2 * var(--k-layer-arrow-size));
-  padding: var(--__layer-padding, 7px var(--k-padding-x));
+  padding: var(--__layer-padding, 8px var(--k-padding-x));
   background-color: var(--__layer-background-color);
   color: var(--__layer-color);
   min-width: var(--__layer-min-width, auto);
@@ -9,7 +9,9 @@
   position: absolute;
   border-radius: var(--k-radius);
   z-index: var(--__layer-z-index, 100);
-  filter: drop-shadow(0 0 1px var(--__layer-border-color, var(--k-color-line)))
+  filter: drop-shadow(
+      0 0 1px var(--__layer-border-color, var(--k-color-line-2))
+    )
     drop-shadow(var(--k-drop-shadow));
   transform-origin: var(--__layer-transform-origin, 0 0);
   &.k-layer--fixed {
@@ -158,6 +160,7 @@
   /* opacity: 0; */
   overflow: hidden !important;
   pointer-events: none;
+  transform: translateZ(0);
 }
 .k-layer-size-transition-leave-to {
   opacity: 0;
@@ -168,7 +171,8 @@
     top var(--k-transition-enter) var(--k-cubic-bezier),
     width var(--k-transition-enter) var(--k-cubic-bezier),
     height var(--k-transition-enter) var(--k-cubic-bezier),
-    opacity var(--k-transition-enter) var(--k-cubic-bezier);
+    opacity var(--k-transition-enter) var(--k-cubic-bezier),
+    transform var(--k-transition-leave) var(--k-cubic-bezier);
 }
 .k-layer-size-transition-leave-active {
   transition: left var(--k-transition-leave) var(--k-cubic-bezier),

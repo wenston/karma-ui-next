@@ -6,6 +6,7 @@
   align-items: center;
   cursor: pointer;
   outline: 0;
+  background-color: var(--k-color-background);
   &:hover {
     &:not(.k-item--disabled) {
       background-color: var(--k-color-6);

@@ -24,7 +24,7 @@ export default defineComponent({
                     "background-color": 'rgba(0,0,0,.85)',
                     "color": 'rgba(255,255,255,.8)',
                     'border-color': 'rgba(0,0,0,.25)',
-                    'padding': '5px 8px',
+                    'padding': '6px 8px',
                     ..._sty
                 },
                 "onUpdate:show":(v:any)=>{

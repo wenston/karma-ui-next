@@ -23,6 +23,10 @@ export default defineComponent({
         },
         disabled: Boolean,
         readonly: Boolean,
+        //如果是String，则只是on状态下的颜色，如果是数组，则第二个颜色是控制阀的颜色
+        onColor: {type: [String,Array]},
+        offColor: [String,Array],
+        
     },
     emits: ['update:modelValue','change'],
     setup(props,{emit,attrs,slots}) {
@@ -55,6 +59,24 @@ export default defineComponent({
                 },klass],
                 style: _sty,
                 ...rest
+            }
+            if(props.onColor) {
+                if(typeof props.onColor === 'string') {
+                    o.style['--__on-color'] = props.onColor
+
+                }else{
+                    o.style['--__on-color'] = props.onColor[0]
+                    o.style['--__on-valve-color'] = props.onColor[1]
+                }
+            }
+            if(props.offColor) {
+                if(typeof props.offColor === 'string') {
+                    o.style['--__off-color'] = props.offColor
+
+                }else{
+                    o.style['--__off-color'] = props.offColor[0]
+                    o.style['--__off-valve-color'] = props.offColor[1]
+                }
             }
             if(!props.disabled && !props.readonly) {
                 o.onClick=toToggle

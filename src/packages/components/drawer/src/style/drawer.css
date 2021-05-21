@@ -3,46 +3,53 @@
 .k-drawer-transition--top-enter-active,
 .k-drawer-transition--bottom-enter-active,
 .k-drawer-transition--center-enter-active {
-  transition: transform var(--k-transition-enter) var(--k-cubic-bezier);
+  transition: transform var(--k-transition-enter) var(--k-cubic-bezier),
+    opacity var(--k-transition-enter) var(--k-cubic-bezier);
 }
 .k-drawer-transition--right-leave-active,
 .k-drawer-transition--left-leave-active,
 .k-drawer-transition--top-leave-active,
 .k-drawer-transition--bottom-leave-active,
 .k-drawer-transition--center-leave-active {
-  transition: transform var(--k-transition-leave) var(--k-cubic-bezier);
+  transition: transform var(--k-transition-leave) var(--k-cubic-bezier),
+    opacity var(--k-transition-enter) var(--k-cubic-bezier);
 }
 
 .k-drawer-transition--right-enter-from,
 .k-drawer-transition--right-leave-to {
   transform: translateX(100%);
+  opacity: 0;
 }
 .k-drawer-transition--left-enter-from,
 .k-drawer-transition--left-leave-to {
   transform: translateX(-100%);
+  opacity: 0;
 }
 
 .k-drawer-transition--top-enter-from,
 .k-drawer-transition--top-leave-to {
   transform: translateY(-100%);
+  opacity: 0;
 }
 
 .k-drawer-transition--bottom-enter-from,
 .k-drawer-transition--bottom-leave-to {
   transform: translateY(100%);
+  opacity: 0;
 }
 .k-drawer-transition--center-enter-from,
 .k-drawer-transition--center-leave-to {
   transform: rotateX(90deg);
+  opacity: 0;
 }
 
 .k-drawer {
   --k-drawer-max-size: calc(var(--k-gap) * 3);
   position: fixed;
-  background-color: white;
+  background-color: var(--k-color-background);
   display: flex;
   flex-direction: column;
-
+  opacity: 1;
   &.k-drawer--center {
     position: relative;
     max-width: calc(100vw - var(--k-drawer-max-size));
@@ -84,11 +91,11 @@
   }
 
   & .k-drawer-header {
-    border-bottom: 1px solid var(--k-color-line-2);
+    border-bottom: 1px solid var(--k-color-line-6);
     flex-shrink: 0;
   }
   & .k-drawer-footer {
-    border-top: 1px solid var(--k-color-line-2);
+    border-top: 1px solid var(--k-color-line-6);
     flex-shrink: 0;
   }
   & .k-drawer-body {

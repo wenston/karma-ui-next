@@ -1,7 +1,18 @@
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
   &:after,
   &:before {
     box-sizing: border-box;
   }
+}
+html,
+body {
+  height: 100%;
+  font-family: system-ui;
+  line-height: normal;
+  font-size: var(--k-font-size);
+  color: var(--k-color-2);
+  background-color: var(--k-color-background);
 }

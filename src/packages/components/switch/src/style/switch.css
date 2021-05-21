@@ -1,6 +1,10 @@
 .k-switch {
   --__width: var(--__switch-width, var(--k-switch-width));
   --__height: var(--__switch-height, var(--k-switch-height));
+  --__on-color: var(--k-color-primary);
+  --__off-color: var(--k-switch-bg-color);
+  --__on-valve-color: var(--k-switch-valve-color);
+  --__off-valve-color: var(--k-switch-valve-color);
   font-style: normal;
   display: inline-flex;
   align-items: center;
@@ -9,7 +13,7 @@
   position: relative;
   width: var(--__width);
   height: var(--__height);
-  background-color: var(--k-switch-bg-color);
+  background-color: var(--__off-color);
   border-radius: calc(var(--__height) / 2);
   user-select: none;
   transition: background-color var(--k-transition);
@@ -18,7 +22,7 @@
   &:after {
     /* 圆点尺寸 */
     --__valve-size: calc(
-      (var(--__switch-height, var(--k-switch-valve-size)) + 2px)
+      (var(--__switch-height, var(--k-switch-valve-size)) - 2px)
     );
     content: "";
     position: absolute;
@@ -27,18 +31,18 @@
     border-radius: 100%;
     left: calc(var(--__width) - var(--__valve-size));
     top: calc((var(--__height) - var(--__valve-size)) / 2);
-    background-color: var(--k-switch-valve-color);
-    box-shadow: var(--k-box-shadow);
-    border: var(--k-switch-valve-border);
+    background-color: var(--__off-valve-color);
+    box-shadow: var(--k-switch-valve-box-shadow);
     transition: left var(--k-transition);
   }
   &.k-switch--on {
-    background-color: var(--k-color-primary);
+    background-color: var(--__on-color);
     justify-content: flex-end;
     &:after {
-      border-color: var(--k-color-primary);
+      border-color: var(--__on-color);
       /* box-shadow: var(--k-box-shadow), 0 0 1px 1px white; */
       left: 0;
+      background-color: var(--__on-valve-color);
     }
   }
   &.k-switch--disabled {

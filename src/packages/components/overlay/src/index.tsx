@@ -107,7 +107,7 @@ export default defineComponent({
                 transitionName: trans_name.value,
                 class: attrs.class??'',
                 style: {
-                    '--__layer-background-color': 'rgba(255,255,255,.95)',
+                    '--__layer-background-color': 'var(--k-color-background)',
                     '--__layer-color': '#666',
                     ..._sty
                 },
