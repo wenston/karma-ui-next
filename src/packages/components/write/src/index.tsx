@@ -63,7 +63,9 @@ export default defineComponent({
             "k-write--disabled": props.disabled,
             "k-write--invalid": visibleTip.value
           }
-        ]
+        ],
+        
+        style: {...((attrs.style??{}) as any)},
       }
       return o
     })
@@ -111,7 +113,7 @@ export default defineComponent({
       // }
       return o
     })
-    const visibleTip = computed(()=>isInvalid.value||props.showTip)
+    const visibleTip = computed(()=>isInvalid.value&&props.showTip)
 
     function toValidate(e: any) {
       let isError = false

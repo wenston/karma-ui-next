@@ -7,8 +7,9 @@ import {
 } from "vue"
 import Write from "../../write"
 import Icon from "../../icon"
+import { filterListeners } from "../../../util"
 const OnlyOnce = ["-", "."]
-const OtherKeys = ["backspace", "delete", "tab"]
+const OtherKeys = ["backspace", "delete", "tab", 'enter']
 export default defineComponent({
   name: "Number",
   inheritAttrs: false,
@@ -30,6 +31,7 @@ export default defineComponent({
     const tip = ref("")
     const writeProps = computed(() => {
       const o: any = {
+        style: {...((attrs.style??{}) as any)},
         placement: props.placement,
         toBody: props.toBody,
         //---------
@@ -47,6 +49,7 @@ export default defineComponent({
           ...props.validate
         },
         type: "text",
+        ...filterListeners(attrs),
         //由于是只能输入数字的输入框，所以在keydown的时候，做初步的筛选，只允许数值相关的字符录入
         onKeydown,
         //在input时，做进一步的筛选
@@ -104,6 +107,7 @@ export default defineComponent({
         OtherKeys.indexOf(key) === -1 &&
         OnlyOnce.indexOf(key) === -1
       ) {
+        // console.log('阻止了吗')
         e.preventDefault()
       }
     }
@@ -156,6 +160,7 @@ export default defineComponent({
       if (firstChar === "." || firstChar === "-") {
         _rest = restChars.replace(new RegExp(firstChar), "")
       }
+
       if (_rest !== restChars) {
         _v = firstChar + _rest
       }

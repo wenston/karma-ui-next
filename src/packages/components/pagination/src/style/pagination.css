@@ -1,0 +1,93 @@
+ol.k-pagination {
+  list-style: none;
+  padding: 0;
+  margin: var(--k-gap) 0;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  &.k-pagination__right {
+    justify-content: flex-end;
+  }
+  li {
+    flex-shrink: 0;
+    &.k-pagination-total {
+      margin-right: var(--k-gap);
+    }
+    &.k-pagination-sizes {
+      margin: 0 var(--k-gap);
+    }
+    &.k-pagination-pager {
+      display: flex;
+
+      & > span {
+        background-color: var(--k-color-background);
+        border: 1px solid var(--k-color-line-1);
+        margin-left: -1px;
+        width: calc(2px + var(--k-pagination-size));
+        height: var(--k-pagination-size);
+        text-align: center;
+        line-height: calc(var(--k-pagination-size) - 2px);
+        color: var(--k-color-3);
+        transition: var(--k-transition);
+        cursor: pointer;
+        flex-shrink: 0;
+
+        &:first-child {
+          border-radius: var(--k-radius) 0 0 var(--k-radius);
+        }
+        &:last-child {
+          border-radius: 0 var(--k-radius) var(--k-radius) 0;
+        }
+        &.k-pagination--disabled {
+          cursor: not-allowed;
+        }
+        &.k-pagination-prev,
+        &.k-pagination-next {
+          position: relative;
+          &:after {
+            content: "";
+            position: absolute;
+            border-width: 1px;
+            border-style: solid;
+            border-color: var(--k-color-4) transparent transparent
+              var(--k-color-4);
+            transform: rotate(-45deg);
+            width: 6px;
+            height: 6px;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+          }
+        }
+        &.k-pagination-next {
+          &:after {
+            transform: rotate(135deg);
+            left: 11px;
+          }
+        }
+        &:hover {
+          &:not(.k-pagination--disabled),
+          &:not(.k-pagination--active) {
+            color: var(--k-color-primary);
+            font-weight: bold;
+            box-shadow: var(--k-box-shadow);
+          }
+        }
+        &.k-pagination--active {
+          border-color: var(--k-color-primary);
+          position: relative;
+          z-index: 1;
+          color: white;
+          font-weight: bold;
+          background-color: var(--k-color-primary);
+          &:hover {
+            color: white;
+          }
+        }
+      }
+    }
+    &.k-pagination-go {
+      margin-left: var(--k-gap);
+    }
+  }
+}

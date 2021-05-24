@@ -96,6 +96,8 @@
 
   --k-notice-box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
   --k-notice-cubic-bezier: cubic-bezier(0.26, 0.28, 0, 1.36);
+
+  --k-pagination-size: var(--k-height);
 }
 html[data-theme="night"] {
   &:root {

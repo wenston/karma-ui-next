@@ -1,7 +1,8 @@
 <template>
   <h3>选择器，类似于select</h3>
   <section>
-    <Choose v-model="val">
+    <Choose v-model="val"
+      style="width:100px">
       <Item v-for="item in supplier"
         :key="item.Id"
         :disabled="item.Name.indexOf('小米')>-1"

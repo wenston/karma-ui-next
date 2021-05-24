@@ -34,7 +34,8 @@ const OverlayProps = {
     type: Number,
     default: 0.15
   },
-  toBody: {type:Boolean,default: true}
+  toBody: {type:Boolean,default: true},
+  clearable: Boolean
 }
 const ChooseProps = {
   modelValue: [Number, String],
@@ -45,6 +46,7 @@ const ChooseProps = {
 }
 
 export default defineComponent({
+  inheritAttrs: false,
   name: "Choose",
   components: { Overlay, Icon, Close },
   props: {
@@ -67,12 +69,14 @@ export default defineComponent({
           "k-choose",
           { "k-choose-placeholder": isInvalidValue(props.modelValue) }
         ],
-        tabindex: 0
+        tabindex: 0,
+        style: {...((attrs.style??{}) as any)}
       }
       return o
     })
 
     const overlayProps = computed(() => {
+      // console.log(attrs)
       const o = {
         ...props,
         show: visible.value,
@@ -136,7 +140,7 @@ export default defineComponent({
             <span class="k-choose-placeholder">{props.placeholder}</span>
           )}
           <span class="k-choose-right-icon">
-            {modelValue.value ? (
+            {modelValue.value && props.clearable ? (
               <Close size="13" onClick={clear} />
             ) : (
               <Icon name="k-icon-arrow-down" size="12" style={arrowIconStyle} />
