@@ -105,6 +105,12 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       title: "通知 Notice"
     }
+  },
+  {
+    path: "/pagination",
+    name: "pagination",
+    component: () => import("../views/Pagination.vue"),
+    meta: { title: "分页 Pagination" }
   }
 ]
 
