@@ -1,5 +1,5 @@
 :root {
-  --k-radius: 5px;
+  --k-radius: 4px;
   --k-gap: 15px;
   --k-color-background: white;
   --k-cubic-bezier: cubic-bezier(0.4, 1, 0, 1);

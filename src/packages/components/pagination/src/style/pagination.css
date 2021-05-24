@@ -8,6 +8,12 @@ ol.k-pagination {
   &.k-pagination__right {
     justify-content: flex-end;
   }
+  &.k-pagination__left {
+    justify-content: flex-start;
+  }
+  &.k-pagination__center {
+    justify-content: center;
+  }
   li {
     flex-shrink: 0;
     &.k-pagination-total {

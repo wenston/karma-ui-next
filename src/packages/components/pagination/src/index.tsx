@@ -221,7 +221,7 @@ export default defineComponent({
             }
 
             return (
-                <ol class="k-pagination">
+                <ol class={["k-pagination",`k-pagination__${props.align}`]}>
                     {showItem('total') && <li class="k-pagination-total"
                         style={{order:setOrder('total')}}>共 {props.total} 条</li>}
                     <li class="k-pagination-pager" style={{order:setOrder('pager')}}>
