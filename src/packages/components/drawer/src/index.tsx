@@ -1,7 +1,6 @@
 import {computed, defineComponent,Transition,Teleport, ref, watch, withDirectives, vShow, onMounted, reactive} from 'vue'
 import Mask from '../../mask'
 import useGlobalZIndex from '../../../use/useGlobalZIndex'
-import {getInvisibleElementSize,getElement} from '../../../util'
 export default defineComponent({
     components: {Mask},
     props: {
@@ -17,7 +16,13 @@ export default defineComponent({
             default:()=>document.body
         },
         //是否可以点击遮罩关闭抽屉
-        canCloseByClickMask: {type: Boolean,default: true}
+        canCloseByClickMask: {type: Boolean,default: true},
+        headerClass: [String,Object,Array],
+        bodyClass: [String,Object,Array],
+        footerClass: [String,Object,Array],
+        //给confirm用的参数
+        isConfirm:Boolean,
+        afterClose:Function
     },
     emits: ['update:show'],
     setup(props,{attrs,emit,slots}){
@@ -40,6 +45,15 @@ export default defineComponent({
         function close() {
             visible.value=false
         }
+        function afterLeave() {
+            props.afterClose?.()
+        }
+
+        onMounted(()=>{
+            if(props.isConfirm) {
+                visible.value = true
+            }
+        })
 
         watch(()=>props.show,v=>{visible.value=v})
         watch(visible,v=>{
@@ -61,15 +75,15 @@ export default defineComponent({
                 <div {...drawProps.value}>
                     {
                         slots.header && (
-                            <div class="k-drawer-header">{slots.header?.({close})}</div>
+                            <div class={["k-drawer-header",props.headerClass]}>{slots.header?.({close})}</div>
                         )
                     }
-                    <div class="k-drawer-body">
+                    <div class={["k-drawer-body",props.bodyClass]}>
                         {slots.default?.({close})}
                     </div>
                     {
                         slots.footer && (
-                            <div class="k-drawer-footer">{slots.footer?.({
+                            <div class={["k-drawer-footer",props.footerClass]}>{slots.footer?.({
                                 close
                             })}</div>
                         )
@@ -101,7 +115,8 @@ export default defineComponent({
                 <>
                     {mask}
                     <Teleport to={props.to}>
-                        <Transition name={`k-drawer-transition--${props.placement}`}>
+                        <Transition name={`k-drawer-transition--${props.placement}`}
+                            onAfter-leave={afterLeave}>
                             {main}
                         </Transition>
                     </Teleport>

@@ -44,15 +44,29 @@
       </div>
     </Drawer>
   </div>
+  <div style="margin: 15px 0;">
+    以下是在抽屉基础上，创建的Confirm组件
+    <div>
+      <Bouton @click="onConfirm">Confirm对话框</Bouton>
+    </div>
+  </div>
+  <div style="margin: 15px 0;">
+
+    <div>
+      <Bouton @click="onShowOtherConfirm">另外一个Confirm对话框</Bouton>
+    </div>
+  </div>
 </template>
-<script lang="ts">
-import { defineComponent, ref } from "vue"
+<script lang="tsx">
+import { defineComponent, getCurrentInstance, ref } from "vue"
 import Bouton from "../packages/components/bouton"
 import Drawer from "../packages/components/drawer"
 import Close from "../packages/components/close"
+import Confirm from "../packages/components/confirm"
 export default defineComponent({
   components: { Bouton, Drawer, Close },
   setup() {
+    const ins = getCurrentInstance()
     const show = ref(false)
     const placement = ref("right")
     return {
@@ -61,6 +75,35 @@ export default defineComponent({
       beforeShow(p: any) {
         placement.value = p
         show.value = true
+      },
+      onConfirm() {
+        const confirm = ins?.appContext.config.globalProperties.$confirm
+        confirm({
+          content: "确认一下",
+          ok: () => {
+            console.log("ok")
+          },
+        })
+      },
+      onShowOtherConfirm() {
+        Confirm.open({
+          title: "这个是一个确认提示框",
+          okText: "好吧",
+          cancelText: "我再想想...",
+          content(close: any) {
+            return (
+              <>
+                <div>这是另外的一个确认框，引用方法有不同</div>
+                <div style="margin-top:10px;">
+                  <a href="javascript:;" onClick={close}>
+                    好的，我知道了，关闭吧
+                  </a>
+                </div>
+              </>
+            )
+          },
+          ok: () => {},
+        })
       },
     }
   },

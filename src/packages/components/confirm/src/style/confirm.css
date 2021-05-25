@@ -1,0 +1,21 @@
+.k-confirm-header {
+  padding: 10px var(--k-gap);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  > span {
+    font-size: 16px;
+  }
+}
+
+.k-confirm-body {
+  min-width: 420px;
+  min-height: 44px;
+  padding: var(--k-gap);
+}
+.k-confirm-footer {
+  display: flex;
+  padding: 10px var(--k-gap);
+  justify-content: flex-end;
+  align-items: center;
+}
