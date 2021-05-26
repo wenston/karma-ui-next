@@ -5,6 +5,7 @@
   --k-cubic-bezier: cubic-bezier(0.4, 1, 0, 1);
   --k-color-primary: rgb(69, 145, 252);
   --k-color-primary-05: rgba(69, 145, 252, 0.5);
+  --k-color-primary-01: rgba(69, 145, 252, 0.1);
   --k-color-danger: rgb(255, 112, 112);
   --k-color-danger-05: rgba(255, 112, 112, 0.5);
   --k-color-danger-01: rgba(255, 112, 112, 0.1);
@@ -20,6 +21,7 @@
   --k-color-5: #c4cacf;
   --k-color-6: #dfe5e9;
   --k-color-7: #edf1f5;
+  --k-color-8: #f6f9fc;
   --k-color-input: var(--k-color-2);
   --k-color-placeholder: var(--k-color-5);
 
@@ -98,6 +100,13 @@
   --k-notice-cubic-bezier: cubic-bezier(0.26, 0.28, 0, 1.36);
 
   --k-pagination-size: var(--k-height);
+
+  --k-sheet-thead-background-color: var(--k-color-7);
+  --k-sheet-tr-background-color: var(--k-color-background);
+  --k-sheet-tr-stripe-color: var(--k-color-8);
+  --k-sheet-tr-hover-color: var(--k-color-primary-01);
+  --k-sheet-container-border-color: var(--k-color-line-5);
+  --k-sheet-td-border-color: var(--k-color-line-5);
 }
 html[data-theme="night"] {
   &:root {
@@ -123,5 +132,7 @@ html[data-theme="night"] {
     --k-drop-shadow: 0 5px 12px rgba(0, 0, 0, 0.45);
 
     --k-mask-background-color: rgba(0, 0, 0, 0.55);
+    --k-sheet-tr-stripe-color: var(--k-color-7);
+    --k-sheet-td-border-color: var(--k-color-line-6);
   }
 }

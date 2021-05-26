@@ -1,0 +1,98 @@
+.k-sheet-container {
+  border: 1px solid var(--k-sheet-container-border-color);
+  border-radius: var(--k-radius);
+  overflow: hidden;
+  position: relative;
+  .k-sheet-inner-container {
+    overflow: auto;
+    margin: -1px;
+
+    .k-sheet {
+      border-collapse: collapse;
+      /* width: 100%; */
+    }
+    .k-sheet-thead {
+      position: sticky;
+      top: 0;
+      background-color: var(--k-sheet-thead-background-color);
+      width: 100%;
+      z-index: 1;
+      & thead {
+        background-color: var(--k-sheet-thead-background-color);
+      }
+    }
+    .k-sheet-tbody {
+    }
+    .k-cell {
+      padding: 10px var(--k-padding-x);
+      border: 1px solid var(--k-sheet-td-border-color);
+
+      text-align: left;
+      position: relative;
+      &.k-cell--center {
+        text-align: center;
+      }
+      &.k-cell--right {
+        text-align: right;
+      }
+      &:hover {
+      }
+    }
+
+    &.k-sheet--min-content {
+      & .k-sheet-tbody {
+        width: min-content;
+      }
+      & .k-sheet {
+        width: min-content;
+        table-layout: fixed;
+      }
+    }
+
+    /* 以下布局方式，对于列宽调整不友好 ,故弃之。采用js动态计算，并按照宽度占比分配宽度*/
+    /* &.k-sheet--auto {
+      & .k-sheet-tbody {
+        width: 100%;
+        min-width: min-content;
+      }
+      & .k-sheet {
+        width: 100%;
+        table-layout: fixed;
+      }
+    } */
+
+    &.k-sheet--nowrap {
+      & .k-sheet {
+        white-space: nowrap;
+      }
+      & .k-cell {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+    &.k-sheet--stripe {
+      & .k-sheet-tbody {
+        & .k-sheet {
+          & tr {
+            background-color: var(--k-sheet-tr-background-color);
+            &:nth-child(2n) {
+              background-color: var(--k-sheet-tr-stripe-color);
+            }
+          }
+        }
+      }
+    }
+    &.k-sheet--hover {
+      & .k-sheet-tbody {
+        & .k-sheet {
+          & tr {
+            transition: var(--k-transition-quick);
+            &:hover {
+              background-color: var(--k-sheet-tr-hover-color);
+            }
+          }
+        }
+      }
+    }
+  }
+}

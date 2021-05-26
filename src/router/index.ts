@@ -111,6 +111,12 @@ const routes: Array<RouteRecordRaw> = [
     name: "pagination",
     component: () => import("../views/Pagination.vue"),
     meta: { title: "分页 Pagination" }
+  },
+  {
+    path: "/sheet",
+    name: "sheet",
+    component: () => import("../views/Sheet.vue"),
+    meta: { title: "表格 Sheet" }
   }
 ]
 

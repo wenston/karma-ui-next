@@ -1,4 +1,4 @@
-import { defineComponent, computed } from "vue"
+import { defineComponent, computed, ref } from "vue"
 import Icon from '../../icon'
 import useToggle from '../../../use/useToggle'
 export default defineComponent({
@@ -12,9 +12,9 @@ export default defineComponent({
     setup( props, {slots,emit} ) {
         const symbol = computed(()=>Symbol(props.value))
         const {value:v, set} = useToggle(
-            [props.value, symbol.value], props.modelValue
+            [props.value, symbol.value], ref(props.modelValue)
         )
-        function onSet(e) {
+        function onSet() {
             set({item: props.value})
             if(props.value===v.value) {
                 emit('update:modelValue', v.value)
@@ -26,7 +26,7 @@ export default defineComponent({
                 return {
                     tabindex: 0,
                     onClick: onSet,
-                    onKeyup:e=>{
+                    onKeyup:(e:KeyboardEvent)=>{
                         if(e.key.toLowerCase()==='enter') {
                             onSet()
                         }

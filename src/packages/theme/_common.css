@@ -16,3 +16,7 @@ body {
   color: var(--k-color-2);
   background-color: var(--k-color-background);
 }
+
+.k-text-center {
+  text-align: center;
+}
