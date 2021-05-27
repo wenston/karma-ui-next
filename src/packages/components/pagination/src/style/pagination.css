@@ -27,7 +27,7 @@ ol.k-pagination {
 
       & > span {
         background-color: var(--k-color-background);
-        border: 1px solid var(--k-color-line-1);
+        border: 1px solid var(--k-color-line-4);
         margin-left: -1px;
         width: calc(2px + var(--k-pagination-size));
         height: var(--k-pagination-size);

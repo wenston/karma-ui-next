@@ -1,22 +1,38 @@
 <template>
   <h1>Sheet 表格</h1>
   <div style="padding:15px 0;">
+    <div style="margin-bottom:10px;">
+      <Checkbox v-model="isAuto"
+        :value="[false,true]">宽度自动</Checkbox>
+      <Checkbox v-model="hasIndex"
+        :value="[false,true]">带序号</Checkbox>
+      <!-- <Bouton @click="isAuto=!isAuto"
+        :type="isAuto?'primary':'default'">宽度自动</Bouton>
+      <Bouton @click="hasIndex=!hasIndex"
+        :type="hasIndex?'primary':'default'">带序号</Bouton> -->
+    </div>
+
     <Sheet :data='D'
       :columns="columns"
+      :autoWidth="isAuto"
       stripe
-      width="auto"
-      height="calc(100vh - 120px)"></Sheet>
+      :hasIndex="hasIndex"
+      height="calc(100vh - 140px)"></Sheet>
   </div>
 </template>
 <script lang="ts">
 import { defineComponent, ref, computed } from "vue"
 import Sheet from "../packages/components/sheet"
 import Data from "./test-data/sheet"
+import Bouton from "../packages/components/bouton"
+import Checkbox from "../packages/components/checkbox"
 export default defineComponent({
-  components: { Sheet },
+  components: { Sheet, Bouton, Checkbox },
   setup() {
     const a = ref(0)
     const D = ref(Data)
+    const isAuto = ref(true)
+    const hasIndex = ref(true)
     const columns = computed(() => [
       {
         name: "单号",
@@ -89,6 +105,8 @@ export default defineComponent({
     return {
       a,
       D,
+      isAuto,
+      hasIndex,
       columns,
     }
   },

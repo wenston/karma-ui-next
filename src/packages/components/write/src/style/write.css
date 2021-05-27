@@ -1,6 +1,6 @@
 .k-write {
   position: relative;
-  border: 1px solid var(--k-color-line-1);
+  border: 1px solid var(--k-color-line-4);
   border-radius: var(--k-radius);
   height: var(--k-height);
   width: var(--k-form-item-width);
@@ -12,7 +12,7 @@
   }
   &.k-write--simple {
     border: none;
-    border-bottom: 1px solid var(--k-color-line-1);
+    border-bottom: 1px solid var(--k-color-line-4);
     border-radius: 0;
   }
 
@@ -38,11 +38,11 @@
   }
   & .k-write-prepend {
     border-radius: var(--k-radius) 0 0 var(--k-radius);
-    border-right: 1px solid var(--k-color-line-1);
+    border-right: 1px solid var(--k-color-line-4);
   }
   & .k-write-append {
     border-radius: 0 var(--k-radius) var(--k-radius) 0;
-    border-left: 1px solid var(--k-color-line-1);
+    border-left: 1px solid var(--k-color-line-4);
   }
   & .k-write-input {
     height: 100%;

@@ -1,11 +1,50 @@
 import { ComputedRef, Ref, computed, ref, watch } from "vue"
-import { getBoundingClientRect } from "../../../util"
+import { getBoundingClientRect, getScrollbarWidth } from "../../../util"
+import useEvent from "../../../use/useEvent"
+import useDelay from "../../../use/useDelay"
 
-export default function useTdWidth(container: Ref, bodyColumns: ComputedRef) {
+const PRESET_INDEX = "__preset_index__"
+const PRESET_CHECKBOX = "__preset_checkbox__"
+const PRESET_RADIO = "__preset_radio__"
+const PRESET_ACTION = "__preset_action__"
+
+export const PRESET_FIELDS: { [key: string]: any } = {
+  index: { field: PRESET_INDEX, style: { width: 46 } },
+  checkbox: { field: PRESET_CHECKBOX, style: { width: 40 } },
+  radio: { field: PRESET_RADIO, style: { width: 40 } },
+  action: { field: PRESET_ACTION, style: { width: 46 } }
+}
+export const IS_PRESET = (field: string) => {
+  let b = false
+  for (const o in PRESET_FIELDS) {
+    if (PRESET_FIELDS[o].field === field) {
+      b = true
+      break
+    }
+  }
+  return b
+}
+
+export const IS_INDEX = (field: string) => PRESET_INDEX === field
+export const IS_CHECKBOX = (field: string) => PRESET_CHECKBOX === field
+export const IS_RADIO = (field: string) => PRESET_RADIO === field
+export const IS_ACTION = (field: string) => PRESET_ACTION === field
+
+export function useTdWidth(
+  isAuto: ComputedRef<boolean>,
+  inner: Ref,
+  bodyColumns: ComputedRef
+) {
+  const { start } = useDelay()
+  //设置a，只是为了重新计算tdWidths
+  const a = ref(0)
   const tdWidths = computed(() => {
-    let totalTdWidth = 0
-    const wrapperWidth = container.value
-      ? getBoundingClientRect(container.value).width
+    let totalTdWidth = a.value - a.value
+    // const wrapperWidth = container.value
+    //   ? getBoundingClientRect(container.value).width
+    //   : window.innerWidth
+    const wrapperWidth = inner.value
+      ? Math.floor(inner.value.clientWidth) + 1
       : window.innerWidth
     //设置的宽度
     let widths = bodyColumns.value.map((col: any) => {
@@ -13,20 +52,54 @@ export default function useTdWidth(container: Ref, bodyColumns: ComputedRef) {
         typeof col.style === "function" ? col.style(null, null, {}) : col.style
       //w是通过代码设置的宽度
       const w = style?.width ?? 120
-      totalTdWidth += w - 2
+      totalTdWidth += w
       return w
     })
     //计算后的真实宽度
     // console.log(totalTdWidth, widths)
-    if (wrapperWidth > totalTdWidth) {
-      console.log(wrapperWidth, totalTdWidth)
-      widths = widths.map((w: number) =>
-        //为什么要减1？因为边框占去了1px的宽度！
-        Math.floor(wrapperWidth * ((w - 3) / totalTdWidth))
-      )
+    if (isAuto.value) {
+      if (wrapperWidth > totalTdWidth) {
+        widths = widths.map((w: number) => {
+          const t = Math.floor(wrapperWidth * (w / totalTdWidth))
+          return t
+        })
+      }
     }
+
     return widths
+  })
+  useEvent(ref(window), "resize", () => {
+    start(() => {
+      a.value += 1
+    })
   })
 
   return tdWidths
+}
+
+export function useColumns(columns: ComputedRef, opts: ComputedRef) {
+  const col_index = computed(() => ({
+    name: opts.value.indexContent,
+    ...PRESET_FIELDS.index
+  }))
+  const col_checkbox = { ...PRESET_FIELDS.checkbox }
+  const col_radio = { ...PRESET_FIELDS.radio }
+  const col_action = { ...PRESET_FIELDS.action }
+  let cols = computed(() => {
+    let arr: any[] = []
+    if (opts.value.hasIndex) {
+      arr.push(col_index.value)
+    }
+    if (opts.value.hasCheckbox) {
+      arr.push(col_checkbox)
+    } else if (opts.value.hasRadio) {
+      arr.push(col_radio)
+    }
+    if (opts.value.hasRadio) {
+      arr.push(col_action)
+    }
+    return [...arr, ...columns.value]
+  })
+
+  return cols
 }

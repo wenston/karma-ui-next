@@ -76,6 +76,19 @@ export function getOffset(elem: HTMLElement) {
   }
 }
 
+export function getScrollbarWidth() {
+  let noScroll,
+    scroll,
+    oDiv = document.createElement("DIV")
+  oDiv.style.cssText =
+    "position:fixed; top:-1000px; width:100px; height:100px; overflow:hidden;"
+  noScroll = document.body.appendChild(oDiv).clientWidth
+  oDiv.style.overflowY = "scroll"
+  scroll = oDiv.clientWidth
+  document.body.removeChild(oDiv)
+  return noScroll - scroll
+}
+
 export function getElement(el: any) {
   const v = el
   let _v = undefined

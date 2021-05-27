@@ -6,9 +6,12 @@ export default {
   nowrap: { type: Boolean, default: true },
   height: String,
   maxHeight: String,
-  width: { type: String, default: "min-content" }, //取值'auto'，'min-content'
+  autoWidth: Boolean,
   hasCheckbox: Boolean,
   hasRadio: Boolean,
+  hasAction: Boolean,
   hasIndex: Boolean,
-  hasAction: Boolean
+  indexContent: { type: String, default: "#" },
+  pageSize: [String, Number],
+  pageIndex: [String, Number]
 }

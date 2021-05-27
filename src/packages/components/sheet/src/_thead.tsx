@@ -2,16 +2,18 @@ import {defineComponent} from 'vue'
 import Cell from './_cell'
 import Checkbox from '../../checkbox'
 import Radio from '../../radio'
+import {IS_PRESET} from './_use'
 
 export default defineComponent({
     components: {Cell,Checkbox,Radio},
     props: {
         //columns是加工处理过的
         columns: Array,
-        indexText: [String,Object],
+        indexContent: [String,Object],
         hasIndex: Boolean,
         hasCheckbox: Boolean,
-        hasRadio: Boolean
+        hasRadio: Boolean,
+        hasAction: Boolean
     },
     setup(props,{attrs,emit,slots}) {
 
@@ -94,8 +96,9 @@ export default defineComponent({
                 } else {
                   content = col.name;
                 }
-                if (props.hasIndex && props.indexText /* && col.field === this.__index */) {
-                  content = props.indexText;
+                // console.log(col)
+                if (props.hasIndex && col.field==='__preset_index__' /* && col.field === this.__index */) {
+                  content = props.indexContent;
                 }
                 // if (this.hasAction && col.field === this.__action) {
                 //   content = "操作"
@@ -134,7 +137,7 @@ export default defineComponent({
                   class: [
                     {
                       "k-cell--center":
-                        colspan > 1 /* || this.$_is_built_in_column(col.field) */
+                        colspan > 1 || IS_PRESET(col.field)
                     },
                     /* [
                       col.cellClass

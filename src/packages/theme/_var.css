@@ -11,7 +11,7 @@
   --k-color-danger-01: rgba(255, 112, 112, 0.1);
   --k-color-success: #3ecc56;
   --k-color-warning: #f1cd00;
-  --k-color-default: #acafb5;
+  --k-color-default: #cad1d6;
   --k-color-disabled: #edf1f5;
 
   --k-color-1: #1f2e43;
@@ -25,11 +25,12 @@
   --k-color-input: var(--k-color-2);
   --k-color-placeholder: var(--k-color-5);
 
-  --k-color-line-1: var(--k-color-5);
-  --k-color-line-2: var(--k-color-6);
-  --k-color-line-3: var(--k-color-7);
+  --k-color-line-1: var(--k-color-2);
+  --k-color-line-2: var(--k-color-3);
+  --k-color-line-3: var(--k-color-4);
   --k-color-line-4: var(--k-color-5);
   --k-color-line-5: var(--k-color-6);
+  --k-color-line-6: var(--k-color-7);
 
   --k-font-size: 12px;
 
@@ -53,8 +54,8 @@
   --k-bouton-font-size: var(--k-font-size);
   /* --k-bouton-box-shadow: 0 4px 0 0 rgba(0, 0, 0, 0.35),
     0 3px 5px 0 rgba(0, 0, 0, 0.3); */
-  --k-bouton-box-shadow: 0 4px 0 -2px rgba(0, 0, 0, 0.2),
-    0 3px 5px 0 rgba(0, 0, 0, 0.3), inset 0 1px 3px 0 rgba(255, 255, 255, 0.8);
+  --k-bouton-box-shadow: 0 5px 0 -4px rgba(0, 0, 0, 0.15),
+    0 3px 5px 0 rgba(0, 0, 0, 0.2), inset 0 1px 3px 0 rgba(255, 255, 255, 0.7);
   --k-bouton-active-box-shadow: 0 1px 0 -0.5px rgba(0, 0, 0, 0.7);
 
   --k-mask-background-color: rgba(0, 0, 0, 0.45);
@@ -106,7 +107,10 @@
   --k-sheet-tr-stripe-color: var(--k-color-8);
   --k-sheet-tr-hover-color: var(--k-color-primary-01);
   --k-sheet-container-border-color: var(--k-color-line-5);
-  --k-sheet-td-border-color: var(--k-color-line-5);
+  --k-sheet-thead-th-border-color: var(--k-color-line-5);
+  --k-sheet-td-border-color: var(--k-color-line-6);
+  --k-sheet-td-padding: 8px var(--k-padding-x);
+  --k-sheet-td-narrow-padding: 3px;
 }
 html[data-theme="night"] {
   &:root {

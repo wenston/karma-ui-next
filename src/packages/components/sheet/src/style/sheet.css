@@ -11,24 +11,16 @@
       border-collapse: collapse;
       /* width: 100%; */
     }
-    .k-sheet-thead {
-      position: sticky;
-      top: 0;
-      background-color: var(--k-sheet-thead-background-color);
-      width: 100%;
-      z-index: 1;
-      & thead {
-        background-color: var(--k-sheet-thead-background-color);
-      }
-    }
-    .k-sheet-tbody {
-    }
+
     .k-cell {
-      padding: 10px var(--k-padding-x);
+      padding: var(--k-sheet-td-padding);
       border: 1px solid var(--k-sheet-td-border-color);
 
       text-align: left;
       position: relative;
+      &.k-cell--narrow {
+        padding: var(--k-sheet-td-narrow-padding);
+      }
       &.k-cell--center {
         text-align: center;
       }
@@ -37,6 +29,21 @@
       }
       &:hover {
       }
+    }
+    .k-sheet-thead {
+      position: sticky;
+      top: 0;
+      background-color: var(--k-sheet-thead-background-color);
+      width: 100%;
+      z-index: 1;
+      & thead {
+        background-color: var(--k-sheet-thead-background-color);
+        & .k-cell {
+          border-color: var(--k-sheet-thead-th-border-color);
+        }
+      }
+    }
+    .k-sheet-tbody {
     }
 
     &.k-sheet--min-content {

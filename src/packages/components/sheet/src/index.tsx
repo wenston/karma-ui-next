@@ -1,17 +1,19 @@
-import {computed, defineComponent,onMounted,ref} from 'vue'
+import {computed, defineComponent,onMounted,reactive,ref,toRefs} from 'vue'
 import {getBoundingClientRect} from '../../../util'
 import Thead from './_thead'
 import Tbody from './_tbody'
 import _props from './_props'
-import useTdWidth from './_use'
+import {useTdWidth,useColumns} from './_use'
 import {createTbodyColumns} from './_util'
 export default defineComponent({
     components: {Thead,Tbody},
     props: _props,
     setup(props,{emit,attrs,slots}) {
         const tableRoot = ref()
+        const inner = ref()
         const innerProps = computed(()=>{
             let o:any = {
+                ref:inner,
                 class: [
                     'k-sheet-inner-container',
                     'k-sheet--min-content',
@@ -29,26 +31,37 @@ export default defineComponent({
             return o
         })
         //columns参数传入之后，加入预置列, 序列号、多选框、单选框
-        const finalColumns = computed(()=>{
-
-            return props.columns??[]
-        })
+        const finalColumns = useColumns(
+            computed(()=>props.columns),
+            computed(()=>({
+                indexContent:props.indexContent,
+                hasIndex: props.hasIndex,
+                hasCheckbox: props.hasCheckbox,
+                hasRadio: props.hasRadio,
+                hasAction: props.hasAction
+            })))
         const tbodyColumns = computed(()=>createTbodyColumns(finalColumns.value))
         const theadProps = computed(()=>{
             let o:any = {
-                columns: finalColumns.value
+                columns: finalColumns.value,
+                hasIndex: props.hasIndex,
+                indexContent:props.indexContent
             }
             return o
         })
         const tbodyProps = computed(()=>{
             let o:any = {
                 columns: tbodyColumns.value,
-                data: props.data
+                data: props.data,
+                hasIndex: props.hasIndex,
+                pageSize: props.pageSize,
+                pageIndex: props.pageIndex
             }
             return o
         })
 
-        const tdWidths = useTdWidth(tableRoot, tbodyColumns)
+        const tdWidths = useTdWidth(
+            computed(()=>props.autoWidth), inner, tbodyColumns)
 
 
         onMounted(()=>{
@@ -88,7 +101,7 @@ export default defineComponent({
     }
 })
 
-function colGroup(widths:[]){
+function colGroup(widths:number[]){
     return (
         <colgroup>
             {
