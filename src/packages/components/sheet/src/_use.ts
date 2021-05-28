@@ -1,4 +1,5 @@
 import { ComputedRef, Ref, computed, ref, watch } from "vue"
+import { isObject, isFunction } from "@vue/shared"
 import { getBoundingClientRect, getScrollbarWidth } from "../../../util"
 import useEvent from "../../../use/useEvent"
 import useDelay from "../../../use/useDelay"
@@ -95,6 +96,22 @@ export function useColumns(columns: ComputedRef, opts: ComputedRef) {
   const col_radio = { ...PRESET_FIELDS.radio }
   const col_action = { ...PRESET_FIELDS.action }
   let cols = computed(() => {
+    let _columns = columns.value
+    let validCols: any[] = []
+    //对columns进行处理
+    if (typeof _columns === "function") {
+      _columns = _columns()
+    }
+    _columns = _columns.forEach((c: any) => {
+      if (isObject(c)) {
+        validCols.push(c)
+      } else if (isFunction(c)) {
+        let f = c()
+        if (isObject(f)) {
+          validCols.push(f)
+        }
+      }
+    })
     let arr: any[] = []
     if (opts.value.hasIndex) {
       arr.push(col_index.value)
@@ -107,7 +124,7 @@ export function useColumns(columns: ComputedRef, opts: ComputedRef) {
     if (opts.value.hasRadio) {
       arr.push(col_action)
     }
-    return [...arr, ...columns.value]
+    return [...arr, ...validCols]
   })
 
   return cols

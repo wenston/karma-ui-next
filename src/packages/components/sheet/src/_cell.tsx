@@ -11,6 +11,7 @@ export default defineComponent({
             let o:any = {
                 class: ['k-cell',{
                     'k-cell--center':props.align==='center',
+                    'k-cell--right': props.align==='right',
                     'k-cell--narrow':props.isNarrow
                 }],
 

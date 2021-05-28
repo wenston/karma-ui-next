@@ -37,7 +37,8 @@ export function createTbodyColumns(columns: any) {
   return bodyColumns
 }
 
-export function getAlign(align: string | string[]) {
+export function getAlign(col: any) {
+  const align = col.align || ""
   if (typeof align === "string") {
     return {
       thead: align,

@@ -1,6 +1,6 @@
 export default {
   data: Array,
-  columns: Array,
+  columns: [Array, Function],
   stripe: Boolean,
   hover: { type: Boolean, default: true },
   nowrap: { type: Boolean, default: true },

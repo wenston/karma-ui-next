@@ -9,7 +9,8 @@ export default defineComponent({
         data: Array,
         hasIndex: Boolean,
         pageIndex: {type:[String, Number]},
-        pageSize: {type: [String, Number]}
+        pageSize: {type: [String, Number]},
+        tbodySlots: Object
     },
     setup(props,{emit,attrs,slots}) {
         const pi = computed(()=>props.pageIndex?Number(props.pageIndex):0)
@@ -17,7 +18,7 @@ export default defineComponent({
         //row是一行数据，col是columns里的其中一列, index是第几行
         function renderTd(row:any,col:any,index:number) {
             const tdProps:any = {
-                align: getAlign(col)?.tbody
+                align:getAlign(col)?.tbody
             }
             let cont:any
             //处理预置列
@@ -33,9 +34,14 @@ export default defineComponent({
                 }
             } else if(col.render) {
                 cont = col.render(row,index)
+            } else if(col.slot) {
+                if(props.tbodySlots && props.tbodySlots[col.slot]) {
+                    cont = props.tbodySlots[col.slot]({row,index})
+                }
             } else if(col.field) {
                 cont = row[col.field]
             }
+
             return (
                 <Cell {...tdProps}>{cont}</Cell>
             )

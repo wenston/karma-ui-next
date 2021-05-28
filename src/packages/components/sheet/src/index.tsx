@@ -55,7 +55,8 @@ export default defineComponent({
                 data: props.data,
                 hasIndex: props.hasIndex,
                 pageSize: props.pageSize,
-                pageIndex: props.pageIndex
+                pageIndex: props.pageIndex,
+                tbodySlots: slots
             }
             return o
         })

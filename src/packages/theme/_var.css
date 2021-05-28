@@ -103,11 +103,11 @@
 
   --k-pagination-size: var(--k-height);
 
+  --k-sheet-container-border-color: var(--k-color-line-5);
   --k-sheet-thead-background-color: var(--k-color-7);
   --k-sheet-tr-background-color: var(--k-color-background);
   --k-sheet-tr-stripe-color: var(--k-color-8);
   --k-sheet-tr-hover-color: var(--k-color-primary-02);
-  --k-sheet-container-border-color: var(--k-color-line-5);
   --k-sheet-thead-th-border-color: var(--k-color-line-5);
   --k-sheet-td-border-color: var(--k-color-line-6);
   --k-sheet-td-padding: 8px var(--k-padding-x);
