@@ -36,3 +36,22 @@ export function createTbodyColumns(columns: any) {
   fn(cols)
   return bodyColumns
 }
+
+export function getAlign(align: string | string[]) {
+  if (typeof align === "string") {
+    return {
+      thead: align,
+      tbody: align,
+      tfoot: align
+    }
+  } else {
+    if (align.length) {
+      let [a, b, c] = align
+      return {
+        thead: a || "",
+        tbody: b || "",
+        tfoot: c || ""
+      }
+    }
+  }
+}

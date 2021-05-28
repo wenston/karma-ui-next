@@ -1,6 +1,7 @@
 import {computed, defineComponent} from 'vue'
 import Cell from './_cell'
 import {IS_PRESET,IS_ACTION,IS_CHECKBOX,IS_INDEX,IS_RADIO} from './_use'
+import {getAlign} from './_util'
 export default defineComponent({
     components: {Cell},
     props: {
@@ -15,7 +16,9 @@ export default defineComponent({
         const ps = computed(()=>props.pageSize?Number(props.pageSize):0)
         //row是一行数据，col是columns里的其中一列, index是第几行
         function renderTd(row:any,col:any,index:number) {
-            const tdProps:any = {}
+            const tdProps:any = {
+                align: getAlign(col)?.tbody
+            }
             let cont:any
             //处理预置列
             if(IS_PRESET(col.field)) {
@@ -28,6 +31,8 @@ export default defineComponent({
 
                     }
                 }
+            } else if(col.render) {
+                cont = col.render(row,index)
             } else if(col.field) {
                 cont = row[col.field]
             }

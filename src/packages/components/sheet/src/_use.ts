@@ -40,28 +40,37 @@ export function useTdWidth(
   const a = ref(0)
   const tdWidths = computed(() => {
     let totalTdWidth = a.value - a.value
-    // const wrapperWidth = container.value
-    //   ? getBoundingClientRect(container.value).width
-    //   : window.innerWidth
+    let totalStretchWidth = 0
     const wrapperWidth = inner.value
       ? Math.floor(inner.value.clientWidth) + 1
       : window.innerWidth
-    //设置的宽度
+    //使用组件时设置的宽度
     let widths = bodyColumns.value.map((col: any) => {
       let style =
         typeof col.style === "function" ? col.style(null, null, {}) : col.style
       //w是通过代码设置的宽度
       const w = style?.width ?? 120
       totalTdWidth += w
+      if (!IS_PRESET(col.field) && !col.lockWidth) {
+        totalStretchWidth += w
+      }
       return w
     })
     //计算后的真实宽度
     // console.log(totalTdWidth, widths)
     if (isAuto.value) {
+      //预置的列，不参与计算
       if (wrapperWidth > totalTdWidth) {
-        widths = widths.map((w: number) => {
-          const t = Math.floor(wrapperWidth * (w / totalTdWidth))
-          return t
+        const restWidth = wrapperWidth - totalTdWidth
+        widths = bodyColumns.value.map((col: any, i: number) => {
+          if (IS_PRESET(col.field) || col.lockWidth) {
+            return widths[i]
+          } else {
+            return (
+              widths[i] +
+              Math.floor(restWidth * (widths[i] / totalStretchWidth))
+            )
+          }
         })
       }
     }

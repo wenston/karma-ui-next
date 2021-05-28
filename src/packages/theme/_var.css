@@ -5,6 +5,7 @@
   --k-cubic-bezier: cubic-bezier(0.4, 1, 0, 1);
   --k-color-primary: rgb(69, 145, 252);
   --k-color-primary-05: rgba(69, 145, 252, 0.5);
+  --k-color-primary-02: rgba(69, 145, 252, 0.2);
   --k-color-primary-01: rgba(69, 145, 252, 0.1);
   --k-color-danger: rgb(255, 112, 112);
   --k-color-danger-05: rgba(255, 112, 112, 0.5);
@@ -105,7 +106,7 @@
   --k-sheet-thead-background-color: var(--k-color-7);
   --k-sheet-tr-background-color: var(--k-color-background);
   --k-sheet-tr-stripe-color: var(--k-color-8);
-  --k-sheet-tr-hover-color: var(--k-color-primary-01);
+  --k-sheet-tr-hover-color: var(--k-color-primary-02);
   --k-sheet-container-border-color: var(--k-color-line-5);
   --k-sheet-thead-th-border-color: var(--k-color-line-5);
   --k-sheet-td-border-color: var(--k-color-line-6);

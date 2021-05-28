@@ -20,7 +20,7 @@
       height="calc(100vh - 140px)"></Sheet>
   </div>
 </template>
-<script lang="ts">
+<script lang="tsx">
 import { defineComponent, ref, computed } from "vue"
 import Sheet from "../packages/components/sheet"
 import Data from "./test-data/sheet"
@@ -38,6 +38,8 @@ export default defineComponent({
         name: "单号",
         field: "BillCode",
         style: { width: 140 },
+        //是否锁定该列的宽度，只在autoWidth为true时有用，虽然锁定，但仍然可以通过拖拽调整宽度！
+        lockWidth: true,
       },
       {
         name: "状态",
@@ -53,6 +55,13 @@ export default defineComponent({
         name: "金额",
         field: "TotalPrice",
         style: { width: 70 },
+        lockWidth: true,
+        align: "right",
+        render: (row: any, index: number) => {
+          return (
+            <span style="color:var(--k-color-danger)">{row.TotalPrice}</span>
+          )
+        },
       },
       {
         name: "收货单位",
