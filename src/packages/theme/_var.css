@@ -43,8 +43,8 @@
 
   --k-transition-quick: 0.2s;
   --k-transition: 0.35s;
-  --k-transition-enter: 0.818s;
-  --k-transition-leave: var(--k-transition);
+  --k-transition-enter: 0.8s;
+  --k-transition-leave: 0.25s;
 
   --k-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
   --k-drop-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);

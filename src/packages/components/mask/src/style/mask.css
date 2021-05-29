@@ -15,7 +15,7 @@
 
 .k-mask-fade-enter-active,
 .k-mask-fade-leave-active {
-  transition: var(--k-transition-enter);
+  transition: var(--k-transition);
 }
 .k-mask-fade-leave-active {
   transition: var(--k-transition-leave);
