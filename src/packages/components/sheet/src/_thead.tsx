@@ -1,8 +1,8 @@
-import {defineComponent} from 'vue'
+import {defineComponent,ref,inject, Ref} from 'vue'
 import Cell from './_cell'
 import Checkbox from '../../checkbox'
 import Radio from '../../radio'
-import {IS_PRESET} from './_use'
+import {IS_PRESET,IS_ACTION,IS_CHECKBOX,IS_INDEX,IS_RADIO} from './_use'
 
 export default defineComponent({
     components: {Cell,Checkbox,Radio},
@@ -10,13 +10,14 @@ export default defineComponent({
         //columns是加工处理过的
         columns: Array,
         indexContent: [String,Object],
-        hasIndex: Boolean,
-        hasCheckbox: Boolean,
-        hasRadio: Boolean,
+        checkboxKey: String,
+        radioKey: String,
         hasAction: Boolean
     },
     setup(props,{attrs,emit,slots}) {
-
+      const is_all = ref(0)
+      const isCheckedAll = inject('isCheckedAll') as Ref<number>
+      const setCheckAll = inject('setCheckAll') as Function
         function getRowspan(obj:any, max:number) {
             if (obj.children && obj.children.length !== 0) {
               return 1;
@@ -88,7 +89,7 @@ export default defineComponent({
       
             let renderTd = (columns:any[]) => {
               columns.forEach((col, i, arr) => {
-                const isPreset = false;//this.$_is_built_in_column(col.field)
+                const isPreset = IS_PRESET(col.field);//this.$_is_built_in_column(col.field)
                 let content = null;
                 // console.log(col.name , typeof col.name)
                 if (typeof col.name === "function") {
@@ -96,23 +97,30 @@ export default defineComponent({
                 } else {
                   content = col.name;
                 }
-                // console.log(col)
-                if (props.hasIndex && col.field==='__preset_index__' /* && col.field === this.__index */) {
-                  content = props.indexContent;
+
+                if(isPreset) {
+                  if (IS_INDEX(col.field)) {
+                    content = props.indexContent;
+                  }
+                  // if (this.hasAction && col.field === this.__action) {
+                  //   content = "操作"
+                  // }
+                  if (IS_CHECKBOX(col.field)) {
+                    const checkboxProps = {
+                      modelValue: isCheckedAll.value,
+                      "onUpdate:modelValue":(v:number) => {
+                        setCheckAll(v)
+                      }
+                    }
+                    content = (
+                      <Checkbox {...checkboxProps} />
+                    )
+                  } else if (IS_RADIO(col.field)/*  && col.field === this.__radio */) {
+                    content = ""
+                  }
                 }
-                // if (this.hasAction && col.field === this.__action) {
-                //   content = "操作"
-                // }
-                if (props.hasCheckbox /* && col.field === this.__checkbox */) {
-                //   content = (
-                //     <Checkbox
-                //       checked={isCheckedAll.value}
-                //       onChange={this.toggleCheckedAll}
-                //     />
-                //   );
-                } else if (props.hasRadio/*  && col.field === this.__radio */) {
-                  content = ""
-                }
+                
+                
                 const colspan = getColspan(col)
                 const rowspan = getRowspan(col, maxRowLength)
       
@@ -120,6 +128,9 @@ export default defineComponent({
                   
                     colspan,
                     rowspan,
+                    notBold: isPreset,
+                    isNarrow: isPreset,
+                    align: isPreset || colspan>1?'center':'',
                     // resizeWidth: this.resizeWidth,
                     // presets,
                     // index: i,
@@ -135,10 +146,6 @@ export default defineComponent({
                     // })()
                   
                   class: [
-                    {
-                      "k-cell--center":
-                        colspan > 1 || IS_PRESET(col.field)
-                    },
                     /* [
                       col.cellClass
                         ? this.$_get_td_class(null, null, col, { thead: true })

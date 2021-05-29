@@ -27,6 +27,7 @@
       &.k-cell--right {
         text-align: right;
       }
+
       &:hover {
       }
     }
@@ -40,10 +41,11 @@
         background-color: var(--k-sheet-thead-background-color);
         & .k-cell {
           border-color: var(--k-sheet-thead-th-border-color);
+          &.k-cell--not-bold {
+            font-weight: normal;
+          }
         }
       }
-    }
-    .k-sheet-tbody {
     }
 
     &.k-sheet--min-content {
@@ -84,6 +86,21 @@
             background-color: var(--k-sheet-tr-background-color);
             &:nth-child(2n) {
               background-color: var(--k-sheet-tr-stripe-color);
+            }
+          }
+        }
+      }
+    }
+
+    & .k-sheet-tbody {
+      .k-sheet {
+        tr {
+          &.k-sheet-tr--checked {
+            background-color: var(--k-sheet-tr-checked-background-color);
+          }
+          &:nth-child(2n) {
+            &.k-sheet-tr--checked {
+              background-color: var(--k-sheet-tr-checked-background-color);
             }
           }
         }

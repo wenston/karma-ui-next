@@ -1,7 +1,4 @@
 import { isObject } from "@vue/shared"
-export function isBuiltInColumn(field: string) {
-  return field === ""
-}
 
 //筛选出有效的数据列
 export function filterValidColumns(columns: any) {
@@ -13,7 +10,7 @@ export function filterValidColumns(columns: any) {
     if (!!col && isObject(col)) {
       arr.push(col)
     } else if (typeof col === "function") {
-      const c = { ...col() }
+      const c = col()
       if (!!c && isObject(c)) arr.push(c)
     }
   })
@@ -55,4 +52,15 @@ export function getAlign(col: any) {
       }
     }
   }
+}
+
+export function getSelectedKey(row: any, checkboxKey: string) {
+  let cks = checkboxKey
+  let arrKeys: string[] = []
+  if (cks.indexOf(",") > -1) {
+    arrKeys = cks.split(/\s*,\s*/)
+  } else {
+    arrKeys.push(cks)
+  }
+  return arrKeys.map((k: string) => row[k]).join(",")
 }

@@ -6,39 +6,77 @@
         :value="[false,true]">宽度自动</Checkbox>
       <Checkbox v-model="hasIndex"
         :value="[false,true]">带序号</Checkbox>
+      <Checkbox v-model="stripe"
+        :value="[false,true]">隔行变色</Checkbox>
+      <span style="padding-left: 30px;padding-right: 30px;">
+        <Radio value='checkbox'
+          v-model="ck">多选</Radio>
+        <Radio value='radio'
+          v-model="ck">单选</Radio>
+      </span>
       <!-- <Bouton @click="isAuto=!isAuto"
         :type="isAuto?'primary':'default'">宽度自动</Bouton>
       <Bouton @click="hasIndex=!hasIndex"
         :type="hasIndex?'primary':'default'">带序号</Bouton> -->
     </div>
 
-    <Sheet :data='D'
+    <Sheet :data='D.slice(0)'
       :columns="columns"
       :autoWidth="isAuto"
-      stripe
+      :stripe="stripe"
       :hasIndex="hasIndex"
-      height="calc(100vh - 140px)">
+      :hasCheckbox="ck==='checkbox'"
+      checkboxKey="BillCode"
+      v-model:keys="keys"
+      :checkable="checkable"
+      :hasRadio="ck==='radio'"
+      @after-checked="afterChecked"
+      height="calc(70vh - 100px)">
       <template #status="{row,index}">
         <template v-if="row.Status===11">状态11</template>
         <template v-else-if="row.Status===3">已完成</template>
         <template v-else>12退货</template>
       </template>
     </Sheet>
+    <div style="margin-top:12px">
+      <Sheet :data="rows"
+        :columns="columns"
+        height="calc(30vh - 50px)">
+        <template #status="{row,index}">
+          <template v-if="row.Status===11">状态11</template>
+          <template v-else-if="row.Status===3">已完成</template>
+          <template v-else>12退货</template>
+        </template>
+      </Sheet>
+    </div>
   </div>
 </template>
 <script lang="tsx">
-import { defineComponent, ref, computed } from "vue"
+import { defineComponent, ref, computed, watch, onMounted } from "vue"
 import Sheet from "../packages/components/sheet"
 import Data from "./test-data/sheet"
 import Bouton from "../packages/components/bouton"
 import Checkbox from "../packages/components/checkbox"
+import Radio from "../packages/components/radio"
 export default defineComponent({
-  components: { Sheet, Bouton, Checkbox },
+  components: { Sheet, Bouton, Checkbox, Radio },
   setup() {
     const a = ref(0)
     const D = ref(Data)
     const isAuto = ref(true)
     const hasIndex = ref(true)
+    const stripe = ref(false)
+    const ck = ref("checkbox")
+    const keys = ref<any[]>([])
+    const rows = ref<any[]>([])
+
+    watch(
+      keys,
+      (v: any) => {
+        // console.log(v)
+      },
+      { deep: true }
+    )
     function columns() {
       return [
         {
@@ -124,12 +162,27 @@ export default defineComponent({
         // },
       ]
     }
+
+    onMounted(() => {})
     return {
       a,
       D,
       isAuto,
       hasIndex,
+      stripe,
+      ck,
+      keys,
+      rows,
       columns,
+      checkable(row: any) {
+        if (row.TotalPrice - 0 > 400) {
+          return { disabled: true, checked: false }
+        }
+        return { disabled: false, checked: false }
+      },
+      afterChecked(arr: any[]) {
+        rows.value = arr
+      },
     }
   },
 })

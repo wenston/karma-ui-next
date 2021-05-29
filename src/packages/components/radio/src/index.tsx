@@ -50,7 +50,7 @@ export default defineComponent({
                         ?'k-icon-radio-fill'
                         :'k-icon-radio'
                     } />
-                {slots.default?.()}
+                {slots.default && <span class="k-radio-text">{slots.default?.()}</span>}
             </span>
         )
     }

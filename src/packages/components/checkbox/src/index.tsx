@@ -39,7 +39,7 @@ function one(props:any, {emit, slots}:SetupContext) {
                 <Icon class="k-checkbox-icon" name={v.value
                     ?'k-icon-checkbox-fill'
                     :'k-icon-checkbox'} />
-                {slots.default?.()}
+                {slots.default&&<span class="k-checkbox-text">{slots.default?.()}</span>}
             </span>
         )
     
@@ -103,7 +103,7 @@ function more(props:any, {emit, slots}:SetupContext) {
                 <Icon class="k-checkbox-icon" name={v.value===symbol.value
                     ?'k-icon-checkbox'
                     :'k-icon-checkbox-fill'} />
-                {slots.default?.()}
+                {slots.default&&<span class="k-checkbox-text">{slots.default?.()}</span>}
             </span>
         
     )
@@ -112,7 +112,7 @@ function more(props:any, {emit, slots}:SetupContext) {
 export default defineComponent({
     components: {Icon},
     props: {
-        value: {
+        value: {//多选时，value不是数组
             type: [Array,Number,String],
             default: ()=> [0,1]
         },

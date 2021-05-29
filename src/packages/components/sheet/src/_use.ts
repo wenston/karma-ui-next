@@ -11,8 +11,8 @@ const PRESET_ACTION = "__preset_action__"
 
 export const PRESET_FIELDS: { [key: string]: any } = {
   index: { field: PRESET_INDEX, style: { width: 46 } },
-  checkbox: { field: PRESET_CHECKBOX, style: { width: 40 } },
-  radio: { field: PRESET_RADIO, style: { width: 40 } },
+  checkbox: { field: PRESET_CHECKBOX, style: { width: 38 } },
+  radio: { field: PRESET_RADIO, style: { width: 38 } },
   action: { field: PRESET_ACTION, style: { width: 46 } }
 }
 export const IS_PRESET = (field: string) => {
@@ -121,7 +121,7 @@ export function useColumns(columns: ComputedRef, opts: ComputedRef) {
     } else if (opts.value.hasRadio) {
       arr.push(col_radio)
     }
-    if (opts.value.hasRadio) {
+    if (opts.value.hasAction) {
       arr.push(col_action)
     }
     return [...arr, ...validCols]
