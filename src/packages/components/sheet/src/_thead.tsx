@@ -2,7 +2,7 @@ import {defineComponent,ref,inject, Ref} from 'vue'
 import Cell from './_cell'
 import Checkbox from '../../checkbox'
 import Radio from '../../radio'
-import {IS_PRESET,IS_ACTION,IS_CHECKBOX,IS_INDEX,IS_RADIO} from './_use'
+import {IS_PRESET,IS_CHECKBOX,IS_INDEX,IS_RADIO} from './_use'
 
 export default defineComponent({
     components: {Cell,Checkbox,Radio},

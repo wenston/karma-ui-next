@@ -6,6 +6,8 @@
         :value="[false,true]">宽度自动</Checkbox>
       <Checkbox v-model="hasIndex"
         :value="[false,true]">带序号</Checkbox>
+      <Checkbox v-model="hasAction"
+        :value="[false,true]">有添加和删除行</Checkbox>
       <Checkbox v-model="stripe"
         :value="[false,true]">隔行变色</Checkbox>
       <span style="padding-left: 30px;padding-right: 30px;">
@@ -31,7 +33,10 @@
       v-model="currentKey"
       :checkable="checkable"
       :hasRadio="ck==='radio'"
+      :hasAction="hasAction"
       @after-checked="afterChecked"
+      @add="toAdd"
+      @delete="toDelete"
       height="calc(70vh - 100px)">
       <template #status="{row}">
         <template v-if="row.Status===11">状态11</template>
@@ -59,14 +64,17 @@ import Data from "./test-data/sheet"
 import Bouton from "../packages/components/bouton"
 import Checkbox from "../packages/components/checkbox"
 import Radio from "../packages/components/radio"
+import Confirm from "../packages/components/confirm"
+import Icon from "../packages/components/icon"
 export default defineComponent({
-  components: { Sheet, Bouton, Checkbox, Radio },
+  components: { Sheet, Bouton, Checkbox, Radio, Icon },
   setup() {
     const a = ref(0)
     const D = ref(Data)
     const isAuto = ref(true)
     const hasIndex = ref(true)
     const stripe = ref(false)
+    const hasAction = ref(true)
     const ck = ref("radio")
     const keys = ref<any[]>([])
     const rows = ref<any[]>([])
@@ -84,7 +92,7 @@ export default defineComponent({
         {
           name: "单号",
           field: "BillCode",
-          style: { width: "11.3em" },
+          style: { width: "12em" },
           //是否锁定该列的宽度，只在autoWidth为true时有用，虽然锁定，但仍然可以通过拖拽调整宽度！
           lockWidth: true,
         },
@@ -175,6 +183,7 @@ export default defineComponent({
       D,
       isAuto,
       hasIndex,
+      hasAction,
       stripe,
       ck,
       keys,
@@ -189,6 +198,31 @@ export default defineComponent({
       },
       afterChecked(arr: any[]) {
         rows.value = arr
+      },
+      toAdd(row: any, index: number) {
+        D.value.splice(index, 0, {
+          BillCode: (Math.random() + "").slice(2),
+        } as any)
+      },
+      toDelete(row: any, index: number) {
+        Confirm.open({
+          content(close: any) {
+            return (
+              <div>
+                &#12288;
+                <Icon
+                  name="k-icon-warning"
+                  size="20"
+                  style="color:var(--k-color-warning)"
+                />
+                &#8194;确定要删除【{row.BillCode}】吗？
+              </div>
+            )
+          },
+          ok() {
+            D.value.splice(index, 1)
+          },
+        })
       },
     }
   },

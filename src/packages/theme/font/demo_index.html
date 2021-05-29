@@ -55,6 +55,12 @@
           <ul class="icon_lists dib-box">
           
             <li class="dib">
+              <span class="icon iconfont">&#xe60a;</span>
+                <div class="name">加 (5)</div>
+                <div class="code-name">&amp;#xe60a;</div>
+              </li>
+          
+            <li class="dib">
               <span class="icon iconfont">&#xe634;</span>
                 <div class="name">警告</div>
                 <div class="code-name">&amp;#xe634;</div>
@@ -64,12 +70,6 @@
               <span class="icon iconfont">&#xe63e;</span>
                 <div class="name">垃圾桶</div>
                 <div class="code-name">&amp;#xe63e;</div>
-              </li>
-          
-            <li class="dib">
-              <span class="icon iconfont">&#xe67d;</span>
-                <div class="name">加</div>
-                <div class="code-name">&amp;#xe67d;</div>
               </li>
           
             <li class="dib">
@@ -150,9 +150,9 @@
 <pre><code class="language-css"
 >@font-face {
   font-family: 'iconfont';
-  src: url('iconfont.woff2?t=1622259302688') format('woff2'),
-       url('iconfont.woff?t=1622259302688') format('woff'),
-       url('iconfont.ttf?t=1622259302688') format('truetype');
+  src: url('iconfont.woff2?t=1622270976419') format('woff2'),
+       url('iconfont.woff?t=1622270976419') format('woff'),
+       url('iconfont.ttf?t=1622270976419') format('truetype');
 }
 </code></pre>
           <h3 id="-iconfont-">第二步：定义使用 iconfont 的样式</h3>
@@ -179,6 +179,15 @@
         <ul class="icon_lists dib-box">
           
           <li class="dib">
+            <span class="icon iconfont k-icon-add"></span>
+            <div class="name">
+              加 (5)
+            </div>
+            <div class="code-name">.k-icon-add
+            </div>
+          </li>
+          
+          <li class="dib">
             <span class="icon iconfont k-icon-warning"></span>
             <div class="name">
               警告
@@ -193,15 +202,6 @@
               垃圾桶
             </div>
             <div class="code-name">.k-icon-delete
-            </div>
-          </li>
-          
-          <li class="dib">
-            <span class="icon iconfont k-icon-add"></span>
-            <div class="name">
-              加
-            </div>
-            <div class="code-name">.k-icon-add
             </div>
           </li>
           
@@ -324,6 +324,14 @@
           
             <li class="dib">
                 <svg class="icon svg-icon" aria-hidden="true">
+                  <use xlink:href="#k-icon-add"></use>
+                </svg>
+                <div class="name">加 (5)</div>
+                <div class="code-name">#k-icon-add</div>
+            </li>
+          
+            <li class="dib">
+                <svg class="icon svg-icon" aria-hidden="true">
                   <use xlink:href="#k-icon-warning"></use>
                 </svg>
                 <div class="name">警告</div>
@@ -336,14 +344,6 @@
                 </svg>
                 <div class="name">垃圾桶</div>
                 <div class="code-name">#k-icon-delete</div>
-            </li>
-          
-            <li class="dib">
-                <svg class="icon svg-icon" aria-hidden="true">
-                  <use xlink:href="#k-icon-add"></use>
-                </svg>
-                <div class="name">加</div>
-                <div class="code-name">#k-icon-add</div>
             </li>
           
             <li class="dib">

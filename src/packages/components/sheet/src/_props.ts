@@ -13,7 +13,7 @@ export default {
   keys: { type: Array, default: () => [] }, //用于checkboxKey的双向绑定
   hasRadio: Boolean,
   modelValue: [String, Number],
-  hasAction: Boolean,
+  hasAction: [Boolean, Array, String], //true/false,['add','delete'],'add'/'delete'
   hasIndex: Boolean,
   indexContent: { type: String, default: "#" },
   pageSize: [String, Number],

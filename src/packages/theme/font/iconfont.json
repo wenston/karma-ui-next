@@ -6,6 +6,13 @@
   "description": "for vue3",
   "glyphs": [
     {
+      "icon_id": "20030002",
+      "name": "加 (5)",
+      "font_class": "add",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
+    },
+    {
       "icon_id": "19362949",
       "name": "警告",
       "font_class": "warning",
@@ -18,13 +25,6 @@
       "font_class": "delete",
       "unicode": "e63e",
       "unicode_decimal": 58942
-    },
-    {
-      "icon_id": "18288408",
-      "name": "加",
-      "font_class": "add",
-      "unicode": "e67d",
-      "unicode_decimal": 59005
     },
     {
       "icon_id": "8602716",

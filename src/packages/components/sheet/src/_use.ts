@@ -29,7 +29,6 @@ export const IS_PRESET = (field: string) => {
 export const IS_INDEX = (field: string) => PRESET_INDEX === field
 export const IS_CHECKBOX = (field: string) => PRESET_CHECKBOX === field
 export const IS_RADIO = (field: string) => PRESET_RADIO === field
-export const IS_ACTION = (field: string) => PRESET_ACTION === field
 
 export function useTdWidth(
   isAuto: ComputedRef<boolean>,
@@ -121,7 +120,7 @@ export function useColumns(columns: ComputedRef, opts: ComputedRef) {
       }
     })
     let arr: any[] = []
-    if (opts.value.hasIndex) {
+    if (opts.value.hasIndex || opts.value.hasAction) {
       arr.push(col_index.value)
     }
     if (opts.value.hasCheckbox) {
@@ -129,9 +128,9 @@ export function useColumns(columns: ComputedRef, opts: ComputedRef) {
     } else if (opts.value.hasRadio) {
       arr.push(col_radio)
     }
-    if (opts.value.hasAction) {
-      arr.push(col_action)
-    }
+    // if (opts.value.hasAction) {
+    //   arr.push(col_action)
+    // }
     return [...arr, ...validCols]
   })
 

@@ -1,7 +1,7 @@
 import { computed, defineComponent, Ref, inject, ComputedRef } from "vue"
 import Cell from "./_cell"
 import Icon from "../../icon"
-import { IS_PRESET, IS_ACTION, IS_CHECKBOX, IS_INDEX, IS_RADIO } from "./_use"
+import { IS_PRESET, IS_CHECKBOX, IS_INDEX, IS_RADIO } from "./_use"
 import { getAlign, getSelectedKey } from "./_util"
 export default defineComponent({
   components: { Cell, Icon },
@@ -9,6 +9,7 @@ export default defineComponent({
     columns: Array,
     data: Array,
     hasIndex: Boolean,
+    hasAction: [Boolean, Array, String],
     pageIndex: { type: [String, Number] },
     pageSize: { type: [String, Number] },
     tbodySlots: Object,
@@ -19,6 +20,7 @@ export default defineComponent({
     checkable: Function
   },
   setup(props, { emit, attrs }) {
+    const toEmit = inject("toEmit") as Function
     const modelValue = inject("modelValue") as ComputedRef<string | number>
     const updateModelValue = inject("updateModelValue") as Function
     const isCheckedAll = inject("isCheckedAll") as Ref<number>
@@ -27,6 +29,26 @@ export default defineComponent({
     const hasKey = inject("hasKey") as Function
     const pi = computed(() => (props.pageIndex ? Number(props.pageIndex) : 0))
     const ps = computed(() => (props.pageSize ? Number(props.pageSize) : 0))
+    const hasAddAction = computed(() => {
+      const a = props.hasAction
+      if (a) {
+        return (
+          a === "add" ||
+          a === true ||
+          (Array.isArray(a) && a.indexOf("add") > -1)
+        )
+      }
+    })
+    const hasDeleteAction = computed(() => {
+      const a = props.hasAction
+      if (a) {
+        return (
+          a === "delete" ||
+          a === true ||
+          (Array.isArray(a) && a.indexOf("delete") > -1)
+        )
+      }
+    })
     //row是一行数据，col是columns里的其中一列, index是第几行
     function renderTd(
       row: any,
@@ -52,6 +74,33 @@ export default defineComponent({
             cont = index + 1
             if (pi.value && ps.value) {
               cont = ps.value * (pi.value - 1) + cont
+            }
+            if (props.hasAction) {
+              tdProps.onClick = (e: MouseEvent) => {
+                e.stopPropagation()
+              }
+              const addProps = {
+                name: "k-icon-add",
+                class: "k-cell-action-add",
+                onClick: (e: MouseEvent) => {
+                  toEmit("add", row, index)
+                }
+              }
+              const deleteProps = {
+                name: "k-icon-delete",
+                class: "k-cell-action-delete",
+                onClick: (e: MouseEvent) => {
+                  toEmit("delete", row, index)
+                }
+              }
+              cont = [
+                <div class="k-cell-index">{cont}</div>,
+                <span>&#12288;</span>,
+                <div class="k-cell-action">
+                  {hasAddAction.value && <Icon {...addProps} />}
+                  {hasDeleteAction.value && <Icon {...deleteProps} />}
+                </div>
+              ]
             }
           } else if (isCheckbox || isRadio) {
             let iconName = isCheckbox ? "k-icon-checkbox" : "k-icon-radio"

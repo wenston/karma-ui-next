@@ -7,7 +7,8 @@ import {
   watch,
   toRefs,
   provide,
-  readonly
+  readonly,
+  getCurrentInstance
 } from "vue"
 import { getBoundingClientRect, hasUnit } from "../../../util"
 import Thead from "./_thead"
@@ -15,10 +16,13 @@ import Tbody from "./_tbody"
 import _props from "./_props"
 import { useTdWidth, useColumns } from "./_use"
 import { createTbodyColumns, getSelectedKey } from "./_util"
+const EMITS = ["update:modelValue", "update:keys", "after-checked"]
+const TBODYEMITS = ["add", "delete"]
+type TbodyEmits = "add" | "delete"
 export default defineComponent({
   components: { Thead, Tbody },
   props: _props,
-  emits: ["update:modelValue", "update:keys", "after-checked"],
+  emits: [...EMITS, ...TBODYEMITS],
   setup(props, { emit, attrs, slots }) {
     const isCheckedAll = ref(0)
     const selectedKeys = ref<any[]>([])
@@ -33,7 +37,8 @@ export default defineComponent({
           {
             "k-sheet--nowrap": props.nowrap,
             "k-sheet--stripe": props.stripe,
-            "k-sheet--hover": props.hover
+            "k-sheet--hover": props.hover,
+            "k-sheet--has-action": props.hasAction
           }
         ],
         style: {
@@ -69,6 +74,7 @@ export default defineComponent({
         columns: tbodyColumns.value,
         data: props.data,
         hasIndex: props.hasIndex,
+        hasAction: props.hasAction,
         pageSize: props.pageSize,
         pageIndex: props.pageIndex,
         tbodySlots: slots,
@@ -86,6 +92,11 @@ export default defineComponent({
       inner,
       tbodyColumns
     )
+
+    //子组件通过一个方法发射事件
+    provide("toEmit", (eventName: TbodyEmits, opts: any) => {
+      emit(eventName, opts)
+    })
 
     //单选
     provide("modelValue", readonly(computed(() => props.modelValue)))
