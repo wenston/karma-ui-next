@@ -26,13 +26,14 @@
       :stripe="stripe"
       :hasIndex="hasIndex"
       :hasCheckbox="ck==='checkbox'"
-      checkboxKey="BillCode"
+      checkKey="BillCode"
       v-model:keys="keys"
+      v-model="currentKey"
       :checkable="checkable"
       :hasRadio="ck==='radio'"
       @after-checked="afterChecked"
       height="calc(70vh - 100px)">
-      <template #status="{row,index}">
+      <template #status="{row}">
         <template v-if="row.Status===11">状态11</template>
         <template v-else-if="row.Status===3">已完成</template>
         <template v-else>12退货</template>
@@ -42,7 +43,7 @@
       <Sheet :data="rows"
         :columns="columns"
         height="calc(30vh - 50px)">
-        <template #status="{row,index}">
+        <template #status="{row}">
           <template v-if="row.Status===11">状态11</template>
           <template v-else-if="row.Status===3">已完成</template>
           <template v-else>12退货</template>
@@ -66,9 +67,10 @@ export default defineComponent({
     const isAuto = ref(true)
     const hasIndex = ref(true)
     const stripe = ref(false)
-    const ck = ref("checkbox")
+    const ck = ref("radio")
     const keys = ref<any[]>([])
     const rows = ref<any[]>([])
+    const currentKey = ref("")
 
     watch(
       keys,
@@ -82,7 +84,7 @@ export default defineComponent({
         {
           name: "单号",
           field: "BillCode",
-          style: { width: 140 },
+          style: { width: "11.3em" },
           //是否锁定该列的宽度，只在autoWidth为true时有用，虽然锁定，但仍然可以通过拖拽调整宽度！
           lockWidth: true,
         },
@@ -163,7 +165,11 @@ export default defineComponent({
       ]
     }
 
-    onMounted(() => {})
+    onMounted(() => {
+      setTimeout(() => {
+        currentKey.value = "CGDD2105130004"
+      }, 200)
+    })
     return {
       a,
       D,
@@ -173,6 +179,7 @@ export default defineComponent({
       ck,
       keys,
       rows,
+      currentKey,
       columns,
       checkable(row: any) {
         if (row.TotalPrice - 0 > 400) {

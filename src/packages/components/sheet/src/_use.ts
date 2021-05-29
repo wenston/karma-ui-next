@@ -1,6 +1,6 @@
 import { ComputedRef, Ref, computed, ref, watch } from "vue"
 import { isObject, isFunction } from "@vue/shared"
-import { getBoundingClientRect, getScrollbarWidth } from "../../../util"
+import { toPX, getScrollbarWidth, hasUnit, getUnit } from "../../../util"
 import useEvent from "../../../use/useEvent"
 import useDelay from "../../../use/useDelay"
 
@@ -10,10 +10,10 @@ const PRESET_RADIO = "__preset_radio__"
 const PRESET_ACTION = "__preset_action__"
 
 export const PRESET_FIELDS: { [key: string]: any } = {
-  index: { field: PRESET_INDEX, style: { width: 46 } },
-  checkbox: { field: PRESET_CHECKBOX, style: { width: 38 } },
-  radio: { field: PRESET_RADIO, style: { width: 38 } },
-  action: { field: PRESET_ACTION, style: { width: 46 } }
+  index: { field: PRESET_INDEX, style: { width: 40 } },
+  checkbox: { field: PRESET_CHECKBOX, style: { width: 40 } },
+  radio: { field: PRESET_RADIO, style: { width: 40 } },
+  action: { field: PRESET_ACTION, style: { width: 42 } }
 }
 export const IS_PRESET = (field: string) => {
   let b = false
@@ -50,7 +50,15 @@ export function useTdWidth(
       let style =
         typeof col.style === "function" ? col.style(null, null, {}) : col.style
       //w是通过代码设置的宽度
-      const w = style?.width ?? 120
+      //由于width的单位可能是px、em、rem、vh、vw单位，故需要转换成px
+      //TODO: 待完善，此处只简单的转换一下
+      let w = style?.width ?? 120
+      if (hasUnit(w)) {
+        if (getUnit(w) !== "px") {
+          w = parseFloat(w) * 12
+        }
+      }
+      // const w = style?.width ?? 120
       totalTdWidth += w
       if (!IS_PRESET(col.field) && !col.lockWidth) {
         totalStretchWidth += w

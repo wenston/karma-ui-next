@@ -9,10 +9,10 @@ export default {
   autoWidth: Boolean,
   hasCheckbox: Boolean,
   checkable: Function, //返回{checked:boolean,disabled:boolean}//选中状态，能否点选
-  checkboxKey: { type: String, default: "Id" },
+  checkKey: { type: String, default: "Id" }, //用于checkbox或者radio的选择
   keys: { type: Array, default: () => [] }, //用于checkboxKey的双向绑定
   hasRadio: Boolean,
-  radioKey: { type: String, default: "Id" },
+  modelValue: [String, Number],
   hasAction: Boolean,
   hasIndex: Boolean,
   indexContent: { type: String, default: "#" },

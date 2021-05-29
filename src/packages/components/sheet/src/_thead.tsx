@@ -10,7 +10,7 @@ export default defineComponent({
         //columns是加工处理过的
         columns: Array,
         indexContent: [String,Object],
-        checkboxKey: String,
+        checkKey: String,
         radioKey: String,
         hasAction: Boolean
     },

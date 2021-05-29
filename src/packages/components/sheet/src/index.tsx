@@ -9,7 +9,7 @@ import {
   provide,
   readonly
 } from "vue"
-import { getBoundingClientRect } from "../../../util"
+import { getBoundingClientRect, hasUnit } from "../../../util"
 import Thead from "./_thead"
 import Tbody from "./_tbody"
 import _props from "./_props"
@@ -18,7 +18,7 @@ import { createTbodyColumns, getSelectedKey } from "./_util"
 export default defineComponent({
   components: { Thead, Tbody },
   props: _props,
-  emits: ["update:keys", "after-checked"],
+  emits: ["update:modelValue", "update:keys", "after-checked"],
   setup(props, { emit, attrs, slots }) {
     const isCheckedAll = ref(0)
     const selectedKeys = ref<any[]>([])
@@ -50,9 +50,8 @@ export default defineComponent({
         indexContent: props.indexContent,
         hasIndex: props.hasIndex,
         hasCheckbox: props.hasCheckbox,
-        checkboxKey: props.checkboxKey,
+        checkKey: props.checkKey,
         hasRadio: props.hasRadio,
-        radioKey: props.radioKey,
         hasAction: props.hasAction
       }))
     )
@@ -61,7 +60,7 @@ export default defineComponent({
       let o: any = {
         columns: finalColumns.value,
         indexContent: props.indexContent,
-        checkboxKey: props.checkboxKey
+        checkKey: props.checkKey
       }
       return o
     })
@@ -73,7 +72,9 @@ export default defineComponent({
         pageSize: props.pageSize,
         pageIndex: props.pageIndex,
         tbodySlots: slots,
-        checkboxKey: props.checkboxKey,
+        hasCheckbox: props.hasCheckbox,
+        hasRadio: props.hasRadio,
+        checkKey: props.checkKey,
         isCheckedAll: isCheckedAll.value,
         checkable: props.checkable
       }
@@ -86,6 +87,13 @@ export default defineComponent({
       tbodyColumns
     )
 
+    //单选
+    provide("modelValue", readonly(computed(() => props.modelValue)))
+    provide("updateModelValue", (k: number | string) => {
+      emit("update:modelValue", k)
+    })
+
+    //复选
     provide("isCheckedAll", readonly(isCheckedAll))
     //thead中使用
     provide("setCheckAll", setCheckAll)
@@ -113,10 +121,10 @@ export default defineComponent({
             if (props.checkable) {
               const { disabled } = props.checkable(row, index)
               if (!disabled) {
-                selectedKeys.value.push(getSelectedKey(row, props.checkboxKey))
+                selectedKeys.value.push(getSelectedKey(row, props.checkKey))
               }
             } else {
-              selectedKeys.value.push(getSelectedKey(row, props.checkboxKey))
+              selectedKeys.value.push(getSelectedKey(row, props.checkKey))
             }
           })
         }
@@ -142,7 +150,7 @@ export default defineComponent({
           let i = 0
           while (i < d.length) {
             const row = d[i]
-            const k = getSelectedKey(row, props.checkboxKey)
+            const k = getSelectedKey(row, props.checkKey)
             if (!keys.some((_k) => _k == k)) {
               checked = 0
               break
@@ -159,7 +167,7 @@ export default defineComponent({
 
     function afterChecked() {
       let arr = (props.data ?? []).filter((row, index) => {
-        const k = getSelectedKey(row, props.checkboxKey)
+        const k = getSelectedKey(row, props.checkKey)
         if (props.checkable) {
           const { disabled } = props.checkable(row, index)
           if (!disabled) {
@@ -221,7 +229,7 @@ function colGroup(widths: number[]) {
   return (
     <colgroup>
       {widths.map((w: any) => {
-        return <col width={w} />
+        return <col style={{ width: hasUnit(w) ? w : w + "px" }} />
       })}
     </colgroup>
   )

@@ -42,11 +42,31 @@ export function isInvalidValue(v: any) {
   return v === "" || v === undefined || v === null || isNaN(v)
 }
 
-export function hasUnit(value: string | number) {
+export function getUnit(value: string | number) {
   const unit = String(value)
-    .slice(-2)
+    .replace(/[\-\.\d]/gi, "")
     .toLowerCase()
-  return unit === "px" || unit === "em" || unit === "pt"
+  return unit
+}
+
+export function hasUnit(value: string | number) {
+  const units = ["px", "em", "pt", "vh", "vw", "rem"]
+  // console.log(units.indexOf(unit) > -1)
+  const unit = getUnit(value)
+  // return units.indexOf(getUnit(value)) > -1
+  return unit !== ""
+}
+
+export function toPX(el: HTMLElement, value: string | number): number {
+  const v = parseFloat(value + "")
+  const unit = getUnit(value)
+  const fontSize = parseInt(getStyle(el, "font-size"))
+  if (unit !== "") {
+    if (unit === "em") {
+      return v * fontSize
+    }
+  }
+  return 0
 }
 
 export function getStyle(elem: HTMLElement, prop: any) {
