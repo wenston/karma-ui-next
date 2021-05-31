@@ -17,5 +17,6 @@ export default {
   hasIndex: Boolean,
   indexContent: { type: String, default: "#" },
   pageSize: [String, Number],
-  pageIndex: [String, Number]
+  pageIndex: [String, Number],
+  resize: { type: Boolean, default: true }
 }

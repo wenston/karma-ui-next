@@ -37,7 +37,7 @@
       @after-checked="afterChecked"
       @add="toAdd"
       @delete="toDelete"
-      height="calc(70vh - 100px)">
+      height="calc(65vh - 100px)">
       <template #status="{row}">
         <template v-if="row.Status===11">状态11</template>
         <template v-else-if="row.Status===3">已完成</template>
@@ -47,7 +47,28 @@
     <div style="margin-top:12px">
       <Sheet :data="rows"
         :columns="columns"
-        height="calc(30vh - 50px)">
+        hasAction
+        height="calc(35vh - 50px)">
+        <template #action="{row,index}">
+          <Overlay placement="top"
+            toBody>
+            <template #trigger>
+              <div>
+                <Icon name="k-icon-close" />
+              </div>
+            </template>
+            <template #default="{hide}">
+              <div :class="css.indeed">
+                确认要删除<span style="color:red;">订单：{{row.BillCode}}</span>吗?
+              </div>
+              <div style="float:right;margin-top:12px;">
+                <span style="color:var(--k-color-5);cursor:pointer;"
+                  @click="hide">取消</span>
+                <span style="color:var(--k-color-primary);cursor:pointer;margin-left:10px;">确定</span>
+              </div>
+            </template>
+          </Overlay>
+        </template>
         <template #status="{row}">
           <template v-if="row.Status===11">状态11</template>
           <template v-else-if="row.Status===3">已完成</template>
@@ -66,8 +87,9 @@ import Checkbox from "../packages/components/checkbox"
 import Radio from "../packages/components/radio"
 import Confirm from "../packages/components/confirm"
 import Icon from "../packages/components/icon"
+import Overlay from "../packages/components/overlay"
 export default defineComponent({
-  components: { Sheet, Bouton, Checkbox, Radio, Icon },
+  components: { Sheet, Bouton, Checkbox, Radio, Icon, Overlay },
   setup() {
     const a = ref(0)
     const D = ref(Data)
@@ -200,7 +222,8 @@ export default defineComponent({
         rows.value = arr
       },
       toAdd(row: any, index: number) {
-        D.value.splice(index, 0, {
+        console.log(index)
+        D.value.splice(index + 1, 0, {
           BillCode: (Math.random() + "").slice(2),
         } as any)
       },
@@ -228,3 +251,10 @@ export default defineComponent({
   },
 })
 </script>
+<style module="css" lang="postcss">
+.indeed {
+  max-width: 150px;
+  color: var(--k-color-3);
+  font-size: 12px;
+}
+</style>

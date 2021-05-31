@@ -76,14 +76,16 @@ export default defineComponent({
               cont = ps.value * (pi.value - 1) + cont
             }
             if (props.hasAction) {
-              tdProps.onClick = (e: MouseEvent) => {
-                e.stopPropagation()
-              }
+              const actionSlot =
+                props.tbodySlots &&
+                props.tbodySlots.action &&
+                props.tbodySlots.action({ row, index })
               const addProps = {
                 name: "k-icon-add",
                 class: "k-cell-action-add",
                 onClick: (e: MouseEvent) => {
                   toEmit("add", row, index)
+                  e.stopPropagation()
                 }
               }
               const deleteProps = {
@@ -91,15 +93,17 @@ export default defineComponent({
                 class: "k-cell-action-delete",
                 onClick: (e: MouseEvent) => {
                   toEmit("delete", row, index)
+                  e.stopPropagation()
                 }
               }
+              const actionContent = actionSlot ?? [
+                hasAddAction.value && <Icon {...addProps} />,
+                hasDeleteAction.value && <Icon {...deleteProps} />
+              ]
               cont = [
                 <div class="k-cell-index">{cont}</div>,
                 <span>&#12288;</span>,
-                <div class="k-cell-action">
-                  {hasAddAction.value && <Icon {...addProps} />}
-                  {hasDeleteAction.value && <Icon {...deleteProps} />}
-                </div>
+                <div class="k-cell-action">{actionSlot ?? actionContent}</div>
               ]
             }
           } else if (isCheckbox || isRadio) {

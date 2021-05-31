@@ -78,6 +78,10 @@ export default defineComponent({
         watch(visible,v=>{
             emit('update:show',v)
         })
+
+        function hide() {
+            visible.value = false
+        }
         const trans_name = computed(()=>{
             if(props.isFixed) {
                 return 'k-layer-size-transition'
@@ -159,7 +163,7 @@ export default defineComponent({
         
         const _titleSlot = useSlot({slot:titleSlot,tag:props.tag})
         return ()=> {
-            const defaultSlot = slots.default?.()
+            const defaultSlot = slots.default?.({hide})
             let t = <></>
             if(_titleSlot.value.length) {
                 //注意：由于是clone出的节点，所以ref指向的有可能是个组件，而不是原生html标签！！

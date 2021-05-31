@@ -1,4 +1,4 @@
-import {computed, defineComponent} from 'vue'
+import {computed, defineComponent,inject,ComputedRef} from 'vue'
 export default defineComponent({
     props: {
         tag:{type:String,default:'td'},
@@ -7,7 +7,7 @@ export default defineComponent({
         notBold: Boolean
     },
     setup(props,{slots}){
-        const tag = props.tag
+        const canResizeWidth = inject('canResizeWidth') as ComputedRef<boolean>
         const cellProps = computed(()=>{
             let o:any = {
                 class: ['k-cell',{
@@ -21,9 +21,8 @@ export default defineComponent({
             return o
         })
         return ()=>{
-
             return (
-                <tag {...cellProps.value}>{slots.default?.()}</tag>
+                <props.tag {...cellProps.value}>{slots.default?.()}</props.tag>
             )
         }
     }

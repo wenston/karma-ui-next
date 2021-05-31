@@ -24,6 +24,8 @@ export default defineComponent({
   props: _props,
   emits: [...EMITS, ...TBODYEMITS],
   setup(props, { emit, attrs, slots }) {
+    const ins = getCurrentInstance()
+    console.time(String(ins?.uid))
     const isCheckedAll = ref(0)
     const selectedKeys = ref<any[]>([])
     const tableRoot = ref()
@@ -94,8 +96,8 @@ export default defineComponent({
     )
 
     //子组件通过一个方法发射事件
-    provide("toEmit", (eventName: TbodyEmits, opts: any) => {
-      emit(eventName, opts)
+    provide("toEmit", (eventName: TbodyEmits, ...opts: any) => {
+      emit(eventName, ...opts)
     })
 
     //单选
@@ -123,6 +125,10 @@ export default defineComponent({
       isCheckedAll.value = b
       afterChecked()
     })
+
+    //列宽调整
+    provide('canResizeWidth',readonly(computed(()=>props.resize)))
+    provide('colWidths',tdWidths)
 
     function setCheckAll(b: number) {
       isCheckedAll.value = b
@@ -210,7 +216,9 @@ export default defineComponent({
       { deep: true, immediate: true }
     )
 
-    onMounted(() => {})
+    onMounted(() => {
+      console.timeEnd(String(ins?.uid))
+    })
     return () => {
       const thead = <Thead {...theadProps.value}></Thead>
       const tbody = <Tbody {...tbodyProps.value}></Tbody>
@@ -230,6 +238,7 @@ export default defineComponent({
               </table>
             </div>
           </div>
+          <div class="k-sheet-resize-line"></div>
         </div>
       )
     }

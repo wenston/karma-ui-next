@@ -167,6 +167,17 @@
       }
     }
   }
+
+  & .k-sheet-resize-line {
+    position: absolute;
+    width: 1px;
+    height: 100%;
+    background-color: var(--k-color-danger-05);
+    left: 14px;
+    top: 0;
+    z-index: 2;
+    box-shadow: 2px 1px 1px rgba(0, 0, 0, 0.1);
+  }
 }
 
 .k-sheet-check-icon {
