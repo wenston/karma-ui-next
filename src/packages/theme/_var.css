@@ -4,8 +4,8 @@
   --k-color-background: white;
   --k-cubic-bezier: cubic-bezier(0.4, 1, 0, 1);
   --k-color-primary: rgb(69, 145, 252);
-  --k-color-primary-05: rgba(69, 145, 252, 0.5);
-  --k-color-primary-02: rgba(69, 145, 252, 0.2);
+  --k-color-primary-05: rgb(162 200 253);
+  --k-color-primary-02: rgb(218 233 254);
   --k-color-primary-01: rgba(69, 145, 252, 0.1);
   --k-color-danger: rgb(255, 112, 112);
   --k-color-danger-05: rgba(255, 112, 112, 0.5);

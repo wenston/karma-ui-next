@@ -1,4 +1,4 @@
-import {ref,computed, defineComponent,inject,ComputedRef, reactive} from 'vue'
+import {ref,computed, defineComponent,inject,ComputedRef, reactive, onMounted} from 'vue'
 export default defineComponent({
     props: {
         tag:{type:String,default:'td'},
@@ -15,19 +15,32 @@ export default defineComponent({
         const beforeResize = inject('beforeResize') as Function
         const inResizing = inject('inResizing') as Function
         const afterResize = inject('afterResize') as Function
+        const leftFixed = inject('leftFixed') as ComputedRef<string|number>
+        const rightFixed = inject('rightFixed') as ComputedRef<string|number>
+        const stickyLeft = ref(0)
         const cellProps = computed(()=>{
+            const isFixedLeft = leftFixed.value 
+                && props.colIndex!==undefined 
+                && Number(leftFixed.value)>props.colIndex
+            // console.log(leftFixed.value,props.colIndex)
             let o:any = {
+                ref: tdRoot,
                 class: ['k-cell',{
                     'k-cell--center':props.align==='center',
                     'k-cell--right': props.align==='right',
                     'k-cell--narrow':props.isNarrow,
-                    'k-cell--not-bold':props.notBold
+                    'k-cell--not-bold':props.notBold,
+                    'k-cell--sticky': isFixedLeft
                 }],
+                style: {
+                    left: isFixedLeft?(stickyLeft.value+'px'):'',
+
+                }
 
             }
-            if(props.resizeWidth) {
-                o.ref = tdRoot
-            }
+            // if(props.resizeWidth || leftFixed.value || rightFixed.value) {
+            //     o.ref = tdRoot
+            // }
             return o
         })
         function toResize(e:MouseEvent) {
@@ -41,6 +54,15 @@ export default defineComponent({
             document.removeEventListener('mousemove',toResize)
             document.removeEventListener('mouseup',handleMouseup)
         }
+        onMounted(()=>{
+            if(tdRoot.value) {
+                if(leftFixed.value) {
+                    const el = tdRoot.value as any
+                    stickyLeft.value = el.offsetLeft + 1
+                    // console.log(el.offsetLeft)
+                }
+            }
+        })
         return ()=>{
             let line:any = null
             if(props.resizeWidth) {

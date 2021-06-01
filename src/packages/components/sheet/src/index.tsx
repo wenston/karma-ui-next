@@ -141,6 +141,9 @@ export default defineComponent({
     provide('toggleHighlight',(v:number|string)=> {
       emit('update:highlight',v)
     })
+    //左右固定列
+    provide('leftFixed',readonly(computed(()=>props.leftFixed)))
+    provide('rightFixed',readonly(computed(()=>props.rightFixed)))
 
     //列宽调整
     //给组件根节点添加k-no-select的class，以免在拖拽时选择了文本

@@ -58,12 +58,14 @@ export default defineComponent({
       row: any,
       col: any,
       index: number,
+      iCol: number,
       checked: boolean,
       isChecked: boolean,
       disabled: boolean
     ) {
       const tdProps: any = {
-        align: getAlign(col)?.tbody
+        align: getAlign(col)?.tbody,
+        colIndex: iCol
       }
       let cont: any
       //处理预置列
@@ -183,9 +185,9 @@ export default defineComponent({
         }
       }
 
-      const tds = (props.columns ?? []).map((col: any) => {
+      const tds = (props.columns ?? []).map((col: any, iCol: number) => {
         //isChecked是在disabled时用的
-        return renderTd(row, col, index, checked, isChecked, disabled)
+        return renderTd(row, col, index, iCol, checked, isChecked, disabled)
       })
       return <tr {...trProps}>{tds}</tr>
     }

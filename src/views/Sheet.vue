@@ -37,6 +37,7 @@
       :can-highlight="h"
       highlightKey="BillCode"
       v-model:highlight="hValue"
+      leftFixed="3"
       @after-checked="afterChecked"
       @add="toAdd"
       @delete="toDelete"
@@ -182,29 +183,30 @@ export default defineComponent({
           ],
         },
 
-        // {
-        //   name: "发票类型",
-        // },
-        // {
-        //   name: "交易类型",
-        // },
-        // {
-        //   name: "商品",
-        // },
-        // {
-        //   name: "经手人",
-        //   field: "Handler",
-        // },
-        // {
-        //   name: "制单人",
-        //   field: "CreatedUserName",
-        // },
-        // {
-        //   name: "制单时间",
-        // },
-        // {
-        //   name: "备注",
-        // },
+        {
+          name: "发票类型",
+        },
+        {
+          name: "交易类型",
+        },
+        {
+          name: "商品",
+        },
+        {
+          name: "经手人",
+          field: "Handler",
+        },
+        {
+          name: "制单人",
+          field: "CreatedUserName",
+        },
+        {
+          name: "制单时间",
+        },
+        {
+          name: "备注",
+          field: "Description",
+        },
       ]
     }
 

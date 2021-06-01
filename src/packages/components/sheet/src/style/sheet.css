@@ -18,6 +18,13 @@
 
       text-align: left;
       position: relative;
+      transition: var(--k-transition);
+      &.k-cell--sticky {
+        position: sticky;
+        background-color: var(--k-sheet-tr-background-color);
+        z-index: 1;
+        box-shadow: 1px 1px var(--k-sheet-td-border-color);
+      }
       &.k-cell--narrow {
         padding: var(--k-sheet-td-narrow-padding);
       }
@@ -76,11 +83,15 @@
       top: 0;
       background-color: var(--k-sheet-thead-background-color);
       width: 100%;
-      z-index: 1;
+      z-index: 2;
       & thead {
         background-color: var(--k-sheet-thead-background-color);
         & .k-cell {
           border-color: var(--k-sheet-thead-th-border-color);
+          &.k-cell--sticky {
+            background-color: var(--k-sheet-thead-background-color);
+            box-shadow: 1px 1px var(--k-sheet-thead-th-border-color);
+          }
           &.k-cell--not-bold {
             font-weight: normal;
           }
@@ -123,9 +134,17 @@
       & .k-sheet-tbody {
         & .k-sheet {
           & tr {
-            background-color: var(--k-sheet-tr-background-color);
+            & td {
+              &.k-cell {
+                background-color: var(--k-sheet-tr-background-color);
+              }
+            }
             &:nth-child(2n) {
-              background-color: var(--k-sheet-tr-stripe-color);
+              & td {
+                &.k-cell {
+                  background-color: var(--k-sheet-tr-stripe-color);
+                }
+              }
             }
           }
         }
@@ -136,21 +155,35 @@
       .k-sheet {
         tr {
           &.k-sheet-tr--checked {
-            background-color: var(--k-sheet-tr-checked-background-color);
+            & td {
+              &.k-cell {
+                background-color: var(--k-sheet-tr-checked-background-color);
+              }
+            }
           }
           &.k-sheet-tr--highlight {
-            /* background-color: var(--k-sheet-tr-highlight-background-color); */
-            outline: 2px solid var(--k-color-primary);
-            outline-offset: -2px;
+            & td {
+              &.k-cell {
+                background-color: var(--k-sheet-tr-highlight-background-color);
+              }
+            }
           }
           &:nth-child(2n) {
             &.k-sheet-tr--checked {
-              background-color: var(--k-sheet-tr-checked-background-color);
+              & td {
+                &.k-cell {
+                  background-color: var(--k-sheet-tr-checked-background-color);
+                }
+              }
             }
             &.k-sheet-tr--highlight {
-              /* background-color: var(--k-sheet-tr-highlight-background-color); */
-              outline: 2px solid var(--k-color-primary);
-              outline-offset: -2px;
+              & td {
+                &.k-cell {
+                  background-color: var(
+                    --k-sheet-tr-highlight-background-color
+                  );
+                }
+              }
             }
           }
         }
@@ -162,7 +195,14 @@
           & tr {
             transition: var(--k-transition-quick);
             &:hover {
-              background-color: var(--k-sheet-tr-hover-color);
+              & td {
+                &.k-cell {
+                  background-color: var(--k-sheet-tr-hover-color);
+                }
+                /* &.k-cell--sticky {
+                  background-color: var(--k-sheet-tr-hover-color);
+                } */
+              }
             }
           }
         }
