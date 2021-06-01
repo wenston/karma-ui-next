@@ -17,7 +17,7 @@ import _props from "./_props"
 import { useTdWidth, useColumns } from "./_use"
 import { createTbodyColumns, getSelectedKey } from "./_util"
 const MIN_WIDTH = 32//调整列宽时，最小允许的宽度
-const EMITS = ["update:modelValue", "update:keys", "after-checked"]
+const EMITS = ["update:modelValue", "update:keys", "after-checked",'update:highlight']
 const TBODYEMITS = ["add", "delete"]
 type TbodyEmits = "add" | "delete"
 
@@ -93,7 +93,9 @@ export default defineComponent({
         hasRadio: props.hasRadio,
         checkKey: props.checkKey,
         isCheckedAll: isCheckedAll.value,
-        checkable: props.checkable
+        checkable: props.checkable,
+        canHighlight: props.canHighlight,
+        highlightKey: props.highlightKey
       }
       return o
     })
@@ -134,12 +136,15 @@ export default defineComponent({
       isCheckedAll.value = b
       afterChecked()
     })
+    //高亮
+    provide('highlight',readonly(computed(()=>props.highlight)))
+    provide('toggleHighlight',(v:number|string)=> {
+      emit('update:highlight',v)
+    })
 
     //列宽调整
-    provide('colWidths',tdWidths)
-    //在开始调整列宽之前，应该知道调整的是哪一个列，记录其index
-    //接下来给组件根节点添加k-no-selected的class，以免在拖拽时选择了文本
-    provide('beforeResize',(tdElem:HTMLElement,colIndex:number,start:any)=> {
+    //给组件根节点添加k-no-select的class，以免在拖拽时选择了文本
+    provide('beforeResize',(tdElem:HTMLElement)=> {
       resizing.value = true
       tableRoot.value.classList.add('k-no-select')
       //记录tableRoot在页面中的left

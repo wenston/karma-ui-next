@@ -17,16 +17,20 @@ export default defineComponent({
     hasCheckbox: Boolean,
     hasRadio: Boolean,
     isCheckedAll: Number, //0,1
-    checkable: Function
+    checkable: Function,
+    canHighlight: Boolean,
+    highlightKey: String
   },
   setup(props, { emit, attrs }) {
     const toEmit = inject("toEmit") as Function
     const modelValue = inject("modelValue") as ComputedRef<string | number>
     const updateModelValue = inject("updateModelValue") as Function
-    const isCheckedAll = inject("isCheckedAll") as Ref<number>
-    const selectedKeys = inject("selectedKeys") as Ref<string[]>
+    // const isCheckedAll = inject("isCheckedAll") as Ref<number>
+    // const selectedKeys = inject("selectedKeys") as Ref<string[]>
     const toggleSelect = inject("toggleSelect") as Function
     const hasKey = inject("hasKey") as Function
+    const highlight = inject("highlight") as ComputedRef<string | number>
+    const toggleHighlight = inject("toggleHighlight") as Function
     const pi = computed(() => (props.pageIndex ? Number(props.pageIndex) : 0))
     const ps = computed(() => (props.pageSize ? Number(props.pageSize) : 0))
     const hasAddAction = computed(() => {
@@ -145,16 +149,20 @@ export default defineComponent({
     function renderTr(row: any, index: number) {
       const trProps: any = {}
       let checkValue = ""
+      let hValue: number | string
       let checked = false
       let isChecked = false
       let disabled = false
-      if (props.hasRadio || props.hasCheckbox) {
+      if (props.hasRadio || props.hasCheckbox || props.canHighlight) {
         checkValue = getSelectedKey(row, props.checkKey ?? "Id")
+        hValue = getSelectedKey(row, props.highlightKey ?? "Id")
         checked = props.hasCheckbox
           ? hasKey(checkValue)
           : checkValue == modelValue.value
+        const isHigh = props.canHighlight && hValue == highlight.value
         trProps.class = {
-          "k-sheet-tr--checked": checked
+          "k-sheet-tr--checked": checked,
+          "k-sheet-tr--highlight": isHigh
         }
         if (props.checkable) {
           ;({ checked: isChecked, disabled } = props.checkable(row, index))
@@ -167,6 +175,9 @@ export default defineComponent({
               if (!checked) {
                 updateModelValue(checkValue)
               }
+            }
+            if (props.canHighlight) {
+              toggleHighlight(hValue)
             }
           }
         }

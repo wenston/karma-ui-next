@@ -48,7 +48,7 @@ export default defineComponent({
                     class:"k-cell-resize-line",
                     onMousedown:(e:MouseEvent)=> {
                         start.x = e.clientX
-                        beforeResize(tdRoot.value,props.colIndex,start)
+                        beforeResize(tdRoot.value)
 
                         document.addEventListener('mousemove', toResize)
                         document.addEventListener('mouseup', handleMouseup)

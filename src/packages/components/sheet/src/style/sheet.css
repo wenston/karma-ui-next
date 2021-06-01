@@ -42,6 +42,7 @@
       & .k-cell-action {
         color: var(--k-color-4);
         transform: translateX(100%);
+        visibility: hidden;
         & .k-cell-action-add {
           font-size: 1.2em;
           cursor: pointer;
@@ -137,9 +138,19 @@
           &.k-sheet-tr--checked {
             background-color: var(--k-sheet-tr-checked-background-color);
           }
+          &.k-sheet-tr--highlight {
+            /* background-color: var(--k-sheet-tr-highlight-background-color); */
+            outline: 2px solid var(--k-color-primary);
+            outline-offset: -2px;
+          }
           &:nth-child(2n) {
             &.k-sheet-tr--checked {
               background-color: var(--k-sheet-tr-checked-background-color);
+            }
+            &.k-sheet-tr--highlight {
+              /* background-color: var(--k-sheet-tr-highlight-background-color); */
+              outline: 2px solid var(--k-color-primary);
+              outline-offset: -2px;
             }
           }
         }
@@ -168,6 +179,7 @@
                 }
                 & .k-cell-action {
                   transform: translateX(0);
+                  visibility: visible;
                 }
               }
             }

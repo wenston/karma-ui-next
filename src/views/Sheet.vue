@@ -34,6 +34,9 @@
       :checkable="checkable"
       :hasRadio="ck==='radio'"
       :hasAction="hasAction"
+      :can-highlight="h"
+      highlightKey="BillCode"
+      v-model:highlight="hValue"
       @after-checked="afterChecked"
       @add="toAdd"
       @delete="toDelete"
@@ -45,8 +48,16 @@
       </template>
     </Sheet>
     <div style="margin-top:12px">
+      <div style="margin-bottom:10px;">
+        <Checkbox v-model="h"
+          :value="[false,true]">高亮展示某一行</Checkbox>
+
+      </div>
       <Sheet :data="rows"
         :columns="columns"
+        :canHighlight="h"
+        highlightKey="BillCode"
+        v-model:highlight="hValue"
         hasAction
         height="calc(35vh - 50px)">
         <template #action="{row,index}">
@@ -97,10 +108,12 @@ export default defineComponent({
     const hasIndex = ref(true)
     const stripe = ref(false)
     const hasAction = ref(true)
+    const h = ref(true)
     const ck = ref("radio")
     const keys = ref<any[]>([])
     const rows = ref<any[]>([])
     const currentKey = ref("")
+    const hValue = ref("CGDD2104290001")
 
     watch(
       keys,
@@ -207,10 +220,12 @@ export default defineComponent({
       hasIndex,
       hasAction,
       stripe,
+      h,
       ck,
       keys,
       rows,
       currentKey,
+      hValue,
       columns,
       checkable(row: any) {
         if (row.TotalPrice - 0 > 400) {
