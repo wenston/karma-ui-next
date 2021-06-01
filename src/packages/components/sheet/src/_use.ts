@@ -45,7 +45,7 @@ export function useTdWidth(
       ? Math.floor(inner.value.clientWidth) + 1
       : window.innerWidth
     //使用组件时设置的宽度
-    let widths = bodyColumns.value.map((col: any) => {
+    let widths = bodyColumns.value.map((col: any, index: number) => {
       let style =
         typeof col.style === "function" ? col.style(null, null, {}) : col.style
       //w是通过代码设置的宽度
@@ -83,6 +83,9 @@ export function useTdWidth(
       }
     }
 
+    // resizeWidths.value = [...widths]
+    // console.log(resizeWidths.value)
+
     return widths
   })
   useEvent(ref(window), "resize", () => {
@@ -91,7 +94,7 @@ export function useTdWidth(
     })
   })
 
-  return tdWidths
+  return { tdWidths }
 }
 
 export function useColumns(columns: ComputedRef, opts: ComputedRef) {

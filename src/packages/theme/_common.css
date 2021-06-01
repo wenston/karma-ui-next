@@ -20,6 +20,6 @@ body {
 .k-text-center {
   text-align: center;
 }
-.k-no-selected {
-  user-selected: none;
+.k-no-select {
+  user-select: none;
 }

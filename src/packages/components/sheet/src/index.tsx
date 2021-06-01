@@ -16,19 +16,27 @@ import Tbody from "./_tbody"
 import _props from "./_props"
 import { useTdWidth, useColumns } from "./_use"
 import { createTbodyColumns, getSelectedKey } from "./_util"
+const MIN_WIDTH = 32//调整列宽时，最小允许的宽度
 const EMITS = ["update:modelValue", "update:keys", "after-checked"]
 const TBODYEMITS = ["add", "delete"]
 type TbodyEmits = "add" | "delete"
+
 export default defineComponent({
   components: { Thead, Tbody },
   props: _props,
   emits: [...EMITS, ...TBODYEMITS],
   setup(props, { emit, attrs, slots }) {
+    const resizeWidths = new Map<object,number>()
     const ins = getCurrentInstance()
     console.time(String(ins?.uid))
+    const resizing = ref(false)
+    const resizeLineLeft = ref(-10000)
+    const oldResizeLineLeft = ref(-10000)
+
     const isCheckedAll = ref(0)
     const selectedKeys = ref<any[]>([])
     const tableRoot = ref()
+    const tableRootLeft = ref(0)
     const inner = ref()
     const innerProps = computed(() => {
       let o: any = {
@@ -67,7 +75,8 @@ export default defineComponent({
       let o: any = {
         columns: finalColumns.value,
         indexContent: props.indexContent,
-        checkKey: props.checkKey
+        checkKey: props.checkKey,
+        resize: props.resize
       }
       return o
     })
@@ -89,7 +98,7 @@ export default defineComponent({
       return o
     })
 
-    const tdWidths = useTdWidth(
+    const {tdWidths} = useTdWidth(
       computed(() => props.autoWidth),
       inner,
       tbodyColumns
@@ -127,8 +136,52 @@ export default defineComponent({
     })
 
     //列宽调整
-    provide('canResizeWidth',readonly(computed(()=>props.resize)))
     provide('colWidths',tdWidths)
+    //在开始调整列宽之前，应该知道调整的是哪一个列，记录其index
+    //接下来给组件根节点添加k-no-selected的class，以免在拖拽时选择了文本
+    provide('beforeResize',(tdElem:HTMLElement,colIndex:number,start:any)=> {
+      resizing.value = true
+      tableRoot.value.classList.add('k-no-select')
+      //记录tableRoot在页面中的left
+      tableRootLeft.value = getBoundingClientRect(tableRoot.value).left
+      const tdRight = getBoundingClientRect(tdElem).right
+      const x = tdRight??0
+      resizeLineLeft.value = x -1 - tableRootLeft.value
+      oldResizeLineLeft.value = resizeLineLeft.value
+    })
+    provide('inResizing',(colIndex:number,dx:number = 0)=> {
+      resizeLineLeft.value = dx + oldResizeLineLeft.value
+    })
+    //dWidth是增或减的宽
+    provide('afterResize',(colIndex:number, dWidth:number)=> {
+      // const old_width = resizeWidths.value[colIndex]
+      resizing.value = false
+      tableRoot.value.classList.remove('k-no-select')
+      resizeLineLeft.value = -10000
+      if(dWidth===0) { return }
+      const k = tbodyColumns.value[colIndex]
+      const oldWidth = resizeWidths.has(k)?resizeWidths.get(k):tdWidths.value[colIndex]
+      let newWidth = oldWidth + dWidth
+      if(newWidth<=MIN_WIDTH) {
+        newWidth = MIN_WIDTH
+      }
+      resizeWidths.set(tbodyColumns.value[colIndex], newWidth)
+    })
+
+    function colGroup(widths: number[]) {
+      
+      return (
+        <colgroup>
+          {widths.map((w: any,i:number) => {
+            const k = tbodyColumns.value[i]
+            const has = resizeWidths.has(k)
+
+            const ww = has?resizeWidths.get(k):w
+            return <col style={{ width: ww + "px" }} />
+          })}
+        </colgroup>
+      )
+    }
 
     function setCheckAll(b: number) {
       isCheckedAll.value = b
@@ -238,22 +291,16 @@ export default defineComponent({
               </table>
             </div>
           </div>
-          <div class="k-sheet-resize-line"></div>
+          <div class="k-sheet-resize-line" 
+            v-show={resizing.value}
+            style={{left:resizeLineLeft.value+'px'}}></div>
         </div>
       )
     }
   }
 })
 
-function colGroup(widths: number[]) {
-  return (
-    <colgroup>
-      {widths.map((w: any) => {
-        return <col style={{ width: hasUnit(w) ? w : w + "px" }} />
-      })}
-    </colgroup>
-  )
-}
+
 
 // 两个数组
 function isSameArray(arr1: any[], arr2: any[]) {
