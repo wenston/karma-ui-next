@@ -10,11 +10,12 @@ import {
   readonly,
   getCurrentInstance
 } from "vue"
+import useDelay from '../../../use/useDelay'
 import { getBoundingClientRect, hasUnit } from "../../../util"
 import Thead from "./_thead"
 import Tbody from "./_tbody"
 import _props from "./_props"
-import { useTdWidth, useColumns } from "./_use"
+import { useTdWidth, useColumns, useFixed } from "./_use"
 import { createTbodyColumns, getSelectedKey } from "./_util"
 const MIN_WIDTH = 32//调整列宽时，最小允许的宽度
 const EMITS = ["update:modelValue", "update:keys", "after-checked",'update:highlight']
@@ -26,6 +27,7 @@ export default defineComponent({
   props: _props,
   emits: [...EMITS, ...TBODYEMITS],
   setup(props, { emit, attrs, slots }) {
+    const {start} = useDelay(5)
     const resizeWidths = new Map<object,number>()
     const ins = getCurrentInstance()
     console.time(String(ins?.uid))
@@ -38,6 +40,8 @@ export default defineComponent({
     const tableRoot = ref()
     const tableRootLeft = ref(0)
     const inner = ref()
+    const {leftLastElem,showLeftShadow,leftShadowPosition,showTopShadow,reset} = useFixed(
+      tableRoot,inner,computed(()=>props.leftFixed),computed(()=>props.rightFixed))
     const innerProps = computed(() => {
       let o: any = {
         ref: inner,
@@ -48,13 +52,24 @@ export default defineComponent({
             "k-sheet--nowrap": props.nowrap,
             "k-sheet--stripe": props.stripe,
             "k-sheet--hover": props.hover,
-            "k-sheet--has-action": props.hasAction
+            "k-sheet--has-action": props.hasAction,
+            "k-sheet--has-top-shadow": showTopShadow.value
           }
         ],
         style: {
           height: props.height,
           maxHeight: props.maxHeight
-        }
+        },
+        // onScroll:(e:any) => {
+        //   start(()=> {
+        //     const left = e.target.scrollLeft
+        //     if(left>0) {
+        //       showLeftShadow.value = true
+        //     }else {
+        //       showLeftShadow.value=false
+        //     }
+        //   })
+        // }
       }
       return o
     })
@@ -144,6 +159,11 @@ export default defineComponent({
     //左右固定列
     provide('leftFixed',readonly(computed(()=>props.leftFixed)))
     provide('rightFixed',readonly(computed(()=>props.rightFixed)))
+    provide('setLeftShadowPosition',(td:HTMLElement,left:number)=> {
+      leftLastElem.value = td
+      leftShadowPosition.value = left
+      // console.log(left)
+    })
 
     //列宽调整
     //给组件根节点添加k-no-select的class，以免在拖拽时选择了文本
@@ -174,6 +194,13 @@ export default defineComponent({
         newWidth = MIN_WIDTH
       }
       resizeWidths.set(tbodyColumns.value[colIndex], newWidth)
+      //重新定位固定列的阴影位置
+      if(!!props.leftFixed) {
+        let n = Number(props.leftFixed)??0
+        if(n>0 && colIndex<n) {
+          reset()
+        }
+      }
     })
 
     function colGroup(widths: number[]) {
@@ -276,6 +303,10 @@ export default defineComponent({
       },
       { deep: true, immediate: true }
     )
+    watch(tbodyColumns,()=> {
+      console.log('reset')
+      setTimeout(reset)
+    })
 
     onMounted(() => {
       console.timeEnd(String(ins?.uid))
@@ -289,7 +320,7 @@ export default defineComponent({
             <div class="k-sheet-thead">
               <table class="k-sheet">
                 {colGroup(tdWidths.value)}
-                <thead>{thead}</thead>
+                <thead >{thead}</thead>
               </table>
             </div>
             <div class="k-sheet-tbody">
@@ -302,6 +333,9 @@ export default defineComponent({
           <div class="k-sheet-resize-line" 
             v-show={resizing.value}
             style={{left:resizeLineLeft.value+'px'}}></div>
+          <div class="k-sheet-left-fixed-shadow-line"
+            v-show={!!props.leftFixed && showLeftShadow.value}
+            style={{left:leftShadowPosition.value+'px'}} />
         </div>
       )
     }

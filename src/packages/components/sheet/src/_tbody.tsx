@@ -178,7 +178,7 @@ export default defineComponent({
                 updateModelValue(checkValue)
               }
             }
-            if (props.canHighlight) {
+            if (props.canHighlight && !isHigh) {
               toggleHighlight(hValue)
             }
           }

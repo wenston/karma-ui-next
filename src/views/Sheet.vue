@@ -22,13 +22,13 @@
         :type="hasIndex?'primary':'default'">带序号</Bouton> -->
     </div>
 
-    <Sheet :data='D.slice(0)'
+    <Sheet :data='D.slice(0,75)'
       :columns="columns"
       :autoWidth="isAuto"
       :stripe="stripe"
       :hasIndex="hasIndex"
       :hasCheckbox="ck==='checkbox'"
-      checkKey="BillCode"
+      checkKey="Id"
       v-model:keys="keys"
       v-model="currentKey"
       :checkable="checkable"
@@ -41,14 +41,15 @@
       @after-checked="afterChecked"
       @add="toAdd"
       @delete="toDelete"
-      height="calc(65vh - 100px)">
+      height="calc(100vh - 120px)">
       <template #status="{row}">
         <template v-if="row.Status===11">状态11</template>
         <template v-else-if="row.Status===3">已完成</template>
         <template v-else>12退货</template>
       </template>
     </Sheet>
-    <div style="margin-top:12px">
+    <div style="margin-top:12px"
+      v-if="false">
       <div style="margin-bottom:10px;">
         <Checkbox v-model="h"
           :value="[false,true]">高亮展示某一行</Checkbox>
@@ -93,7 +94,7 @@
 <script lang="tsx">
 import { defineComponent, ref, computed, watch, onMounted } from "vue"
 import Sheet from "../packages/components/sheet"
-import Data from "./test-data/sheet"
+import Data from "./test-data/big-data"
 import Bouton from "../packages/components/bouton"
 import Checkbox from "../packages/components/checkbox"
 import Radio from "../packages/components/radio"
@@ -104,7 +105,7 @@ export default defineComponent({
   components: { Sheet, Bouton, Checkbox, Radio, Icon, Overlay },
   setup() {
     const a = ref(0)
-    const D = ref(Data)
+    const D = ref<any[]>(Data)
     const isAuto = ref(true)
     const hasIndex = ref(true)
     const stripe = ref(false)
@@ -212,7 +213,7 @@ export default defineComponent({
 
     onMounted(() => {
       setTimeout(() => {
-        currentKey.value = "CGDD2105130004"
+        // D.value = Data
       }, 200)
     })
     return {

@@ -18,7 +18,7 @@
 
       text-align: left;
       position: relative;
-      transition: var(--k-transition);
+      transition: background-color var(--k-transition);
       &.k-cell--sticky {
         position: sticky;
         background-color: var(--k-sheet-tr-background-color);
@@ -82,7 +82,7 @@
       position: sticky;
       top: 0;
       background-color: var(--k-sheet-thead-background-color);
-      width: 100%;
+      width: min-content;
       z-index: 2;
       & thead {
         background-color: var(--k-sheet-thead-background-color);
@@ -227,16 +227,32 @@
         }
       }
     }
+    &.k-sheet--has-top-shadow {
+      & .k-sheet-thead {
+        box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1);
+      }
+    }
   }
 
-  & .k-sheet-resize-line {
+  & .k-sheet-resize-line,
+  & .k-sheet-left-fixed-shadow-line {
     position: absolute;
     width: 1px;
     height: 100%;
-    background-color: var(--k-color-danger-05);
-    left: 14px;
+    left: -1000px;
     top: 0;
     z-index: 2;
+  }
+  & .k-sheet-resize-line {
+    background-color: var(--k-color-danger-05);
+  }
+  & .k-sheet-left-fixed-shadow-line {
+    pointer-events: none;
+    /* background-color: rgba(255, 255, 255, 0.05); */
+    background-color: rgba(0, 0, 0, 0.05);
+    left: -1000px;
+    z-index: 2;
+    box-shadow: 1px 0 5px rgba(0, 0, 0, 0.4);
   }
 }
 

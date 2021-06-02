@@ -1,4 +1,4 @@
-import { defineComponent, ref, inject, Ref } from "vue"
+import { defineComponent, ref, inject, Ref,ComputedRef,computed } from "vue"
 import Cell from "./_cell"
 import Checkbox from "../../checkbox"
 import Radio from "../../radio"
@@ -16,9 +16,21 @@ export default defineComponent({
     resize: Boolean
   },
   setup(props, { attrs, emit, slots }) {
-    const is_all = ref(0)
     const isCheckedAll = inject("isCheckedAll") as Ref<number>
     const setCheckAll = inject("setCheckAll") as Function
+
+    const leftFixed = inject('leftFixed') as ComputedRef<string|number>
+    const _leftFixed = computed(()=>{
+      const l = inject('leftFixed') as ComputedRef<string|number>
+      if(l.value) {
+        return Number(l.value)
+      }
+      return 0
+    })
+    const rightFixed = inject('rightFixed') as ComputedRef<string|number>
+    const setLeftShadowPosition = inject('setLeftShadowPosition') as Function
+    const stickyLeft = ref(0)
+    
     function getRowspan(obj: any, max: number) {
       if (obj.children && obj.children.length !== 0) {
         return 1
@@ -128,14 +140,14 @@ export default defineComponent({
           const rowspan = getRowspan(col, maxRowLength)
 
           const cellProps = {
+            isInThead:true,
             colspan,
             rowspan,
             notBold: isPreset,
             isNarrow: isPreset,
             align: isPreset || colspan > 1 ? "center" : "",
             resizeWidth: props.resize && colspan == 1,
-            // presets,
-            colIndex: colspan == 1 ? colIndex++ : undefined,
+            colIndex: colspan == 1 ? colIndex : undefined,
             tag: "th",
             // sorter: (() => {
             //   let b = true;
@@ -148,6 +160,7 @@ export default defineComponent({
             // })()
 
             class: [
+              {'k-cell--sticky': _leftFixed.value>colIndex}
               /* [
                       col.cellClass
                         ? this.$_get_td_class(null, null, col, { thead: true })
@@ -164,11 +177,14 @@ export default defineComponent({
           if (col.children && col.children.length) {
             renderTd(col.children)
           }
+          colIndex += 1
         })
       }
       renderTd(columns)
       return trs.map((tr) => <tr>{tr}</tr>)
     }
+
+    
 
     return () => {
       return renderTableHead()

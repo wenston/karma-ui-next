@@ -1,6 +1,12 @@
-import { ComputedRef, Ref, computed, ref, watch } from "vue"
+import { ComputedRef, Ref, computed, ref, watch, onUpdated } from "vue"
 import { isObject, isFunction } from "@vue/shared"
-import { toPX, getScrollbarWidth, hasUnit, getUnit } from "../../../util"
+import {
+  toPX,
+  getScrollbarWidth,
+  hasUnit,
+  getUnit,
+  getStyle
+} from "../../../util"
 import useEvent from "../../../use/useEvent"
 import useDelay from "../../../use/useDelay"
 
@@ -138,4 +144,128 @@ export function useColumns(columns: ComputedRef, opts: ComputedRef) {
   })
 
   return cols
+}
+
+export function useFixed(
+  tableRoot: Ref,
+  innerTable: Ref,
+  leftFixed: ComputedRef,
+  rightFixed: ComputedRef
+) {
+  const showTopShadow = ref(false)
+  const leftOffset = ref<number[]>([])
+  const leftShadowPosition = ref(-1000)
+  const leftLastElem = ref<HTMLElement>()
+  const rightOffset = ref<number[]>([])
+  const showLeftShadow = ref(false)
+  const leftNumber = computed(() => {
+    if (leftFixed.value) {
+      return Number(leftFixed.value)
+    }
+    return 0
+  })
+  const rightNumber = computed(() => {
+    if (rightFixed.value) {
+      return Number(rightFixed.value)
+    }
+    return 0
+  })
+  function getTdsAndThs() {
+    const scrollTarget = innerTable.value
+    const trs = [
+      ...scrollTarget.querySelectorAll(".k-sheet-tbody>.k-sheet>tbody>tr")
+    ]
+    const ths = [
+      ...scrollTarget.querySelectorAll(
+        ".k-sheet-thead>.k-sheet>thead>tr>th.k-cell--sticky"
+      )
+    ]
+    const tds = trs.length ? [...trs[0].querySelectorAll("td")] : []
+    const leftTds = tds.slice(0, leftNumber.value)
+    return { trs, leftTds, ths }
+  }
+  function reset() {
+    leftOffset.value = []
+    const { trs, leftTds, ths } = getTdsAndThs()
+    trs.forEach((tr: HTMLElement, i: number) => {
+      const tds = [...tr.querySelectorAll("td")].slice(0, leftNumber.value)
+      tds.forEach((td) => {
+        td.classList.remove("k-cell--sticky")
+        td.style.removeProperty("left")
+      })
+    })
+    // setFixed()
+    setTimeout(setFixed)
+  }
+  function setFixed(e?: any) {
+    const scrollTarget = e ? (e.target as HTMLElement) : innerTable.value
+    if (scrollTarget.scrollLeft > 0) {
+      showLeftShadow.value = true
+      if (leftNumber.value !== 0 || rightNumber.value !== 0) {
+        const { trs, leftTds, ths } = getTdsAndThs()
+        // const ths = [
+        //   ...scrollTarget.querySelectorAll(
+        //     ".k-sheet-thead>.k-sheet>thead>tr>th.k-cell--sticky"
+        //   )
+        // ]
+        // const trs = [
+        //   ...scrollTarget.querySelectorAll(".k-sheet-tbody>.k-sheet>tbody>tr")
+        // ]
+        const tds = trs.length ? [...trs[0].querySelectorAll("td")] : []
+
+        // const leftTds = tds.slice(0, leftNumber.value)
+        const rightTds = tds
+          .reverse()
+          .slice(0, rightNumber.value)
+          .reverse()
+        if (leftTds.length) {
+          leftLastElem.value = leftTds.slice(-1)[0]
+          if (leftOffset.value.length === 0) {
+            let leftPosition = 0
+            leftOffset.value = leftTds.map(
+              (td: HTMLElement, i: number, arr) => {
+                const l = td.offsetLeft + 1
+                if (i === arr.length - 1) {
+                  leftPosition = l + parseInt(getStyle(td, "width"))
+                }
+                return l
+              }
+            )
+            leftShadowPosition.value = leftPosition
+          }
+        }
+        if (rightTds.length) {
+          rightOffset.value = rightTds.map((td) => td.offsetLeft)
+        }
+
+        trs.forEach((tr) => {
+          if (leftOffset.value.length) {
+            const tds = [...tr.querySelectorAll("td")].slice(
+              0,
+              leftOffset.value.length
+            )
+            tds.forEach((td: HTMLElement, i) => {
+              td.style.left = leftOffset.value[i] + "px"
+              td.classList.add("k-cell--sticky")
+            })
+          }
+        })
+        ths.forEach((th: HTMLElement, i: number) => {
+          th.style.left = leftOffset.value[i] + "px"
+        })
+      }
+    } else {
+      showLeftShadow.value = false
+    }
+    showTopShadow.value = scrollTarget.scrollTop > 0
+  }
+  useEvent(innerTable, "scroll", setFixed)
+  // onUpdated(reset)
+  return {
+    leftLastElem,
+    showLeftShadow,
+    showTopShadow,
+    leftShadowPosition,
+    reset
+  }
 }
