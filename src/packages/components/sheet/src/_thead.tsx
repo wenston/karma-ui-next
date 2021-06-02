@@ -174,17 +174,20 @@ export default defineComponent({
           // trs[col.__level].push(<Cell {...cellProps}>{content}</Cell>);
           const _con = <Cell {...cellProps}>{content}</Cell>
           trs[col.__level].push(_con)
+          if(colspan==1) {
+            colIndex += 1
+
+          }
           if (col.children && col.children.length) {
             renderTd(col.children)
           }
-          colIndex += 1
         })
       }
       renderTd(columns)
       return trs.map((tr) => <tr>{tr}</tr>)
     }
 
-    
+
 
     return () => {
       return renderTableHead()

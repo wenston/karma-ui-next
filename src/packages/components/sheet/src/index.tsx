@@ -8,7 +8,8 @@ import {
   toRefs,
   provide,
   readonly,
-  getCurrentInstance
+  getCurrentInstance,
+  nextTick
 } from "vue"
 import useDelay from '../../../use/useDelay'
 import { getBoundingClientRect, hasUnit } from "../../../util"
@@ -304,8 +305,7 @@ export default defineComponent({
       { deep: true, immediate: true }
     )
     watch(tbodyColumns,()=> {
-      console.log('reset')
-      setTimeout(reset)
+      nextTick(reset)
     })
 
     onMounted(() => {

@@ -21,6 +21,7 @@ export default defineComponent({
             // console.log(leftFixed.value,props.colIndex)
             let o:any = {
                 ref: tdRoot,
+                'data-col-index': props.colIndex,
                 class: ['k-cell',{
                     'k-cell--center':props.align==='center',
                     'k-cell--right': props.align==='right',

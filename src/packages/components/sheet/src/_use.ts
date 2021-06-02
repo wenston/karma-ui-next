@@ -1,4 +1,12 @@
-import { ComputedRef, Ref, computed, ref, watch, onUpdated } from "vue"
+import {
+  ComputedRef,
+  Ref,
+  computed,
+  ref,
+  watch,
+  onUpdated,
+  nextTick
+} from "vue"
 import { isObject, isFunction } from "@vue/shared"
 import {
   toPX,
@@ -194,8 +202,7 @@ export function useFixed(
         td.style.removeProperty("left")
       })
     })
-    // setFixed()
-    setTimeout(setFixed)
+    nextTick(setFixed)
   }
   function setFixed(e?: any) {
     const scrollTarget = e ? (e.target as HTMLElement) : innerTable.value
@@ -235,7 +242,7 @@ export function useFixed(
           }
         }
         if (rightTds.length) {
-          rightOffset.value = rightTds.map((td) => td.offsetLeft)
+          rightOffset.value = rightTds.map((td) => td.offsetLeft - 1)
         }
 
         trs.forEach((tr) => {
