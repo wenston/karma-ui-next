@@ -18,7 +18,7 @@ export function filterValidColumns(columns: any) {
 }
 
 export function createTbodyColumns(columns: any) {
-  let bodyColumns: any[] = []
+  let tbodyColumns: any[] = []
   const cols = filterValidColumns(columns)
   const fn = (arr: any) => {
     arr.forEach((col: any) => {
@@ -26,12 +26,14 @@ export function createTbodyColumns(columns: any) {
         fn(col.children)
       } else {
         // bodyColumns.push({...col})
-        bodyColumns.push(col)
+        tbodyColumns.push(col)
+        if (col.sum !== false) {
+        }
       }
     })
   }
   fn(cols)
-  return bodyColumns
+  return tbodyColumns
 }
 
 export function getAlign(col: any) {

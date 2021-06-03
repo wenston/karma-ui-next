@@ -56,7 +56,7 @@
 
       </div>
       <Sheet :data="rows"
-        :columns="columns"
+        :columns="columns()"
         :canHighlight="h"
         highlightKey="BillCode"
         v-model:highlight="hValue"
@@ -146,16 +146,25 @@ export default defineComponent({
           style: { width: 250 },
         },
         {
+          name: "数量",
+          field: "ProCount",
+          sum: true,
+          style: { width: 50 },
+          lockWidth: true,
+        },
+        { name: "单价", field: "ProPrice", style: { width: 80 } },
+        {
           name: "金额",
-          field: "TotalPrice",
+          field: "SubTotal",
           style: { width: 70 },
           lockWidth: true,
           align: "right",
           render: (row: any, index: number) => {
             return (
-              <span style="color:var(--k-color-danger)">{row.TotalPrice}</span>
+              <span style="color:var(--k-color-danger)">{row.SubTotal}</span>
             )
           },
+          sum: true,
         },
         {
           name: "收货单位",

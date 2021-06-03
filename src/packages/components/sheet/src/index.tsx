@@ -11,25 +11,31 @@ import {
   getCurrentInstance,
   nextTick
 } from "vue"
-import useDelay from '../../../use/useDelay'
+import useDelay from "../../../use/useDelay"
 import { getBoundingClientRect, hasUnit } from "../../../util"
 import Thead from "./_thead"
 import Tbody from "./_tbody"
+import Tfoot from "./_tfoot"
 import _props from "./_props"
 import { useTdWidth, useColumns, useFixed } from "./_use"
 import { createTbodyColumns, getSelectedKey } from "./_util"
-const MIN_WIDTH = 32//调整列宽时，最小允许的宽度
-const EMITS = ["update:modelValue", "update:keys", "after-checked",'update:highlight']
+const MIN_WIDTH = 32 //调整列宽时，最小允许的宽度
+const EMITS = [
+  "update:modelValue",
+  "update:keys",
+  "after-checked",
+  "update:highlight"
+]
 const TBODYEMITS = ["add", "delete"]
 type TbodyEmits = "add" | "delete"
 
 export default defineComponent({
-  components: { Thead, Tbody },
+  components: { Thead, Tbody, Tfoot },
   props: _props,
   emits: [...EMITS, ...TBODYEMITS],
   setup(props, { emit, attrs, slots }) {
-    const {start} = useDelay(5)
-    const resizeWidths = new Map<object,number>()
+    const { start } = useDelay(5)
+    const resizeWidths = new Map<object, number>()
     const ins = getCurrentInstance()
     console.time(String(ins?.uid))
     const resizing = ref(false)
@@ -41,8 +47,18 @@ export default defineComponent({
     const tableRoot = ref()
     const tableRootLeft = ref(0)
     const inner = ref()
-    const {leftLastElem,showLeftShadow,leftShadowPosition,showTopShadow,reset} = useFixed(
-      tableRoot,inner,computed(()=>props.leftFixed),computed(()=>props.rightFixed))
+    const {
+      leftLastElem,
+      showLeftShadow,
+      leftShadowPosition,
+      showTopShadow,
+      reset
+    } = useFixed(
+      tableRoot,
+      inner,
+      computed(() => props.leftFixed),
+      computed(() => props.rightFixed)
+    )
     const innerProps = computed(() => {
       let o: any = {
         ref: inner,
@@ -60,17 +76,7 @@ export default defineComponent({
         style: {
           height: props.height,
           maxHeight: props.maxHeight
-        },
-        // onScroll:(e:any) => {
-        //   start(()=> {
-        //     const left = e.target.scrollLeft
-        //     if(left>0) {
-        //       showLeftShadow.value = true
-        //     }else {
-        //       showLeftShadow.value=false
-        //     }
-        //   })
-        // }
+        }
       }
       return o
     })
@@ -87,6 +93,20 @@ export default defineComponent({
       }))
     )
     const tbodyColumns = computed(() => createTbodyColumns(finalColumns.value))
+    const hasSum = computed(() => {
+      let has = false
+      let i = 0
+      let len = tbodyColumns.value.length
+      while (i < len) {
+        if (tbodyColumns.value[i].sum !== false) {
+          has = true
+          break
+        }
+        i++
+      }
+      return has
+    })
+
     const theadProps = computed(() => {
       let o: any = {
         columns: finalColumns.value,
@@ -115,8 +135,12 @@ export default defineComponent({
       }
       return o
     })
+    const tfootProps = computed(() => {
+      let o: any = {}
+      return o
+    })
 
-    const {tdWidths} = useTdWidth(
+    const { tdWidths } = useTdWidth(
       computed(() => props.autoWidth),
       inner,
       tbodyColumns
@@ -153,14 +177,14 @@ export default defineComponent({
       afterChecked()
     })
     //高亮
-    provide('highlight',readonly(computed(()=>props.highlight)))
-    provide('toggleHighlight',(v:number|string)=> {
-      emit('update:highlight',v)
+    provide("highlight", readonly(computed(() => props.highlight)))
+    provide("toggleHighlight", (v: number | string) => {
+      emit("update:highlight", v)
     })
     //左右固定列
-    provide('leftFixed',readonly(computed(()=>props.leftFixed)))
-    provide('rightFixed',readonly(computed(()=>props.rightFixed)))
-    provide('setLeftShadowPosition',(td:HTMLElement,left:number)=> {
+    provide("leftFixed", readonly(computed(() => props.leftFixed)))
+    provide("rightFixed", readonly(computed(() => props.rightFixed)))
+    provide("setLeftShadowPosition", (td: HTMLElement, left: number) => {
       leftLastElem.value = td
       leftShadowPosition.value = left
       // console.log(left)
@@ -168,51 +192,54 @@ export default defineComponent({
 
     //列宽调整
     //给组件根节点添加k-no-select的class，以免在拖拽时选择了文本
-    provide('beforeResize',(tdElem:HTMLElement)=> {
+    provide("beforeResize", (tdElem: HTMLElement) => {
       resizing.value = true
-      tableRoot.value.classList.add('k-no-select')
+      tableRoot.value.classList.add("k-no-select")
       //记录tableRoot在页面中的left
       tableRootLeft.value = getBoundingClientRect(tableRoot.value).left
       const tdRight = getBoundingClientRect(tdElem).right
-      const x = tdRight??0
-      resizeLineLeft.value = x -1 - tableRootLeft.value
+      const x = tdRight ?? 0
+      resizeLineLeft.value = x - 1 - tableRootLeft.value
       oldResizeLineLeft.value = resizeLineLeft.value
     })
-    provide('inResizing',(colIndex:number,dx:number = 0)=> {
+    provide("inResizing", (colIndex: number, dx: number = 0) => {
       resizeLineLeft.value = dx + oldResizeLineLeft.value
     })
     //dWidth是增或减的宽
-    provide('afterResize',(colIndex:number, dWidth:number)=> {
+    provide("afterResize", (colIndex: number, dWidth: number) => {
       // const old_width = resizeWidths.value[colIndex]
       resizing.value = false
-      tableRoot.value.classList.remove('k-no-select')
+      tableRoot.value.classList.remove("k-no-select")
       resizeLineLeft.value = -10000
-      if(dWidth===0) { return }
+      if (dWidth === 0) {
+        return
+      }
       const k = tbodyColumns.value[colIndex]
-      const oldWidth = resizeWidths.has(k)?resizeWidths.get(k):tdWidths.value[colIndex]
+      const oldWidth = resizeWidths.has(k)
+        ? resizeWidths.get(k)
+        : tdWidths.value[colIndex]
       let newWidth = oldWidth + dWidth
-      if(newWidth<=MIN_WIDTH) {
+      if (newWidth <= MIN_WIDTH) {
         newWidth = MIN_WIDTH
       }
       resizeWidths.set(tbodyColumns.value[colIndex], newWidth)
       //重新定位固定列的阴影位置
-      if(!!props.leftFixed) {
-        let n = Number(props.leftFixed)??0
-        if(n>0 && colIndex<n) {
+      if (!!props.leftFixed) {
+        let n = Number(props.leftFixed) ?? 0
+        if (n > 0 && colIndex < n) {
           reset()
         }
       }
     })
 
     function colGroup(widths: number[]) {
-      
       return (
         <colgroup>
-          {widths.map((w: any,i:number) => {
+          {widths.map((w: any, i: number) => {
             const k = tbodyColumns.value[i]
             const has = resizeWidths.has(k)
 
-            const ww = has?resizeWidths.get(k):w
+            const ww = has ? resizeWidths.get(k) : w
             return <col style={{ width: ww + "px" }} />
           })}
         </colgroup>
@@ -304,7 +331,7 @@ export default defineComponent({
       },
       { deep: true, immediate: true }
     )
-    watch(tbodyColumns,()=> {
+    watch(tbodyColumns, () => {
       nextTick(reset)
     })
 
@@ -314,13 +341,14 @@ export default defineComponent({
     return () => {
       const thead = <Thead {...theadProps.value}></Thead>
       const tbody = <Tbody {...tbodyProps.value}></Tbody>
+
       return (
         <div class="k-sheet-container" ref={tableRoot}>
           <div {...innerProps.value}>
             <div class="k-sheet-thead">
               <table class="k-sheet">
                 {colGroup(tdWidths.value)}
-                <thead >{thead}</thead>
+                <thead>{thead}</thead>
               </table>
             </div>
             <div class="k-sheet-tbody">
@@ -329,20 +357,32 @@ export default defineComponent({
                 <tbody>{tbody}</tbody>
               </table>
             </div>
+            {hasSum.value && (
+              <div class="k-sheet-tfoot">
+                <table class="k-sheet">
+                  {colGroup(tdWidths.value)}
+                  <tfoot>
+                    <Tfoot {...tfootProps.value} />
+                  </tfoot>
+                </table>
+              </div>
+            )}
           </div>
-          <div class="k-sheet-resize-line" 
+          <div
+            class="k-sheet-resize-line"
             v-show={resizing.value}
-            style={{left:resizeLineLeft.value+'px'}}></div>
-          <div class="k-sheet-left-fixed-shadow-line"
+            style={{ left: resizeLineLeft.value + "px" }}
+          ></div>
+          <div
+            class="k-sheet-left-fixed-shadow-line"
             v-show={!!props.leftFixed && showLeftShadow.value}
-            style={{left:leftShadowPosition.value+'px'}} />
+            style={{ left: leftShadowPosition.value + "px" }}
+          />
         </div>
       )
     }
   }
 })
-
-
 
 // 两个数组
 function isSameArray(arr1: any[], arr2: any[]) {
