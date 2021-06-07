@@ -5,18 +5,14 @@ import {
   ref,
   watch,
   onUpdated,
-  nextTick
+  nextTick,
+  onMounted
 } from "vue"
 import { isObject, isFunction } from "@vue/shared"
-import {
-  toPX,
-  getScrollbarWidth,
-  hasUnit,
-  getUnit,
-  getStyle
-} from "../../../util"
+import { toPX, hasUnit, getUnit, getStyle } from "../../../util"
 import useEvent from "../../../use/useEvent"
 import useDelay from "../../../use/useDelay"
+import useScroll from "../../../use/useScroll"
 
 const PRESET_INDEX = "__preset_index__"
 const PRESET_CHECKBOX = "__preset_checkbox__"
@@ -158,14 +154,19 @@ export function useFixed(
   tableRoot: Ref,
   innerTable: Ref,
   leftFixed: ComputedRef,
-  rightFixed: ComputedRef
+  rightFixed: ComputedRef,
+  hasSum: Ref
 ) {
+  const { scrollTop, scrollBottom, scrollLeft, scrollRight } = useScroll(
+    innerTable
+  )
   const showTopShadow = ref(false)
+  const showBottomShadow = ref(false)
+  const showLeftShadow = ref(false)
+  const showRightShadow = ref(false)
   const leftOffset = ref<number[]>([])
   const leftShadowPosition = ref(-1000)
-  const leftLastElem = ref<HTMLElement>()
   const rightOffset = ref<number[]>([])
-  const showLeftShadow = ref(false)
   const leftNumber = computed(() => {
     if (leftFixed.value) {
       return Number(leftFixed.value)
@@ -188,45 +189,41 @@ export function useFixed(
         ".k-sheet-thead>.k-sheet>thead>tr>th.k-cell--sticky"
       )
     ]
+    const footThs = hasSum.value
+      ? [
+          ...scrollTarget.querySelectorAll(
+            ".k-sheet-tfoot>.k-sheet>tfoot>tr>th.k-cell--sticky"
+          )
+        ]
+      : []
+
     const tds = trs.length ? [...trs[0].querySelectorAll("td")] : []
     const leftTds = tds.slice(0, leftNumber.value)
-    return { trs, leftTds, ths }
+    const rightTds = tds.slice(-1, rightNumber.value)
+    return { trs, leftTds, rightTds, ths, footThs }
   }
   function reset() {
     leftOffset.value = []
-    const { trs, leftTds, ths } = getTdsAndThs()
+    const { trs, leftTds, rightTds, ths, footThs } = getTdsAndThs()
     trs.forEach((tr: HTMLElement, i: number) => {
-      const tds = [...tr.querySelectorAll("td")].slice(0, leftNumber.value)
-      tds.forEach((td) => {
+      leftTds.forEach((td) => {
         td.classList.remove("k-cell--sticky")
         td.style.removeProperty("left")
+      })
+      rightTds.forEach((td) => {
+        td.classList.remove("k-cell--sticky")
+        td.style.removeProperty("right")
       })
     })
     nextTick(setFixed)
   }
   function setFixed(e?: any) {
     const scrollTarget = e ? (e.target as HTMLElement) : innerTable.value
-    if (scrollTarget.scrollLeft > 0) {
+    if (scrollLeft.value > 0) {
       showLeftShadow.value = true
       if (leftNumber.value !== 0 || rightNumber.value !== 0) {
-        const { trs, leftTds, ths } = getTdsAndThs()
-        // const ths = [
-        //   ...scrollTarget.querySelectorAll(
-        //     ".k-sheet-thead>.k-sheet>thead>tr>th.k-cell--sticky"
-        //   )
-        // ]
-        // const trs = [
-        //   ...scrollTarget.querySelectorAll(".k-sheet-tbody>.k-sheet>tbody>tr")
-        // ]
-        const tds = trs.length ? [...trs[0].querySelectorAll("td")] : []
-
-        // const leftTds = tds.slice(0, leftNumber.value)
-        const rightTds = tds
-          .reverse()
-          .slice(0, rightNumber.value)
-          .reverse()
+        const { trs, leftTds, rightTds, ths, footThs } = getTdsAndThs()
         if (leftTds.length) {
-          leftLastElem.value = leftTds.slice(-1)[0]
           if (leftOffset.value.length === 0) {
             let leftPosition = 0
             leftOffset.value = leftTds.map(
@@ -238,7 +235,7 @@ export function useFixed(
                 return l
               }
             )
-            leftShadowPosition.value = leftPosition
+            leftShadowPosition.value = leftPosition - 1
           }
         }
         if (rightTds.length) {
@@ -259,18 +256,23 @@ export function useFixed(
         })
         ths.forEach((th: HTMLElement, i: number) => {
           th.style.left = leftOffset.value[i] + "px"
+          if (hasSum.value && footThs.length) {
+            footThs[i].style.left = th.style.left
+          }
         })
       }
     } else {
       showLeftShadow.value = false
     }
-    showTopShadow.value = scrollTarget.scrollTop > 0
+    showTopShadow.value = scrollTop.value > 0
+    showBottomShadow.value = scrollBottom.value > 0
   }
   useEvent(innerTable, "scroll", setFixed)
-  // onUpdated(reset)
+  onMounted(setFixed)
   return {
-    leftLastElem,
     showLeftShadow,
+    showRightShadow,
+    showBottomShadow,
     showTopShadow,
     leftShadowPosition,
     reset

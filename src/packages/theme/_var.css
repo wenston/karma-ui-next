@@ -114,6 +114,8 @@
   --k-sheet-td-border-color: var(--k-color-line-6);
   --k-sheet-td-padding: 8px var(--k-padding-x);
   --k-sheet-td-narrow-padding: 3px;
+  --k-sheet-tfoot-background-color: white;
+  --k-sheet-tfoot-th-border-color: var(--k-color-line-6);
 }
 html[data-theme="night"] {
   &:root {

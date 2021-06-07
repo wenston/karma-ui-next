@@ -22,7 +22,7 @@
         :type="hasIndex?'primary':'default'">带序号</Bouton> -->
     </div>
 
-    <Sheet :data='D.slice(0,75)'
+    <Sheet :data='D.slice(0,50)'
       :columns="columns"
       :autoWidth="isAuto"
       :stripe="stripe"
@@ -37,7 +37,8 @@
       :can-highlight="h"
       highlightKey="BillCode"
       v-model:highlight="hValue"
-      leftFixed="3"
+      leftFixed="2"
+      rightFixed="3"
       @after-checked="afterChecked"
       @add="toAdd"
       @delete="toDelete"
@@ -101,8 +102,9 @@ import Radio from "../packages/components/radio"
 import Confirm from "../packages/components/confirm"
 import Icon from "../packages/components/icon"
 import Overlay from "../packages/components/overlay"
+import Tooltip from '../packages/components/tooltip'
 export default defineComponent({
-  components: { Sheet, Bouton, Checkbox, Radio, Icon, Overlay },
+  components: { Sheet, Bouton, Checkbox, Radio, Icon, Overlay, Tooltip },
   setup() {
     const a = ref(0)
     const D = ref<any[]>(Data)
@@ -131,14 +133,14 @@ export default defineComponent({
           field: "BillCode",
           style: { width: "12em" },
           //是否锁定该列的宽度，只在autoWidth为true时有用，虽然锁定，但仍然可以通过拖拽调整宽度！
-          lockWidth: true,
+          lockWidth: true
         },
         {
           name: "状态",
           field: "Status",
           style: { width: 70 },
           slot: "status",
-          lockWidth: true,
+          lockWidth: true
         },
         {
           name: "供应商",
@@ -164,7 +166,7 @@ export default defineComponent({
               <span style="color:var(--k-color-danger)">{row.SubTotal}</span>
             )
           },
-          sum: true,
+          sum: false,
         },
         {
           name: "收货单位",
@@ -210,13 +212,13 @@ export default defineComponent({
         //   name: "制单人",
         //   field: "CreatedUserName",
         // },
-        // {
-        //   name: "制单时间",
-        // },
-        // {
-        //   name: "备注",
-        //   field: "Description",
-        // },
+        {
+          name: "制单时间",
+        },
+        {
+          name: "备注",
+          field: "Description",
+        },
       ]
     }
 

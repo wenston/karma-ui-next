@@ -1,4 +1,4 @@
-import { computed, defineComponent, Ref, inject, ComputedRef } from "vue"
+import { computed, defineComponent, ref, Ref, inject, ComputedRef } from "vue"
 import Cell from "./_cell"
 import Icon from "../../icon"
 import { IS_PRESET, IS_CHECKBOX, IS_INDEX, IS_RADIO } from "./_use"
@@ -31,6 +31,7 @@ export default defineComponent({
     const hasKey = inject("hasKey") as Function
     const highlight = inject("highlight") as ComputedRef<string | number>
     const toggleHighlight = inject("toggleHighlight") as Function
+    const total = ref<number[]>([])
     const pi = computed(() => (props.pageIndex ? Number(props.pageIndex) : 0))
     const ps = computed(() => (props.pageSize ? Number(props.pageSize) : 0))
     const hasAddAction = computed(() => {
@@ -148,6 +149,7 @@ export default defineComponent({
 
       return <Cell {...tdProps}>{cont}</Cell>
     }
+
     function renderTr(row: any, index: number) {
       const trProps: any = {}
       let checkValue = ""
@@ -192,6 +194,7 @@ export default defineComponent({
       return <tr {...trProps}>{tds}</tr>
     }
     function renderBody() {
+      total.value = []
       return (props.data ?? []).map((row, i) => {
         return renderTr(row, i)
       })

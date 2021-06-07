@@ -19,7 +19,6 @@ export default defineComponent({
     const isCheckedAll = inject("isCheckedAll") as Ref<number>
     const setCheckAll = inject("setCheckAll") as Function
 
-    const leftFixed = inject('leftFixed') as ComputedRef<string|number>
     const _leftFixed = computed(()=>{
       const l = inject('leftFixed') as ComputedRef<string|number>
       if(l.value) {
@@ -27,9 +26,6 @@ export default defineComponent({
       }
       return 0
     })
-    const rightFixed = inject('rightFixed') as ComputedRef<string|number>
-    const setLeftShadowPosition = inject('setLeftShadowPosition') as Function
-    const stickyLeft = ref(0)
     
     function getRowspan(obj: any, max: number) {
       if (obj.children && obj.children.length !== 0) {

@@ -34,7 +34,6 @@ export default defineComponent({
   props: _props,
   emits: [...EMITS, ...TBODYEMITS],
   setup(props, { emit, attrs, slots }) {
-    const { start } = useDelay(5)
     const resizeWidths = new Map<object, number>()
     const ins = getCurrentInstance()
     console.time(String(ins?.uid))
@@ -47,18 +46,6 @@ export default defineComponent({
     const tableRoot = ref()
     const tableRootLeft = ref(0)
     const inner = ref()
-    const {
-      leftLastElem,
-      showLeftShadow,
-      leftShadowPosition,
-      showTopShadow,
-      reset
-    } = useFixed(
-      tableRoot,
-      inner,
-      computed(() => props.leftFixed),
-      computed(() => props.rightFixed)
-    )
     const innerProps = computed(() => {
       let o: any = {
         ref: inner,
@@ -70,7 +57,8 @@ export default defineComponent({
             "k-sheet--stripe": props.stripe,
             "k-sheet--hover": props.hover,
             "k-sheet--has-action": props.hasAction,
-            "k-sheet--has-top-shadow": showTopShadow.value
+            "k-sheet--has-top-shadow": showTopShadow.value,
+            "k-sheet--has-bottom-shadow": showBottomShadow.value
           }
         ],
         style: {
@@ -98,14 +86,29 @@ export default defineComponent({
       let i = 0
       let len = tbodyColumns.value.length
       while (i < len) {
-        if (tbodyColumns.value[i].sum !== false) {
+        const col = tbodyColumns.value[i]
+        if (col.sum !== false && col.sum!==undefined) {
           has = true
           break
         }
         i++
       }
+      console.log(has)
       return has
     })
+    const {
+      showLeftShadow,
+      leftShadowPosition,
+      showTopShadow,
+      showBottomShadow,
+      reset
+    } = useFixed(
+      tableRoot,
+      inner,
+      computed(() => props.leftFixed),
+      computed(() => props.rightFixed),
+      hasSum
+    )
 
     const theadProps = computed(() => {
       let o: any = {
@@ -136,7 +139,11 @@ export default defineComponent({
       return o
     })
     const tfootProps = computed(() => {
-      let o: any = {}
+      let o: any = {
+        hasSum: hasSum.value,
+        columns: tbodyColumns.value,
+        data: props.data
+      }
       return o
     })
 
@@ -184,11 +191,6 @@ export default defineComponent({
     //左右固定列
     provide("leftFixed", readonly(computed(() => props.leftFixed)))
     provide("rightFixed", readonly(computed(() => props.rightFixed)))
-    provide("setLeftShadowPosition", (td: HTMLElement, left: number) => {
-      leftLastElem.value = td
-      leftShadowPosition.value = left
-      // console.log(left)
-    })
 
     //列宽调整
     //给组件根节点添加k-no-select的class，以免在拖拽时选择了文本
