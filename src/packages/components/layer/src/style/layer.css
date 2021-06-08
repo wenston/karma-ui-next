@@ -167,18 +167,18 @@
   /* transform: scale(0, 0); */
 }
 .k-layer-size-transition-enter-active {
-  transition: left var(--k-transition-enter) var(--k-cubic-bezier),
-    top var(--k-transition-enter) var(--k-cubic-bezier),
-    width var(--k-transition-enter) var(--k-cubic-bezier),
-    height var(--k-transition-enter) var(--k-cubic-bezier),
-    opacity var(--k-transition-enter) var(--k-cubic-bezier),
-    transform var(--k-transition-leave) var(--k-cubic-bezier);
+  transition: left var(--k-transition-slow) var(--k-cubic-bezier-quick),
+    top var(--k-transition-slow) var(--k-cubic-bezier-quick),
+    width var(--k-transition-slow) var(--k-cubic-bezier-quick),
+    height var(--k-transition-slow) var(--k-cubic-bezier-quick),
+    opacity var(--k-transition-slow) var(--k-cubic-bezier-quick),
+    transform var(--k-transition-slow) var(--k-cubic-bezier-quick);
 }
 .k-layer-size-transition-leave-active {
-  transition: left var(--k-transition-leave) var(--k-cubic-bezier),
-    top var(--k-transition-leave) var(--k-cubic-bezier),
-    width var(--k-transition-leave) var(--k-cubic-bezier),
-    height var(--k-transition-leave) var(--k-cubic-bezier),
-    opacity var(--k-transition-leave) var(--k-cubic-bezier),
-    transform var(--k-transition-leave) var(--k-cubic-bezier);
+  transition: left var(--k-transition-leave) var(--k-cubic-bezier-quick),
+    top var(--k-transition-leave) var(--k-cubic-bezier-quick),
+    width var(--k-transition-leave) var(--k-cubic-bezier-quick),
+    height var(--k-transition-leave) var(--k-cubic-bezier-quick),
+    opacity var(--k-transition-leave) var(--k-cubic-bezier-quick),
+    transform var(--k-transition-leave) var(--k-cubic-bezier-quick);
 }

@@ -2,7 +2,8 @@
   --k-radius: 4px;
   --k-gap: 15px;
   --k-color-background: white;
-  --k-cubic-bezier: cubic-bezier(0.4, 1, 0, 1);
+  --k-cubic-bezier-quick: cubic-bezier(0.4, 1, 0, 1);
+  --k-cubic-bezier: cubic-bezier(0.01, 0.7, 0.53, 1);
   --k-color-primary: rgb(69, 145, 252);
   --k-color-primary-05: rgb(162 200 253);
   --k-color-primary-02: rgb(218 233 254);
@@ -42,8 +43,9 @@
   --k-padding-x: 12px;
 
   --k-transition-quick: 0.2s;
+  --k-transition-slow: 0.8s;
   --k-transition: 0.35s;
-  --k-transition-enter: 0.8s;
+  --k-transition-enter: 0.5s;
   --k-transition-leave: 0.25s;
 
   --k-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
@@ -80,7 +82,7 @@
 
   --k-layer-arrow-size: 5px;
   --k-layer-enter-transition: transform var(--k-transition-enter)
-      var(--k-cubic-bezier),
+      var(--k-cubic-bezier-quick),
     opacity var(--k-transition-enter) var(--k-cubic-bezier);
   --k-layer-leave-transition: transform var(--k-transition-leave)
       var(--k-cubic-bezier),
@@ -99,7 +101,7 @@
   --k-write-box-shadow: var(--k-input-box-shadow);
 
   --k-notice-box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  --k-notice-cubic-bezier: cubic-bezier(0.26, 0.28, 0, 1.36);
+  --k-notice-cubic-bezier: cubic-bezier(0.01, 0.7, 0.1, 1.2);
 
   --k-pagination-size: var(--k-height);
 

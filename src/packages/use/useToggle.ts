@@ -31,6 +31,7 @@ export default function useToggle(refData: ToggleData, refValue: ToggleValue) {
     const { index: currentIndex } = get()
     const nextIndex = (currentIndex + 1) % len
     set({ index: nextIndex })
+    return get()
   }
 
   return {

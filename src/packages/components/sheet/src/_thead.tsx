@@ -1,4 +1,4 @@
-import { defineComponent, ref, inject, Ref,ComputedRef,computed } from "vue"
+import { defineComponent, ref, inject, Ref,ComputedRef,computed, reactive } from "vue"
 import Cell from "./_cell"
 import Checkbox from "../../checkbox"
 import Radio from "../../radio"
@@ -153,6 +153,14 @@ export default defineComponent({
             resizeWidth: props.resize && colspan == 1,
             colIndex: colspan == 1 ? colIndex : undefined,
             tag: "th",
+            sorter: (()=>{
+              let b = undefined
+              if('field' in col && 'sorter' in col) {
+                b = col.sorter
+              }
+              return b
+            })(),
+            col,
             // sorter: (() => {
             //   let b = true;
             //   if (col.field && this.currentSorterField == col.field) {

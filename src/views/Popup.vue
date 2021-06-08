@@ -130,17 +130,17 @@ export default {
         })
       },
       beforeOk() {
-        return new Promise((res, rej) => {
-          setTimeout(() => {
-            const n = Math.random()
-            if (n > 0.5) {
-              //处理工作结束，关闭popup
-              res()
-            } else {
-              rej("呵呵，没有关闭这个弹框")
-            }
-          }, 100)
-        })
+        return Promise.resolve()
+        // return new Promise((res, rej) => {
+        //   setTimeout(() => {
+        //     const n = Math.random()
+        //     if (n > 0.5) {
+        //       res()
+        //     } else {
+        //       rej("呵呵，没有关闭这个弹框")
+        //     }
+        //   }, 100)
+        // })
       },
       afterCancel() {
         console.log("after cancel")

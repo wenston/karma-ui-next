@@ -12,6 +12,7 @@ import {
   nextTick
 } from "vue"
 import useDelay from "../../../use/useDelay"
+import useToggle from '../../../use/useToggle'
 import { getBoundingClientRect, hasUnit } from "../../../util"
 import Thead from "./_thead"
 import Tbody from "./_tbody"
@@ -24,10 +25,15 @@ const EMITS = [
   "update:modelValue",
   "update:keys",
   "after-checked",
-  "update:highlight"
+  "update:highlight",
+  "sort"
 ]
 const TBODYEMITS = ["add", "delete"]
 type TbodyEmits = "add" | "delete"
+interface SorterType {
+  field: string,
+  sorter: boolean | number
+}
 
 export default defineComponent({
   components: { Thead, Tbody, Tfoot },
@@ -40,6 +46,8 @@ export default defineComponent({
     const resizing = ref(false)
     const resizeLineLeft = ref(-10000)
     const oldResizeLineLeft = ref(-10000)
+    const currentSorter = reactive<SorterType>({field:'',sorter:true})
+    const {set,get,toggle} = useToggle([true,0,1],ref(currentSorter.sorter))
 
     const isCheckedAll = ref(0)
     const selectedKeys = ref<any[]>([])
@@ -236,6 +244,22 @@ export default defineComponent({
           reset()
         }
       }
+    })
+
+    //排序
+    provide('currentSorter',readonly(currentSorter))
+    provide('updateSorter',(field:string)=>{
+      if(field===currentSorter.field) {
+        currentSorter.sorter = toggle().item
+
+      }else{
+        currentSorter.field = field
+        set({item: 0})
+        currentSorter.sorter = get().item
+
+      }
+      // console.log(currentSorter)
+      emit('sort',currentSorter)
     })
 
     function colGroup(widths: number[]) {

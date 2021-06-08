@@ -75,6 +75,49 @@
         z-index: 1;
       }
 
+      & .k-cell-sorter {
+        position: absolute;
+        right: 5px;
+        top: 0;
+        bottom: 0;
+        width: 20px;
+        height: 24px;
+        display: flex;
+        border-radius: calc(2 * var(--k-radius));
+        flex-direction: column;
+        margin: auto;
+        cursor: pointer;
+        transition: background-color var(--k-transition-quick);
+        & .k-cell-sorter-icon {
+          color: var(--k-color-5);
+          display: inline-flex;
+          position: absolute;
+          font-size: 19px;
+          width: 19px;
+          height: 21px;
+        }
+        &:hover {
+          background-color: var(--k-sheet-thead-th-border-color);
+          & .k-cell-sorter-icon {
+            color: var(--k-color-4);
+          }
+        }
+        & .k-cell-sorter-up {
+          transform: rotate(180deg);
+          top: -3px;
+          left: 0px;
+          &.k-cell-sorter--0 {
+            color: var(--k-color-primary);
+          }
+        }
+        & .k-cell-sorter-down {
+          top: 4px;
+          &.k-cell-sorter--1 {
+            color: var(--k-color-primary);
+          }
+        }
+      }
+
       &:hover {
       }
     }
@@ -340,5 +383,8 @@
   }
   th.k-cell--sticky {
     box-shadow: -1px -1px var(--k-sheet-thead-th-border-color) !important;
+  }
+  .k-cell-sorter-up {
+    left: 0.8px !important;
   }
 }

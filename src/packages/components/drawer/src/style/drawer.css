@@ -3,8 +3,8 @@
 .k-drawer-transition--top-enter-active,
 .k-drawer-transition--bottom-enter-active,
 .k-drawer-transition--center-enter-active {
-  transition: transform var(--k-transition-enter) var(--k-cubic-bezier),
-    opacity var(--k-transition-enter) var(--k-cubic-bezier);
+  transition: transform var(--k-transition-enter) var(--k-cubic-bezier-quick),
+    opacity var(--k-transition-enter) var(--k-cubic-bezier-quick);
 }
 .k-drawer-transition--right-leave-active,
 .k-drawer-transition--left-leave-active,

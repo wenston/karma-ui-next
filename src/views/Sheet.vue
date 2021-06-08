@@ -38,10 +38,11 @@
       highlightKey="BillCode"
       v-model:highlight="hValue"
       leftFixed="2"
-      rightFixed="3"
+      rightFixed="1"
       @after-checked="afterChecked"
       @add="toAdd"
       @delete="toDelete"
+      @sort="toSort"
       height="calc(100vh - 120px)">
       <template #status="{row}">
         <template v-if="row.Status===11">状态11</template>
@@ -93,7 +94,7 @@
   </div>
 </template>
 <script lang="tsx">
-import { defineComponent, ref, computed, watch, onMounted } from "vue"
+import { defineComponent, ref, computed, watch, onMounted,useCssModule } from "vue"
 import Sheet from "../packages/components/sheet"
 import Data from "./test-data/big-data"
 import Bouton from "../packages/components/bouton"
@@ -103,9 +104,12 @@ import Confirm from "../packages/components/confirm"
 import Icon from "../packages/components/icon"
 import Overlay from "../packages/components/overlay"
 import Tooltip from '../packages/components/tooltip'
+import Notice from "../packages/components/notice"
+
 export default defineComponent({
   components: { Sheet, Bouton, Checkbox, Radio, Icon, Overlay, Tooltip },
   setup() {
+    const css = useCssModule('css')
     const a = ref(0)
     const D = ref<any[]>(Data)
     const isAuto = ref(true)
@@ -151,10 +155,11 @@ export default defineComponent({
           name: "数量",
           field: "ProCount",
           sum: true,
-          style: { width: 50 },
+          style: { width: 59 },
           lockWidth: true,
+          sorter: true,
         },
-        { name: "单价", field: "ProPrice", style: { width: 80 } },
+        { name: "单价", field: "ProPrice", style: { width: 80 } ,sorter: true},
         {
           name: "金额",
           field: "SubTotal",
@@ -280,6 +285,33 @@ export default defineComponent({
           },
         })
       },
+      toSort({field,sorter}:any) {
+        console.log(field,sorter)
+        Notice.open({
+          placement: 'top-end',
+          content(close:any) {
+            const btnProps:any = {
+              onClick: close,
+              href: 'javascript:;',
+              style: {color: 'var(--k-color-primary)','text-decoration':'none'}
+            }
+            return (
+              <div class={css.outer}>
+                <div class={css.flex}>
+                  当前排序列：{field}，排序类型：{sorter}
+                  <br />
+                  说明：0是升序，1是降序，true为默认
+                  <br />
+                  然后对数据进行处理，或交给后台处理数据
+                </div>
+                <div style="margin-top:20px;float:right;">
+                  <a  {...btnProps}>我知道了</a>
+                </div>
+              </div>
+            )
+          }
+        })
+      }
     }
   },
 })
@@ -289,5 +321,16 @@ export default defineComponent({
   max-width: 150px;
   color: var(--k-color-3);
   font-size: 12px;
+}
+.outer {
+  padding: 15px;
+  /* background-color: var(--k-color-2); */
+  border-radius: var(--k-radius);
+  overflow: hidden;
+}
+.flex {
+  color: var(--k-color-3);
+  font-size: 14px;
+  line-height: 1.5;
 }
 </style>
