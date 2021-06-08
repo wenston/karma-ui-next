@@ -22,7 +22,7 @@
         :type="hasIndex?'primary':'default'">带序号</Bouton> -->
     </div>
 
-    <Sheet :data='D.slice(0,50)'
+    <Sheet :data='D.slice(0,80)'
       :columns="columns"
       :autoWidth="isAuto"
       :stripe="stripe"
@@ -208,16 +208,20 @@ export default defineComponent({
         //   name: "经手人",
         //   field: "Handler",
         // },
-        // {
-        //   name: "制单人",
-        //   field: "CreatedUserName",
-        // },
+        {
+          name: "制单人",
+          field: "CreatedUserName",
+        },
         {
           name: "制单时间",
+          field: 'BillDate'
         },
         {
           name: "备注",
           field: "Description",
+          render:(r:any)=>{
+            return r.Description||'默认的一个备注'
+          }
         },
       ]
     }

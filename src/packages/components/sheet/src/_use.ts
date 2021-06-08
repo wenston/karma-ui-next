@@ -9,7 +9,13 @@ import {
   onMounted
 } from "vue"
 import { isObject, isFunction } from "@vue/shared"
-import { toPX, hasUnit, getUnit, getStyle } from "../../../util"
+import {
+  toPX,
+  hasUnit,
+  getUnit,
+  getStyle,
+  getBoundingClientRect
+} from "../../../util"
 import useEvent from "../../../use/useEvent"
 import useDelay from "../../../use/useDelay"
 import useScroll from "../../../use/useScroll"
@@ -157,16 +163,21 @@ export function useFixed(
   rightFixed: ComputedRef,
   hasSum: Ref
 ) {
-  const { scrollTop, scrollBottom, scrollLeft, scrollRight } = useScroll(
-    innerTable
-  )
+  const {
+    scrollTop,
+    scrollBottom,
+    scrollLeft,
+    scrollRight,
+    getScroll
+  } = useScroll(innerTable)
   const showTopShadow = ref(false)
   const showBottomShadow = ref(false)
   const showLeftShadow = ref(false)
   const showRightShadow = ref(false)
   const leftOffset = ref<number[]>([])
-  const leftShadowPosition = ref(-1000)
   const rightOffset = ref<number[]>([])
+  const leftShadowPosition = ref(-1000)
+  const rightShadowPosition = ref(-1000)
   const leftNumber = computed(() => {
     if (leftFixed.value) {
       return Number(leftFixed.value)
@@ -194,87 +205,194 @@ export function useFixed(
           ...scrollTarget.querySelectorAll(
             ".k-sheet-tfoot>.k-sheet>tfoot>tr>th.k-cell--sticky"
           )
-        ]
+        ].slice(0, leftNumber.value)
       : []
 
-    const tds = trs.length ? [...trs[0].querySelectorAll("td")] : []
-    const leftTds = tds.slice(0, leftNumber.value)
-    const rightTds = tds.slice(-1, rightNumber.value)
-    return { trs, leftTds, rightTds, ths, footThs }
+    const firstRowtds = trs.length ? [...trs[0].querySelectorAll("td")] : []
+    const firstRowLeftTds = firstRowtds.slice(0, leftNumber.value)
+    const firstRowRightTds = firstRowtds.slice(-1 * rightNumber.value)
+    let rightThs = []
+    let rightTfootThs = []
+    if (rightNumber.value > 0) {
+      rightThs = [
+        ...scrollTarget.querySelectorAll(
+          ".k-sheet-thead>.k-sheet>thead>tr>th.k-cell--sticky"
+        )
+      ].slice(rightNumber.value * -1)
+      rightTfootThs = [
+        ...scrollTarget.querySelectorAll(".k-sheet-tfoot>.k-sheet>tfoot>tr>th")
+      ].slice(rightNumber.value * -1)
+    }
+    return {
+      trs,
+      firstRowLeftTds,
+      firstRowRightTds,
+      ths,
+      footThs,
+      rightThs,
+      rightTfootThs
+    }
   }
   function reset() {
     leftOffset.value = []
-    const { trs, leftTds, rightTds, ths, footThs } = getTdsAndThs()
+    rightOffset.value = []
+    const {
+      trs,
+      firstRowLeftTds,
+      firstRowRightTds,
+      ths,
+      footThs
+    } = getTdsAndThs()
     trs.forEach((tr: HTMLElement, i: number) => {
-      leftTds.forEach((td) => {
-        td.classList.remove("k-cell--sticky")
-        td.style.removeProperty("left")
-      })
-      rightTds.forEach((td) => {
-        td.classList.remove("k-cell--sticky")
-        td.style.removeProperty("right")
-      })
+      if (i === 0) {
+        const tds = [...tr.querySelectorAll("td")]
+        const leftTds = tds.slice(0, leftNumber.value)
+        const rightTds = tds.slice(-1 * rightNumber.value)
+        leftTds.forEach((td: any) => {
+          td.classList.remove("k-cell--sticky")
+          td.style.removeProperty("left")
+        })
+        rightTds.forEach((td: any) => {
+          td.classList.remove("k-cell--sticky")
+          td.style.removeProperty("right")
+        })
+      }
     })
-    nextTick(setFixed)
+    // firstRowRightTds.forEach((td: HTMLElement, i: number) => {
+    //   td.classList.remove("k-cell--sticky")
+    //   td.style.removeProperty("right")
+    // })
+    // firstRowLeftTds.forEach((td: HTMLElement, i: number) => {
+    //   td.classList.remove("k-cell--sticky")
+    //   td.style.removeProperty("left")
+    // })
+    getScroll()
+    nextTick(() => {
+      setFixed()
+    })
   }
   function setFixed(e?: any) {
     const scrollTarget = e ? (e.target as HTMLElement) : innerTable.value
-    if (scrollLeft.value > 0) {
-      showLeftShadow.value = true
-      if (leftNumber.value !== 0 || rightNumber.value !== 0) {
-        const { trs, leftTds, rightTds, ths, footThs } = getTdsAndThs()
-        if (leftTds.length) {
-          if (leftOffset.value.length === 0) {
-            let leftPosition = 0
-            leftOffset.value = leftTds.map(
-              (td: HTMLElement, i: number, arr) => {
-                const l = td.offsetLeft + 1
-                if (i === arr.length - 1) {
-                  leftPosition = l + parseInt(getStyle(td, "width"))
+    if (leftNumber.value !== 0 || rightNumber.value !== 0) {
+      const {
+        trs,
+        firstRowLeftTds,
+        firstRowRightTds,
+        ths,
+        footThs,
+        rightThs,
+        rightTfootThs
+      } = getTdsAndThs()
+      if (leftNumber.value !== 0) {
+        if (scrollLeft.value > 0) {
+          if (firstRowLeftTds.length) {
+            //计算并设置左侧阴影的位置
+            if (leftOffset.value.length === 0) {
+              let leftPosition = 0
+              leftOffset.value = firstRowLeftTds.map(
+                (td: HTMLElement, i: number, arr) => {
+                  const l = td.offsetLeft + 1
+                  if (i === arr.length - 1) {
+                    leftPosition = l + parseInt(getStyle(td, "width"))
+                  }
+                  return l
                 }
-                return l
+              )
+              leftShadowPosition.value = leftPosition - 1
+            }
+            //设置左侧每一行中需要固定的那些列
+            trs.forEach((tr) => {
+              if (leftOffset.value.length) {
+                const tds = [...tr.querySelectorAll("td")].slice(
+                  0,
+                  leftOffset.value.length
+                )
+                tds.forEach((td: HTMLElement, i: number) => {
+                  td.style.left = leftOffset.value[i] + "px"
+                  td.classList.add("k-cell--sticky")
+                })
               }
-            )
-            leftShadowPosition.value = leftPosition - 1
-          }
-        }
-        if (rightTds.length) {
-          rightOffset.value = rightTds.map((td) => td.offsetLeft - 1)
-        }
-
-        trs.forEach((tr) => {
-          if (leftOffset.value.length) {
-            const tds = [...tr.querySelectorAll("td")].slice(
-              0,
-              leftOffset.value.length
-            )
-            tds.forEach((td: HTMLElement, i) => {
-              td.style.left = leftOffset.value[i] + "px"
-              td.classList.add("k-cell--sticky")
+            })
+            ths.forEach((th: HTMLElement, i: number) => {
+              th.style.left = leftOffset.value[i] + "px"
+              if (hasSum.value && footThs.length) {
+                if (footThs[i]) {
+                  footThs[i].style.left = th.style.left
+                }
+              }
             })
           }
-        })
-        ths.forEach((th: HTMLElement, i: number) => {
-          th.style.left = leftOffset.value[i] + "px"
-          if (hasSum.value && footThs.length) {
-            footThs[i].style.left = th.style.left
-          }
-        })
+          showLeftShadow.value = true
+        } else {
+          showLeftShadow.value = false
+        }
       }
-    } else {
-      showLeftShadow.value = false
+
+      if (rightNumber.value !== 0) {
+        if (scrollRight.value > 0) {
+          if (rightOffset.value.length === 0) {
+            let rightPosition = 0
+            let t = 0
+            rightOffset.value = firstRowRightTds
+              .reverse()
+              .map((td: HTMLElement, i: number, arr) => {
+                if (i === 0) {
+                  t += getBoundingClientRect(td).width
+                  return 1
+                } else {
+                  // if (i === arr.length - 1) {
+                  //   rightPosition = td.offsetLeft - scrollRight.value
+                  // }
+                  let right = t
+                  t += getBoundingClientRect(td).width
+                  return right + 1
+                }
+              })
+              .reverse()
+            // rightShadowPosition.value = rightPosition + 1
+          }
+          trs.forEach((tr, idx) => {
+            if (rightOffset.value.length) {
+              const tds = [...tr.querySelectorAll("td")].slice(
+                -1 * rightOffset.value.length
+              )
+              tds.forEach((td: HTMLElement, i: number) => {
+                td.style.right = rightOffset.value[i] + "px"
+                td.classList.add("k-cell--sticky")
+              })
+            }
+          })
+
+          rightThs.forEach((th: HTMLElement, i: number) => {
+            th.style.right = rightOffset.value[i] + "px"
+            th.classList.add("k-cell--sticky")
+            if (i === 0) {
+              rightShadowPosition.value = th.offsetLeft + 1 - scrollLeft.value
+            }
+          })
+          rightTfootThs.forEach((th: HTMLElement, i: number) => {
+            th.style.right = rightOffset.value[i] + "px"
+            th.classList.add("k-cell--sticky")
+          })
+          showRightShadow.value = true
+        } else {
+          showRightShadow.value = false
+        }
+      }
     }
+
     showTopShadow.value = scrollTop.value > 0
     showBottomShadow.value = scrollBottom.value > 0
   }
   useEvent(innerTable, "scroll", setFixed)
-  onMounted(setFixed)
+  onMounted(() => nextTick(setFixed))
   return {
     showLeftShadow,
     showRightShadow,
     showBottomShadow,
     showTopShadow,
     leftShadowPosition,
+    rightShadowPosition,
     reset
   }
 }

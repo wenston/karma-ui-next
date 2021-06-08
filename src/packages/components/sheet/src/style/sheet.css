@@ -267,10 +267,11 @@
   }
 
   & .k-sheet-resize-line,
-  & .k-sheet-left-fixed-shadow-line {
+  & .k-sheet-left-fixed-shadow-line,
+  & .k-sheet-right-fixed-shadow-line {
     position: absolute;
     height: 100%;
-    left: -1000px;
+    left: -10000px;
     top: 0;
     z-index: 2;
   }
@@ -294,13 +295,24 @@
       top: 0;
     }
   }
-  & .k-sheet-left-fixed-shadow-line {
+  & .k-sheet-left-fixed-shadow-line,
+  & .k-sheet-right-fixed-shadow-line {
     width: 15px;
     pointer-events: none;
-    left: -1000px;
+    left: -10000px;
     z-index: 2;
+  }
+  & .k-sheet-left-fixed-shadow-line {
     background-image: linear-gradient(
       90deg,
+      rgba(0, 0, 0, 0.07) 5%,
+      transparent 70%
+    );
+  }
+  & .k-sheet-right-fixed-shadow-line {
+    transform: translateX(-15px);
+    background-image: linear-gradient(
+      -90deg,
       rgba(0, 0, 0, 0.07) 5%,
       transparent 70%
     );
@@ -318,5 +330,15 @@
   &.k-sheet-check-icon--disabled {
     cursor: not-allowed;
     opacity: 0.35;
+  }
+}
+
+/* //火狐下的hack写法 */
+@-moz-document url-prefix() {
+  .k-cell--sticky {
+    box-shadow: -1px -1px var(--k-sheet-td-border-color) !important;
+  }
+  th.k-cell--sticky {
+    box-shadow: -1px -1px var(--k-sheet-thead-th-border-color) !important;
   }
 }

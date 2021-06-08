@@ -18,5 +18,5 @@ export default function useScroll(elem?: Ref) {
   useEvent(ref(window), "scroll", get)
   useEvent(ref(elem), "scroll", get)
   onMounted(get)
-  return { scrollTop, scrollLeft, scrollRight, scrollBottom }
+  return { scrollTop, scrollLeft, scrollRight, scrollBottom, getScroll: get }
 }

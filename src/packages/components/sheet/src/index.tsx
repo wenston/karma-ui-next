@@ -93,12 +93,14 @@ export default defineComponent({
         }
         i++
       }
-      console.log(has)
+      // console.log(has)
       return has
     })
     const {
       showLeftShadow,
+      showRightShadow,
       leftShadowPosition,
+      rightShadowPosition,
       showTopShadow,
       showBottomShadow,
       reset
@@ -112,6 +114,7 @@ export default defineComponent({
 
     const theadProps = computed(() => {
       let o: any = {
+        totalTbodyColumns: tbodyColumns.value.length,
         columns: finalColumns.value,
         indexContent: props.indexContent,
         checkKey: props.checkKey,
@@ -226,9 +229,10 @@ export default defineComponent({
       }
       resizeWidths.set(tbodyColumns.value[colIndex], newWidth)
       //重新定位固定列的阴影位置
-      if (!!props.leftFixed) {
+      if (!!props.leftFixed || !!props.rightFixed) {
         let n = Number(props.leftFixed) ?? 0
-        if (n > 0 && colIndex < n) {
+        let rightN = Number(props.rightFixed)??0
+        if ((n > 0 && colIndex < n) || rightN>0 ) {
           reset()
         }
       }
@@ -338,6 +342,10 @@ export default defineComponent({
     })
 
     onMounted(() => {
+      //刷新页面时，FF浏览器会记录滚动条的位置，故在此重置为0
+      //不管三七二十一，全部重置
+      inner.value.scrollLeft = 0
+      inner.value.scrollTop = 0
       console.timeEnd(String(ins?.uid))
     })
     return () => {
@@ -379,6 +387,11 @@ export default defineComponent({
             class="k-sheet-left-fixed-shadow-line"
             v-show={!!props.leftFixed && showLeftShadow.value}
             style={{ left: leftShadowPosition.value + "px" }}
+          />
+          <div
+            class="k-sheet-right-fixed-shadow-line"
+            v-show={!!props.rightFixed && showRightShadow.value}
+            style={{ left: rightShadowPosition.value + "px" }}
           />
         </div>
       )

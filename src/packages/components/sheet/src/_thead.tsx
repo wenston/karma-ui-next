@@ -7,6 +7,7 @@ import { IS_PRESET, IS_CHECKBOX, IS_INDEX, IS_RADIO } from "./_use"
 export default defineComponent({
   components: { Cell, Checkbox, Radio },
   props: {
+    totalTbodyColumns: {type:Number,default: 0},
     //columns是加工处理过的
     columns: Array,
     indexContent: [String, Object],
@@ -23,6 +24,13 @@ export default defineComponent({
       const l = inject('leftFixed') as ComputedRef<string|number>
       if(l.value) {
         return Number(l.value)
+      }
+      return 0
+    })
+    const _rightFixed = computed(()=>{
+      const r = inject('rightFixed') as ComputedRef<string|number>
+      if(r.value) {
+        return Number(r.value)
       }
       return 0
     })
@@ -156,7 +164,8 @@ export default defineComponent({
             // })()
 
             class: [
-              {'k-cell--sticky': _leftFixed.value>colIndex}
+              {'k-cell--sticky': _leftFixed.value>colIndex 
+              || _rightFixed.value>props.totalTbodyColumns - colIndex - 1}
               /* [
                       col.cellClass
                         ? this.$_get_td_class(null, null, col, { thead: true })
