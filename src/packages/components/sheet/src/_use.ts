@@ -385,6 +385,7 @@ export function useFixed(
     showBottomShadow.value = scrollBottom.value > 0
   }
   useEvent(innerTable, "scroll", setFixed)
+  useEvent(ref(window), "resize", setFixed)
   onMounted(() => nextTick(setFixed))
   return {
     showLeftShadow,

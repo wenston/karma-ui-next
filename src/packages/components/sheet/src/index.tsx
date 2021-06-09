@@ -41,8 +41,8 @@ export default defineComponent({
   emits: [...EMITS, ...TBODYEMITS],
   setup(props, { emit, attrs, slots }) {
     const resizeWidths = new Map<object, number>()
-    const ins = getCurrentInstance()
-    console.time(String(ins?.uid))
+    // const ins = getCurrentInstance()
+    // console.time(String(ins?.uid))
     const resizing = ref(false)
     const resizeLineLeft = ref(-10000)
     const oldResizeLineLeft = ref(-10000)
@@ -370,7 +370,7 @@ export default defineComponent({
       //不管三七二十一，全部重置
       inner.value.scrollLeft = 0
       inner.value.scrollTop = 0
-      console.timeEnd(String(ins?.uid))
+      // console.timeEnd(String(ins?.uid))
     })
     return () => {
       const thead = <Thead {...theadProps.value}></Thead>

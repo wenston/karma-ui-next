@@ -22,7 +22,7 @@
         :type="hasIndex?'primary':'default'">带序号</Bouton> -->
     </div>
 
-    <Sheet :data='D.slice(0,80)'
+    <Sheet :data='D.slice(0,70)'
       :columns="columns"
       :autoWidth="isAuto"
       :stripe="stripe"

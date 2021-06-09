@@ -15,8 +15,7 @@
     @after-ok="afterOk">
     <!-- 推荐这种方式 -->
     <template #trigger>
-      <Bouton type="danger"
-        style="width:fit-content;margin:auto;display:block;">点击弹框展示某些东西</Bouton>
+      <Bouton type="danger">点击弹框展示某些东西</Bouton>
     </template>
     <div :class="css.body">
 
