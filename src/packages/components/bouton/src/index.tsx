@@ -1,7 +1,7 @@
 import { computed, defineComponent } from "vue"
 
 export default defineComponent({
-  name:'Bouton',
+  name: "Bouton",
   inheritAttrs: false,
   props: {
     tag: {
@@ -16,7 +16,7 @@ export default defineComponent({
       type: String,
       default: "medium"
     },
-    disabled: Boolean,
+    disabled: Boolean
   },
   setup(props, ctx) {
     const tag = props.tag
@@ -25,27 +25,27 @@ export default defineComponent({
         "k-bouton",
         {
           [`k-bouton-${props.type}`]: true,
-          'k-bouton--disabled': props.disabled
+          "k-bouton--disabled": props.disabled
         },
         `k-bouton-${props.size}`,
         ctx.attrs.class
       ]
     })
-    const ps = computed(()=>{
+    const ps = computed(() => {
       let o = {
         tabindex: 0,
-        class: klass.value,
+        class: klass.value
       }
-      if(!props.disabled) {
-        const {..._attrs} = ctx.attrs
-        o = {...o, ..._attrs}
+      if (!props.disabled) {
+        const { ..._attrs } = ctx.attrs
+        o = { ...o, ..._attrs }
       }
       return o
     })
-    
+
     return () => {
       const s = ctx.slots.default?.()
-      return <tag {...ps.value}>{s}</tag>}
+      return <tag {...ps.value}>{s}</tag>
+    }
   }
 })
-

@@ -12,7 +12,7 @@ module.exports = {
     }
   },
   devServer: {
-    port: 100
+    port: 200
 
   }
 }
